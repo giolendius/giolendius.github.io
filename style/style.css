@@ -1,0 +1,37 @@
+body {
+    background-color: midnightblue;
+    color: lightyellow;
+    margin: 0;
+    font-family: "Merriweather", serif;
+    text-align: center;
+    padding: 0;
+}
+
+card {
+    width: 25%;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+
+.tabella {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background-color: #6bd3d4;
+}
