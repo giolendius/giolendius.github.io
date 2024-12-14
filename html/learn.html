@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Esercizio #5</title>
+    <script src="../config/constants.js"></script>
+</head>
+<body>
+<input type="text" id="userInput" placeholder="Type something...">
+<p id="displayText">You typed: </p>
+<script>
+    const inputField = document.querySelector('#userInput');
+    const displayText = document.getElementById('displayText');
+
+    inputField.addEventListener('input', function () {
+        displayText.textContent = 'You typed this: ' + inputField.value;
+    });
+</script>
+
+<br>
+<aside>Proviamo questo aside</aside>
+<section>
+    <h1>Prova Slideshow</h1>
+    <h1 class="mySlides"> 5 </h1>
+    <h1 class="mySlides"> 4 </h1>
+    <h1 class="mySlides"> 3 </h1>
+    <h1 class="mySlides"> 2 </h1>
+    <h1 class="mySlides"> 1 </h1>
+    <h1> Sa contare </h1>
+</section>
+<script src="../scripts/counter.js"></script>
+
+<div><h1> Gioele adora sperimentare e prova selettore di auto</h1>
+<select name="cars" id="cars">
+    <option value="volvo">Volvo-100</option>
+    <option value="saab">Saab-200</option>
+    <option value="mercedes">Mercedes-300</option>
+    <option value="audi">Audi-400</option>
+</select>
+<input type="text" id="name" name="name" value="100">
+<script>
+    const select = document.querySelector('#cars');
+    const input = document.querySelector('#name');
+
+    select.addEventListener('change', function (e) {
+        const option = this.options[this.selectedIndex];
+        const value = option.value;
+        input.value = value;
+    })
+</script>
+</div>
+<a href="../index.html">Back to Homepage</a>
+</body>
+</html>
