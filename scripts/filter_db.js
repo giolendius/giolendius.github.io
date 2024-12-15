@@ -1,9 +1,11 @@
 let chiave = keys[env]
+let schl = {"dev":"1WgYYSWL6uOdjfEGFeQ",
+"prod": "Zw6N3_JFjwqPsMt41c"}
 let sheetLink = "https://sheets.googleapis.com/v4/spreadsheets/" +
     "1YuvMg055gT-pA0brzaKnK9PJqH8Z0bGdPez79sdWR8c" +
     "/values/" +
     "ElencoGiochiDatabase" +
-    "/?key=" + chiave;
+    "/?key=AIzaSyC" + chiave + schl[env];
 fetch(sheetLink).then(response => response.json())
     .then(json => console.log(json["values"])).catch(error => console.error('Error fatching Google sheet:', error))
 
