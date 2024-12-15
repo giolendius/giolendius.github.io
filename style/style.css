@@ -29,9 +29,43 @@ container {
 
 }
 
+/*TABELLA*/
 .tabella {
     width: 100%;
     border-collapse: collapse;
     margin: 1rem 0;
     background-color: #6bd3d4;
+}
+
+thead th:nth-child(1){width: 30%;}
+thead th:nth-child(2){width: 8%;}
+thead th:nth-child(3){width: 15%;}
+thead th:nth-child(4){width: 15%;}
+thead th:nth-child(5){width: 15%;}
+
+table{
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        /*border: 1px solid black; bordo attorno alla tabella*/
+    }
+
+th, td{
+    padding: 20px;
+}
+
+tbody {
+    background-color: deeppink;
+}
+#div_tabella_giochi tbody tr {
+    background-color: lightblue;
+    border-bottom: 20px;
+    border-collapse: separate;
+}
+#div_tabella_giochi tbody tr:nth-child(odd) {
+    background-color: #3d606f;
+}
+tbody tr:nth-child(even) {
+    background-color: red;
 }

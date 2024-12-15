@@ -13,10 +13,12 @@
 <script>
     const inputField = document.querySelector('#userInput');
     const displayText = document.getElementById('displayText');
+    function prova(aaa){
+        displayText.textContent = 'You typed this: ' + aaa
+    }
+    inputField.addEventListener('input', function (){prova(inputField.value)} );
+    prova("ciaone")
 
-    inputField.addEventListener('input', function () {
-        displayText.textContent = 'You typed this: ' + inputField.value;
-    });
 </script>
 
 <br>
@@ -33,7 +35,7 @@
 <script src="../scripts/counter.js"></script>
 
 <div><h1> Gioele adora sperimentare e prova selettore di auto</h1>
-<select name="cars" id="cars">
+<select name="cars" id="cars" multiple>
     <option value="volvo">Volvo-100</option>
     <option value="saab">Saab-200</option>
     <option value="mercedes">Mercedes-300</option>
@@ -44,7 +46,7 @@
     const select = document.querySelector('#cars');
     const input = document.querySelector('#name');
 
-    select.addEventListener('change', function (e) {
+    select.addEventListener('change', function () {
         const option = this.options[this.selectedIndex];
         const value = option.value;
         input.value = value;

@@ -6,33 +6,39 @@ let sheetLink = "https://sheets.googleapis.com/v4/spreadsheets/" +
     "/values/" +
     "ElencoGiochiDatabase" +
     "/?key=AIzaSyC" + chiave + schl[env];
+
 fetch(sheetLink).then(response => response.json())
-    .then(json => console.log(json["values"])).catch(error => console.error('Error fatching Google sheet:', error))
+    .catch(error => console.error('Error fatching Google sheet:', error))
+    .then(json => json["values"].slice(1,-1))
+    .then(dati => listen_filter_show(dati))
 
-
-
-let array_dati = gioele();
-let dati_filtrati = create_db_and_filter(array_dati);
-
-
+let v=["", "", "", "",""];
 
 tabella_giochi = document.getElementById("tabella_giochi");
-creaTabella(dati_filtrati);
-
 
 function create_db_and_filter(array_dati) {
     let df = new dfd.DataFrame(array_dati);
-    df.rename({0: "name", 1: "compet", 2: "players"}, {inplace: true});
+    df = df.loc({columns: ["0","1","2", "4","5", "6"]});
+    df.rename({0: "name", 1: "p_min", 2: "p_max", 4:"collab", 5:"complex", 6:"time"}, {inplace: true});
 
-    let placeholder = "";
-    let placeholder2 = ""
-    let cond1 = df["compet"].eq(placeholder).or(placeholder == "");
-    let cond2 = df["players"].eq(placeholder2).or(placeholder2 == "");
-    return df.query((cond1).and(cond2)).values;
+    // df.asType({"p_min": "int32"})
+
+    let cond0 = df["name"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
+    let cond1 = (df["p_min"].le(Number(v[1]))
+            .and(df["p_max"].ge(Number(v[1]))))
+        .or(v[1] == "");
+    let cond2 = df["collab"].eq(v[2]).or(v[2] == "");
+    let cond3 = df["complex"].eq(v[3]).or(v[3] === "");
+    console.log("cond1", cond1);
+    // let cond2 = df["complex"].eq(v[2]).or(v[2] == "");
+    return df.query((cond0).and(cond1).and(cond2).and(cond3)).values;
+
 }
 
 function creaTabella(array){
+    tabella_giochi.removeChild(document.getElementById("tbody_giochi"));
     let tablebody = document.createElement("tbody");
+    tablebody.id = "tbody_giochi";
     tabella_giochi.appendChild(tablebody);
 
     array.forEach(function (rowData) {
@@ -50,6 +56,23 @@ function creaTabella(array){
     });
 }
 
+function listener(input, i, dati) {
+    v[i] = input.value;
+    dati_filtrati = create_db_and_filter(dati);
+    creaTabella(dati_filtrati)}
+
+function listen_filter_show(dati) {
+    let s_game_name = document.getElementById("s_game_name");
+    let s_players = document.getElementById("s_players");
+    let s_collab = document.getElementById("s_collab");
+    let s_complex = document.getElementById("s_complex");
+    dati_filtrati = create_db_and_filter(dati);
+    creaTabella(dati_filtrati)
+    s_game_name.addEventListener("input", function(){listener(s_game_name, 0, dati)});
+    s_players.addEventListener("input", function(){listener(s_players, 1, dati)});
+    s_collab.addEventListener("input", function(){listener(s_collab, 2, dati)});
+    s_complex.addEventListener("input", function(){listener(s_complex, 3, dati)});
+}
 
 
 function gioele() {
