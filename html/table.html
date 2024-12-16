@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Giochi</title>
-<!--    <link rel="stylesheet" href="../style/style.css">-->
+    <link rel="stylesheet" href="../style/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -11,37 +10,27 @@
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
 </head>
-
-<style>
-    thead, tfoot {
-        /*background: url(leopardskin.jpg);*/
-        color: palevioletred;
-        text-shadow: 1px 1px 1px black;
-    }
-
-    thead th,tfoot th, tfoot td {
-        background: linear-gradient(to bottom, rgb(0 0 0 / 10%), rgb(0 0 0 / 50%));
-        border: 3px solid purple;
-    }
-
-
-
-</style>
-
-<body>
-    <header><h1>Benvenuto nella tabella dei giochi</h1></header>
-    <nav>
-        <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="table.html">Tabella</a></li>
-            <li><a href="prova.html">Prova</a></li>
-            <li><a href="learn.html">Learn</a></li>
-        </ul>
-    </nav>
+<body class="black">
+<header class ="dark">
+    <div><h2>GG Games</h2></div>
+        <div class ="beije">
+            <img src="https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg">
+        </div>
+</header>
+<nav>
+    <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="table.html">Tabella</a></li>
+        <li><a href="prova.html">Prova</a></li>
+        <li><a href="learn.html">Learn</a></li>
+        <li><a href="modify_source.html">Aggiungi</a></li>
+        <li>ULTIMO</li>
+    </ul>
+</nav>
     <main>
-        <h3 id="ciaone"></h3>
         <div>
-        <div class="tabella" id="div_tabella_giochi">
+            <div style="margin:20px"><h3 id="ciaone"> Tabella dei giochi</h3></div>
+        <div class="tabella olive" id="div_tabella_giochi">
             <table id="tabella_giochi">
                 <thead><tr>
                 <th><input type="text" id="s_game_name" placeholder="Filtra per nome"> </th>
@@ -118,12 +107,11 @@
             </table>
         </div>
     </main>
-    <script src="../scripts/filter_db.js"></script>
     <footer>
-        <td></td>
-        <p>La <a href="table.html"> tabella dei giochi</a>
+        <p>La <a href="table.html">tabella dei giochi</a>
             <a href="#">ciaone</a></p>
         <a href="../index.html">Main h</a>
     </footer>
 </body>
+<script src="../scripts/filter_db.js"></script>
 </html>
