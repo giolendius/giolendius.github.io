@@ -30,7 +30,7 @@
     <main>
         <div>
             <div style="margin:20px"><h3 id="ciaone"> Tabella dei giochi</h3></div>
-        <div class="tabella olive" id="div_tabella_giochi">
+        <div class="w-80" id="div_tabella_giochi">
             <table id="tabella_giochi">
                 <thead><tr>
                 <th><input type="text" id="s_game_name" placeholder="Filtra per nome"> </th>
@@ -44,23 +44,32 @@
 <!--                    "multiple" permette di far scegliere più opzioni-->
                 <th><select id="s_collab" >
                     <option value=""></option>
-                    <option value="COOPerativo">COOPerativo</option>
-                    <option value="Tutti contro Tutti">Tutti contro Tutti</option>
-                    <option value="A squadre">A squadre</option>
+                    <option value="cooperativo">COOPerativo</option>
+                    <option value="competitivo">Tutti contro Tutti</option>
+                    <option value="a squadre">A Squadre</option>
                     </select></th>
                 <th><select id="s_complex">
                     <option value=""></option>
-                    <option value="Semplice">Semplice</option>
+                    <option value="Facilissimo">Facilissimo</option>
+                    <option value="Facile">Facile</option>
                     <option value="Medio">Medio</option>
-                    <option value="complesso">Complesso</option>
+                    <option value="Difficile">Difficile</option>
+                    <option value="Molto complesso">Molto Complesso</option>
                     </select></th>
-                <th></th>
+                <th><select multiple id="s_time">
+                    <option value=""></option>
+                    <option value="Molto breve">Molto breve</option>
+                    <option value="Breve">Breve</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Lungo">Lungo</option>
+                    <option value="Molto lungo">Molto lungo</option>
+                    </select></th>
                 </tr></thead>
                 <tbody id ="tbody_giochi"></tbody>
             </table>
         </div>
         </div>
-        <div class="tabella" id="div_tabella2">
+        <div class="w-80" id="div_tabella2">
             <table>
                 <caption>    A summary of the UK's most famous punk bands  </caption>
                 <thead>
@@ -96,6 +105,55 @@
                     <td>1974</td>
                     <td>17</td>
                     <td>No More Heroes</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th scope="row" colspan="2">Total albums</th>
+                    <td colspan="2">77</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="w-80">
+            <table class="tabellozza">
+                <caption>    A new try for table  </caption>
+                <thead>
+                <tr>
+                    <th scope="col">
+                        Nomme band credo
+                    </th>
+                    <th scope="col">
+                        altro
+                    </th>
+                    <th scope="col">No. of Albums</th>
+                    <th scope="col">Most famous song</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Buzzcocks</th>
+                    <td>1976</td>
+                    <td>9</td>
+                    <td>Ever fallen in love</td>
+                </tr>
+                <tr>
+                    <th scope="row">The Clash</th>
+                    <td>1976</td>
+                    <td>6</td>
+                    <td>London Calling</td>
+                </tr>
+                <tr>
+                    <th scope="row">The Stranglers</th>
+                    <td>1974</td>
+                    <td>17</td>
+                    <td>No More Heroes</td>
+                </tr>
+                <tr>
+                    <td>acdc</td>
+                    <td>1980</td>
+                    <td>17</td>
+                    <td>Bck in black</td>
                 </tr>
                 </tbody>
                 <tfoot>
