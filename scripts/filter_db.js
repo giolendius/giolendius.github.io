@@ -17,7 +17,7 @@ fetch(sheetLink).then(response => response.json())
     )
     .then(dati => listen_filter_show(dati))
 
-let v = ["", "", "", "", [""], ""];
+let v = ["", "", "", [""], [""], ""];
 
 tabella_giochi = document.getElementById("tabella_giochi");
 
@@ -39,7 +39,7 @@ function listen_filter_show(dati) {
         listener(s_collab, 2, dati)
     });
     s_complex.addEventListener("input", function () {
-        listener(s_complex, 3, dati)
+        listener(s_complex, 3, dati, true)
     });
     s_time.addEventListener("input", function () {
         listener(s_time, 4, dati, true)
@@ -63,22 +63,20 @@ function listener(input, i, dati, vector_inside = false) {
 
 function create_db_and_filter(array_dati) {
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
-
     df = df.loc({columns: ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"]});
-    df.print();
-    // df.rename({0: "name", 1: "p_min", 2: "p_max", 4:"collab", 5:"complex", 6:"time"}, {inplace: true});
-
-    // df.asType({"p_min": "int32"})
-
+    // df["Titolo"] = df["Titolo"].str.capitalize();
     let cond0 = df["Titolo"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
     let cond1 = (df["Gioc Min"].le(Number(v[1]))
         .and(df["Gioc Max"].ge(Number(v[1]))))
         .or(v[1] == "");
     let cond2 = df["Competizione"].str.toLowerCase().str.includes(v[2]).or(v[2] == "");
-    let cond3 = df["Difficoltà"].eq(v[3]).or(v[3] === "");
+    let cond3 = (v[3][0] === "");
+    for (let i = 0; i < v[3].length; i++) {
+        cond3 = (df["Difficoltà"].eq(v[3][i])).or(cond3);
+    };
     let cond4 =  (v[4][0] === "");
-    for (let i = 0; i < v[4].length; i++) {
-        cond4 = (df["Durata"].eq(v[4][i])).or(cond4);
+    for (let h = 0; h < v[4].length; h++) {
+        cond4 = (df["Durata"].eq(v[4][h])).or(cond4);
     }
     // let cond4 = df["Durata"].eq(v[4]).or(v[4] === "");
     return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4)).values;

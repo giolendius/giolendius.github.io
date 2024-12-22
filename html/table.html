@@ -1,61 +1,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Giochi</title>
+    <title>Cerca Giochi</title>
     <link rel="stylesheet" href="../style/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
 </head>
-<body class="black">
-<header class ="dark">
-    <div><h2>GG Games</h2></div>
-        <div class ="beije">
-            <img src="https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg">
-        </div>
+<body>
+<header>
+    <div class="flex">
+        <img id="meeple" src="../img/3d-meeple-svgrepo-com.svg">
+        <h3>Great Gallo Games</h3>
+    </div>
 </header>
+
 <nav>
     <ul>
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="table.html">Tabella</a></li>
-        <li><a href="prova.html">Prova</a></li>
-        <li><a href="learn.html">Learn</a></li>
-        <li><a href="modify_source.html">Aggiungi</a></li>
-        <li>ULTIMO</li>
+        <a href="../index.html">            <li>Home</li></a>
+        <a href="table.html">            <li>Cerca un gioco</li></a>
+        <a href="modify_source.html">            <li>Aggiungi</li></a>
+        <a href="esercizio.html">            <li>Esercizio</li></a>
+        <a href="learn.html">            <li>Learn</li></a>
     </ul>
 </nav>
-    <main>
-        <div>
-            <div style="margin:20px"><h3 id="ciaone"> Tabella dei giochi</h3></div>
-        <div class="w-80" id="div_tabella_giochi">
-            <table id="tabella_giochi">
-                <thead><tr>
-                <th><input type="text" id="s_game_name" placeholder="Filtra per nome"> </th>
+
+
+<main>
+
+    <div class="title"><h1> Ricerca dei giochi</h1>
+
+    </div>
+    <div>
+        <table id="tabella_giochi">
+            <thead>
+<!--            <tr>-->
+                <th><input type="text" id="s_game_name" placeholder="Filtra per nome"></th>
                 <th colspan="2"><select id="s_players">
-                    <option value=1> </option>
+                    <option value=1></option>
                     <option value=1>1</option>
                     <option value=2>2</option>
+                    <option value=3>3</option>
                     <option value=4>4</option>
+                    <option value=5>5</option>
+                    <option value=6>6</option>
+                    <option value=7>7</option>
+                    <option value=8>8</option>
+                    <option value=9>9</option>
                     <option value=10>10</option>
-                    </select></th>
-<!--                    "multiple" permette di far scegliere più opzioni-->
-                <th><select id="s_collab" >
+                </select></th>
+                <!--                    "multiple" permette di far scegliere più opzioni-->
+                <th><select id="s_collab">
                     <option value=""></option>
                     <option value="cooperativo">COOPerativo</option>
                     <option value="competitivo">Tutti contro Tutti</option>
                     <option value="a squadre">A Squadre</option>
-                    </select></th>
-                <th><select id="s_complex">
+                </select></th>
+                <th><select multiple id="s_complex">
                     <option value=""></option>
                     <option value="Facilissimo">Facilissimo</option>
                     <option value="Facile">Facile</option>
                     <option value="Medio">Medio</option>
                     <option value="Difficile">Difficile</option>
                     <option value="Molto complesso">Molto Complesso</option>
-                    </select></th>
+                </select></th>
                 <th><select multiple id="s_time">
                     <option value=""></option>
                     <option value="Molto breve">Molto breve</option>
@@ -63,113 +75,27 @@
                     <option value="Medio">Medio</option>
                     <option value="Lungo">Lungo</option>
                     <option value="Molto lungo">Molto lungo</option>
-                    </select></th>
-                </tr></thead>
-                <tbody id ="tbody_giochi"></tbody>
-            </table>
-        </div>
-        </div>
-        <div class="w-80" id="div_tabella2">
-            <table>
-                <caption>    A summary of the UK's most famous punk bands  </caption>
-                <thead>
-                <tr>
-                    <th scope="col">
-                        Nomme band credo
-                    </th>
-                    <th scope="col">
-                        <select name="cars" id="cars">
-                            <option value="volvo">Volvo-100</option>
-                            <option value="saab">Saab-200</option>
-                        </select>
-                    </th>
-                    <th scope="col">No. of Albums</th>
-                    <th scope="col">Most famous song</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">Buzzcocks</th>
-                    <td>1976</td>
-                    <td>9</td>
-                    <td>Ever fallen in love (with someone you shouldn't've)</td>
-                </tr>
-                <tr>
-                    <th scope="row">The Clash</th>
-                    <td>1976</td>
-                    <td>6</td>
-                    <td>London Calling</td>
-                </tr>
-                <tr>
-                    <th scope="row">The Stranglers</th>
-                    <td>1974</td>
-                    <td>17</td>
-                    <td>No More Heroes</td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th scope="row" colspan="2">Total albums</th>
-                    <td colspan="2">77</td>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-        <div class="w-80">
-            <table class="tabellozza">
-                <caption>    A new try for table  </caption>
-                <thead>
-                <tr>
-                    <th scope="col">
-                        Nomme band credo
-                    </th>
-                    <th scope="col">
-                        altro
-                    </th>
-                    <th scope="col">No. of Albums</th>
-                    <th scope="col">Most famous song</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">Buzzcocks</th>
-                    <td>1976</td>
-                    <td>9</td>
-                    <td>Ever fallen in love</td>
-                </tr>
-                <tr>
-                    <th scope="row">The Clash</th>
-                    <td>1976</td>
-                    <td>6</td>
-                    <td>London Calling</td>
-                </tr>
-                <tr>
-                    <th scope="row">The Stranglers</th>
-                    <td>1974</td>
-                    <td>17</td>
-                    <td>No More Heroes</td>
-                </tr>
-                <tr>
-                    <td>acdc</td>
-                    <td>1980</td>
-                    <td>17</td>
-                    <td>Bck in black</td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th scope="row" colspan="2">Total albums</th>
-                    <td colspan="2">77</td>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-    </main>
-    <footer>
-        <p>La <a href="table.html">tabella dei giochi</a>
-            <a href="#">ciaone</a></p>
-        <a href="../index.html">Main h</a>
-    </footer>
+                </select></th>
+<!--            </tr>-->
+            </thead>
+            <tbody id="tbody_giochi"></tbody>
+        </table>
+    </div>
+
+    <div class="m-5 evenly">
+        <div></div>
+        <h4><a href="#">Torna su</a></h4>
+    </div>
+
+
+
+
+</main>
+<footer>
+    <p>La <a href="table.html">tabella dei giochi</a>
+    </p>
+    <a href="../index.html">Main h</a>
+</footer>
 </body>
 <script src="../scripts/filter_db.js"></script>
 </html>
