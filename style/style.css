@@ -58,6 +58,24 @@ main {
     background-color: var(--c-scuro1);
 }
 
+section {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+
+.didascalia-immagine {
+    margin: 3em 3em;
+}
+
+article {
+        flex: clamp(500px,5vw,1vw);
+      }
+
+img {
+    width: 100%
+    }
 
 h1 {
     color: var(--c-chiarisssimo1);
@@ -71,10 +89,43 @@ h3 {
 }
 
 h4 {
+    font-size: 2em;
     color: var(--c-chiarisssimo1);
 }
 
 /*!*LISTS NAV BAR*!*/
+
+button {
+background-color: var(--c-contrasto3);
+border: 50px;
+padding: 1em 2em;
+border-radius:10%;
+cursor: pointer;
+box-shadow: 0 12px 0px 0 black;
+font-family: Merriweather, serif;
+transition: 0.1s;}
+
+button:hover {filter: saturate(75%);
+border: red;
+border: 5px;
+}
+
+button:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0px 0 black;
+    transition: 0.1s;
+        }
+
+button span{opacity: 1;
+transition: 1s;
+padding-left: -20px}
+button:hover span{opacity: 1;
+    padding: 0px;}
+
+
+
+
+
 
 nav {
     background-color: var(--c-contrasto3);
@@ -115,17 +166,10 @@ a li {
     justify-content: space-evenly;
     align-items: center;
 }
+.split-horiz {
+    justify-content: space-between;}
 
-.flex {
-    display: flex;
-    align-items: center; /*no idea what is. Vertically maybe?*/
-}
 
-.didascalia-immagine {
-    padding: 0 10%;
-    width: 50%;
-    margin: 3em 0;
-}
 
 /*.center {*/
 /*    display: flex;*/
@@ -151,6 +195,9 @@ a li {
     height: 60px
 }
 
+
+
+
 /*SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT */
 
 select, input {
@@ -169,7 +216,6 @@ select[multiple] {
     min-height: 150px; /* forse inutile */
 }
 
-
 option:checked {
     background-color: var(--c-scuro1);
     color: whitesmoke;
@@ -178,6 +224,11 @@ option:checked {
 select option:last-child {
     border-bottom: none;
 }
+
+.prevent-select{
+    user-select: none;
+    -ms-user-select: none;}
+
 
 
 
