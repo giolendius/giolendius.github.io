@@ -103,7 +103,7 @@ function creaTabella(df) {
 
         row_div.addEventListener("click", function()
         {
-            openNav();
+            openNav("info_out");
 //            let info_out = document.getElementById("info_out");
 //            info_out.className = "show info_out"
 
@@ -115,9 +115,9 @@ function creaTabella(df) {
 
             let a = document.createElement("a");
             info_in.appendChild(a);
-            a.href="javascript:closeNav()";
-            a.class="closebtn";
-            a.textContent="\u{00D7}";
+            a.href="javascript:closeNav('info_out')";
+            a.className="closebtn";
+            a.textContent="\u{279c}";
 
             let h1=document.createElement("h1");
             info_in.appendChild(h1);
@@ -132,12 +132,12 @@ function creaTabella(df) {
     });
 }
 
-function openNav() {
-  document.getElementById("info_out").style.width = "clamp(250px, 30vw, 2000px)";
+function openNav(div_id) {
+  document.getElementById(div_id).style.width = "clamp(250px, 30vw, 2000px)";
 }
 
-function closeNav() {
-  document.getElementById("info_out").style.width = "0";
+function closeNav(div_id) {
+  document.getElementById(div_id).style.width = "0";
 }
 
 function gioele() {
@@ -163,3 +163,5 @@ function gioele() {
     ];
     return lista
 }
+
+

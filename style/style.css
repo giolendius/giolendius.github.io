@@ -73,9 +73,19 @@ section {
 
 article {
         flex: 1;
+    overflow-y: auto;
+
+    transition: 0.7s;
+    overflow-x: hidden;
         /*flex: clamp(500px,2vw,10vw);*/
       }
 
+
+
+#divtable {
+    flex: 5;
+    overflow-x: auto;
+}
 img {
     width: 100%
     }
@@ -178,8 +188,16 @@ a li {
 .split-horiz {
     justify-content: space-between;}
 
+.closebtn {
+    text-decoration: none;
+    color: var(--c-contrasto1);
+    font-size: 4em;
+}
 
-
+.flip {
+    transform: rotate(180deg);
+    display: inline-block;
+}
 .strano
 {position: fixed;
 background: green;
@@ -231,12 +249,7 @@ display: revert;}
 #info_in{
 margin: 3em}
 
-.sidenav {
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 1s;
-  padding-top: 60px;
-}
+
 
 /*SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT */
 
