@@ -53,8 +53,10 @@ p a {
 }
 
 main {
+    position: relative;
     color: white;
-    padding: 4em 10%;
+    /*padding: 4em 10%;*/
+    padding-top: 4em;
     background-color: var(--c-scuro1);
 }
 
@@ -70,7 +72,8 @@ section {
 }
 
 article {
-        flex: clamp(500px,5vw,1vw);
+        flex: 1;
+        /*flex: clamp(500px,2vw,10vw);*/
       }
 
 img {
@@ -93,7 +96,8 @@ h4 {
     color: var(--c-chiarisssimo1);
 }
 
-/*!*LISTS NAV BAR*!*/
+
+/* BUTTONS*/
 
 button {
 background-color: var(--c-contrasto3);
@@ -121,6 +125,11 @@ transition: 1s;
 padding-left: -20px}
 button:hover span{opacity: 1;
     padding: 0px;}
+
+
+
+/*!*LISTS NAV BAR*!*/
+
 
 
 
@@ -171,6 +180,19 @@ a li {
 
 
 
+.strano
+{position: fixed;
+background: green;
+right: 1em;
+display: none;
+bottom: 50%;
+}
+
+.attivo button:active .strano{background-color: red;}
+
+.attivo:hover .strano {
+background-color: blue;
+display: revert;}
 /*.center {*/
 /*    display: flex;*/
 /*    justify-content: center;*/
@@ -196,7 +218,25 @@ a li {
 }
 
 
+.info_out{
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: black;}
 
+
+#info_in{
+margin: 3em}
+
+.sidenav {
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 1s;
+  padding-top: 60px;
+}
 
 /*SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT */
 

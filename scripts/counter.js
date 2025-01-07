@@ -18,7 +18,7 @@ function calcola_numero_giochi(json)
     console.log(tot)
     let bottone = document.getElementById("calcola");
     bottone.addEventListener("click", function () {
-        animateValue(obj, 0, tot, 1500) });
+        animateValue(obj, 0, tot, 2000) });
         }
 
 const obj = document.getElementById("tot_giochi");

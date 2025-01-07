@@ -32,54 +32,66 @@
 
 <main>
     <div class="title"><h1> Ricerca dei giochi</h1>
-
     </div>
-    <div>
-        <table id="tabella_giochi">
-            <thead>
-<!--            <tr>-->
-                <th><input type="text" id="s_game_name" placeholder="Filtra per nome"></th>
-                <th colspan="2"><select id="s_players">
-                    <option value=1></option>
-                    <option value=1>1</option>
-                    <option value=2>2</option>
-                    <option value=3>3</option>
-                    <option value=4>4</option>
-                    <option value=5>5</option>
-                    <option value=6>6</option>
-                    <option value=7>7</option>
-                    <option value=8>8</option>
-                    <option value=9>9</option>
-                    <option value=10>10</option>
-                </select></th>
-                <!--                    "multiple" permette di far scegliere più opzioni-->
-                <th><select id="s_collab">
+    <section style="align-items:flex-start">
+        <article style="flex: 1 50px">
+            <nav>
+                <ul>
+                   <li> <input type="text" id="s_game_name" placeholder="Filtra per nome"></li>
+                    <li><select id="s_players">
+                        <option value=1></option>
+                        <option value=1>1</option>
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=5>5</option>
+                        <option value=6>6</option>
+                        <option value=7>7</option>
+                        <option value=8>8</option>
+                        <option value=9>9</option>
+                        <option value=10>10</option>
+                    </select></li>
+                    <li><select id="s_collab">
                     <option value=""></option>
                     <option value="cooperativo">COOPerativo</option>
                     <option value="competitivo">Tutti contro Tutti</option>
                     <option value="a squadre">A Squadre</option>
-                </select></th>
-                <th><select multiple id="s_complex">
+                    </select></li>
+                    <li><select multiple id="s_complex">
                     <option value=""></option>
                     <option value="Facilissimo">Facilissimo</option>
                     <option value="Facile">Facile</option>
                     <option value="Medio">Medio</option>
                     <option value="Difficile">Difficile</option>
                     <option value="Molto complesso">Molto Complesso</option>
-                </select></th>
-                <th><select multiple id="s_time">
+                    </select></li>
+                    <li><select multiple id="s_time">
                     <option value=""></option>
                     <option value="Molto breve">Molto breve</option>
                     <option value="Breve">Breve</option>
                     <option value="Medio">Medio</option>
                     <option value="Lungo">Lungo</option>
                     <option value="Molto lungo">Molto lungo</option>
-                </select></th>
-<!--            </tr>-->
-            </thead>
+                    </select></li>
+                    </ul>
+            </nav>
+        </article>
+        <article style="flex: 5; padding: 0 3em;">
+            <table id="tabella_giochi">
+<!--            <thead>-->
+<!--                <th></th>-->
+<!--                <th colspan="2"></th>-->
+<!--                &lt;!&ndash;                    "multiple" permette di far scegliere più opzioni&ndash;&gt;-->
+<!--                <th></th>-->
+<!--                <th></th>-->
+<!--                <th></th>-->
+<!--&lt;!&ndash;            </tr>&ndash;&gt;-->
+<!--            </thead>-->
             <tbody id="tbody_giochi"></tbody>
         </table>
-    </div>
+        </article>
+        <article class = "info_out" id="info_out"><div id="info_in">Ciao amigos!</div></article>
+    </section>
 
     <div class="m-5 evenly">
         <div></div>
