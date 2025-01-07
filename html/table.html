@@ -1,0 +1,100 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cerca Giochi</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="../style/style.css">
+    <script src="../config/constants.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
+</head>
+<body>
+<header>
+    <section>
+        <img id="meeple" src="../img/3d-meeple-svgrepo-com.svg">
+        <h3>Great Gallo Games</h3>
+    </section>
+</header>
+
+<nav>
+    <ul>
+        <a href="../index.html">            <li>Home</li></a>
+        <a href="table.html">            <li>Cerca un gioco</li></a>
+        <a href="modify_source.html">            <li>Contribuisci</li></a>
+<!--        <a href="esercizio.html">            <li>Esercizio</li></a>-->
+<!--        <a href="learn.html">            <li>Learn</li></a>-->
+    </ul>
+</nav>
+
+
+<main>
+    <div class="title"><h1> Ricerca dei giochi</h1>
+
+    </div>
+    <div>
+        <table id="tabella_giochi">
+            <thead>
+<!--            <tr>-->
+                <th><input type="text" id="s_game_name" placeholder="Filtra per nome"></th>
+                <th colspan="2"><select id="s_players">
+                    <option value=1></option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                    <option value=6>6</option>
+                    <option value=7>7</option>
+                    <option value=8>8</option>
+                    <option value=9>9</option>
+                    <option value=10>10</option>
+                </select></th>
+                <!--                    "multiple" permette di far scegliere più opzioni-->
+                <th><select id="s_collab">
+                    <option value=""></option>
+                    <option value="cooperativo">COOPerativo</option>
+                    <option value="competitivo">Tutti contro Tutti</option>
+                    <option value="a squadre">A Squadre</option>
+                </select></th>
+                <th><select multiple id="s_complex">
+                    <option value=""></option>
+                    <option value="Facilissimo">Facilissimo</option>
+                    <option value="Facile">Facile</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Difficile">Difficile</option>
+                    <option value="Molto complesso">Molto Complesso</option>
+                </select></th>
+                <th><select multiple id="s_time">
+                    <option value=""></option>
+                    <option value="Molto breve">Molto breve</option>
+                    <option value="Breve">Breve</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Lungo">Lungo</option>
+                    <option value="Molto lungo">Molto lungo</option>
+                </select></th>
+<!--            </tr>-->
+            </thead>
+            <tbody id="tbody_giochi"></tbody>
+        </table>
+    </div>
+
+    <div class="m-5 evenly">
+        <div></div>
+        <h4><a href="#">Torna su</a></h4>
+    </div>
+
+
+
+
+</main>
+<footer>
+    <p>La <a href="table.html">tabella dei giochi</a>
+    </p>
+    <a href="../index.html">Main h</a>
+</footer>
+</body>
+<script src="../scripts/filter_db.js"></script>
+</html>
