@@ -7,23 +7,23 @@
     <title>Learn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../config/constants.js"></script>
-<style>
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: pink;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
-  z-index: 1;
-}
+<!--<style>-->
+<!--.dropdown-content {-->
+<!--  display: none;-->
+<!--  position: absolute;-->
+<!--  background-color: pink;-->
+<!--  min-width: 160px;-->
+<!--  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);-->
+<!--  padding: 12px 16px;-->
+<!--  z-index: 1;-->
+<!--}-->
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+<!--.dropdown:hover .dropdown-content {-->
+<!--  display: block;-->
+<!--}-->
 
 
-</style>
+<!--</style>-->
     <link rel="stylesheet" href="../style/style.css">
 
 </head>
@@ -83,24 +83,28 @@
 </script>
 </div>
 
-<div>
+<div style="position: relative; width: 80%">
     <table>
-        <tr>
+        <tbody>
+        <tr class="norm">
             <td>1</td>
             <td>secondo</td>
             <td>altro</td>
             <td>ancora</td>
         </tr>
-        <tr class="hi">
-            <td colspan="7">prima info bonus<td></tr>
-        <tr>
+        <tr class="norm espa">
+            <td colspan="3">prima info bonus<td></tr>
+        <tr class="norm">
             <td>dopo</td>
             <td>altre cose</td>
+            <td>nuove</td>
+            <td>2</td>
         </tr>
-        <tr style="display: none">
+        <tr class="norm">
             <td><div><p>nuove info bonus</p>
             <p>ancora più</p></div></td>
         </tr>
+        </tbody>
     </table>
 </div>
 

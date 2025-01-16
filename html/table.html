@@ -19,17 +19,11 @@
     </section>
 </header>
 
-<nav>
+<nav class="sticktotop">
     <ul>
-        <a href="../index.html">
-            <li>Home</li>
-        </a>
-        <a href="table.html">
-            <li>Cerca un gioco</li>
-        </a>
-        <a href="modify_source.html">
-            <li>Contribuisci</li>
-        </a>
+        <a href="../index.html">            <li>Home</li></a>
+        <a href="table.html">            <li>Cerca un gioco</li></a>
+        <a href="modify_source.html">            <li>Contribuisci</li></a>
         <!--        <a href="esercizio.html">            <li>Esercizio</li></a>-->
         <!--        <a href="learn.html">            <li>Learn</li></a>-->
     </ul>
@@ -38,60 +32,91 @@
 
 <main>
     <section style="align-items:flex-start">
-        <article id="filters" style="height: 100vh; flex: 0 20%">
-            <nav>
-                <div style="text-align: right; padding: 2em 10%">
+<!--        Filter side bar-->
+        <article id="filters" class="scroll fullhight blu" style="flex: 0 20%; position: relative">
+            <div style=" right: 0; top: 8.5px; text-align: right; padding: 0 10%">
                     <a href="javascript:closeFilters()" class="closebtn flip">
                         &#10140</a></div>
-                <ul>
-                    <li><input type="text" id="s_game_name" placeholder="Filtra per nome"></li>
-                    <li><select id="s_players">
-                        <option value=1></option>
-                        <option value=1>1</option>
-                        <option value=2>2</option>
-                        <option value=3>3</option>
-                        <option value=4>4</option>
-                        <option value=5>5</option>
-                        <option value=6>6</option>
-                        <option value=7>7</option>
-                        <option value=8>8</option>
-                        <option value=9>9</option>
-                        <option value=10>10</option>
-                    </select></li>
-                    <li><select id="s_collab">
-                        <option value=""></option>
-                        <option value="cooperativo">COOPerativo</option>
-                        <option value="competitivo">Tutti contro Tutti</option>
-                        <option value="a squadre">A Squadre</option>
-                    </select></li>
-                    <li><select multiple id="s_complex">
-                        <option value=""></option>
-                        <option value="Facilissimo">Facilissimo</option>
-                        <option value="Facile">Facile</option>
-                        <option value="Medio">Medio</option>
-                        <option value="Difficile">Difficile</option>
-                        <option value="Molto complesso">Molto Complesso</option>
-                    </select></li>
-                    <li><select multiple id="s_time">
+            <div class="space-evenly"><section class="vert" style="width:80%;">
+                <article><label for="s_game_name">Select name:</label><input type="text" id="s_game_name" placeholder="Filtra per nome"></article>
+                <article><label for="s_players">Numero di giocatori</label>
+                    <select id="s_players" style="width: auto">
+                    <option value=""></option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                    <option value=6>6</option>
+                    <option value=7>7</option>
+                    <option value=8>8</option>
+                    <option value=9>9</option>
+                    <option value=10>10</option>
+                    <option value=12>12</option>
+                    <option value=14>14</option>
+                    <option value=16>16+</option>
+                    </select>
+<!--                    <button>CCC</button>-->
+                </article>
+                <article>
+                    <label for="s_collab">Cooperazione: </label>
+                    <select id="s_collab" value="cooperativo">
+                    <option value="" selected></option>
+                    <option value="cooperativo">COOPerativo</option>
+                    <option value="competitivo">Tutti contro Tutti</option>
+                    <option value="a squadre">A Squadre</option>
+                    </select>
+                </article>
+
+                <article>
+                    <label for="s_complex">Complessità:</label>
+                    <select multiple id="s_complex">
+                    <option value=""></option>
+                    <option value="Facilissimo">Facilissimo</option>
+                    <option value="Facile">Facile</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Difficile">Difficile</option>
+                    <option value="Molto complesso">Molto Complesso</option>
+                    </select>
+                </article>
+                <article>
+                    <label for="s_time">Durata: </label>
+                    <select multiple id="s_time">
                         <option value=""></option>
                         <option value="Molto breve">Molto breve</option>
                         <option value="Breve">Breve</option>
                         <option value="Medio">Medio</option>
                         <option value="Lungo">Lungo</option>
                         <option value="Molto lungo">Molto lungo</option>
-                    </select></li>
-                </ul>
-            </nav>
+                    </select>
+                </article>
+                <article>
+                    <label for="s_new_select">New Select:</label>
+                    <div id="s_new_select" class="checkbox-select">
+                        <label><input type="checkbox" value="Option 1"> Option 1</label>
+                        <label><input type="checkbox" value="Option 2"> Option 2</label>
+<!--                        <label><input type="checkbox" value="Option 3"> Option 3</label>-->
+<!--                        <label><input type="checkbox" value="Option 4"> Option 4</label>-->
+                    </div>
+                </article>
+
+                <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem dolores exercitationem incidunt praesentium. Atque consequuntur deleniti eius et ex laudantium modi nesciunt nisi nostrum possimus, praesentium provident reprehenderit, sit velit.-->
+                <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda dignissimos eos illo ipsum, molestiae natus necessitatibus nihil non repellendus voluptates!</p>-->
+                <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cum fugiat impedit molestias mollitia nam quisquam? Aspernatur autem consectetur, earum et iusto maiores nemo obcaecati officiis, pariatur quod rem repellat repellendus repudiandae sit ullam veniam, vitae? A ab assumenda at, aut dolorem doloribus eius id in ipsum quas. Adipisci alias aliquid aperiam consectetur cum delectus dolorum eaque eius eos est et ex expedita explicabo fugit incidunt, iste itaque labore laboriosam magni maxime mollitia nemo nostrum odit officiis pariatur quaerat quis quos repellendus rerum sapiente sed similique sunt totam unde velit voluptates voluptatibus. Atque consequatur hic incidunt laboriosam, quidem veniam voluptatibus.</p>-->
+
+            </section>
+             </div>
         </article>
-        <article id="btnOpenFilters" style="flex: 0 0; direction: rtl">
+<!--        BUTTON vert line-->
+        <article id="btnOpenFilters" class="blu fullhight" style="flex: 0 0; direction: rtl">
             <a  href="javascript:openFilters()" class="closebtn">  &#10140 </a>
         </article>
-        <article id="divtable" style="flex: 5; padding: 0 3em;">
-            <section class="title">
+<!--        table-->
+        <article id="divtable" class="fullhight" style="flex: 5;">
+            <section class="title scroll">
                 <h1>
                      Ricerca dei giochi
                 </h1>
-            </section>
             <table id="tabella_giochi">
                 <!--            <thead>-->
                 <!--                <th></th>-->
@@ -104,23 +129,23 @@
                 <!--            </thead>-->
                 <tbody id="tbody_giochi"></tbody>
             </table>
+            </section>
         </article>
         <article class="info_out" id="info_out">
             <div id="info_in">Ciao amigos!</div>
         </article>
     </section>
 
-    <div class="m-5 evenly">
-        <div></div>
-        <h4><a href="#">Torna su</a></h4>
-    </div>
+<!--    <div class="m-5 evenly">-->
+<!--        <div></div>-->
+<!--    </div>-->
 
 
 </main>
 <footer>
     <p>La <a href="table.html">tabella dei giochi</a>
     </p>
-    <a href="../index.html">Main h</a>
+    <h4><a href="#">Torna su</a></h4>
 </footer>
 </body>
 <script src="../scripts/filter_db.js"></script>

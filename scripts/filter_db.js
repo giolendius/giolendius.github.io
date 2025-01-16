@@ -27,7 +27,7 @@ function listen_filter_show(dati) {
     let s_collab = document.getElementById("s_collab");
     let s_complex = document.getElementById("s_complex");
     let s_time = document.getElementById("s_time");
-    dati_filtrati = create_db_and_filter(dati);
+    [dati_filtrati, ciao] = create_db_and_filter(dati);
     creaTabella(dati_filtrati)
     s_game_name.addEventListener("input", function () {
         listener(s_game_name, 0, dati)
@@ -57,12 +57,17 @@ function listener(input, i, dati, vector_inside = false) {
         tmp = input.value
     }
     v[i] = tmp;
-    db_filtrati = create_db_and_filter(dati);
+    [db_filtrati, df_exp] = create_db_and_filter(dati);
+    console.log("printiamo");
+    df_exp.print();
     creaTabella(db_filtrati);
 }
 
 function create_db_and_filter(array_dati) {
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
+    let cond_base = df["Exp"].eq("");
+    df_exp = df.query(df["Exp"].ne(""));
+    // console.log(prova);
     // df["Titolo"] = df["Titolo"].str.capitalize();
     let cond0 = df["Titolo"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
     let cond1 = (df["Gioc Min"].le(Number(v[1]))
@@ -78,7 +83,7 @@ function create_db_and_filter(array_dati) {
         cond4 = (df["Durata"].eq(v[4][h])).or(cond4);
     }
     // let cond4 = df["Durata"].eq(v[4]).or(v[4] === "");
-    return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4));
+    return [df.query((cond_base).and(cond0).and(cond1).and(cond2).and(cond3).and(cond4)),df_exp];
 
 }
 
@@ -92,6 +97,7 @@ function creaTabella(df) {
 
     dfd.toJSON(df).forEach(function (rowData) {
         let row_div = document.createElement("tr");
+        row_div.className = "norm";
         tablebody.appendChild(row_div);
 
         let main_keys = ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"];
@@ -101,11 +107,73 @@ function creaTabella(df) {
             cell.appendChild(document.createTextNode(rowData[key]));
         });
 
+        if (rowData["Titolo"] === "13 indizi") {
+            row_ex = document.createElement("tr")
+            tablebody.appendChild(row_ex);
+            // row_ex.className = "exp";
+
+            td_ex = document.createElement("td");
+            td_ex.style.padding = "0 2em";
+            row_ex.appendChild(td_ex);
+            td_ex.colSpan = 6;
+
+            cell_ex = document.createElement("div");
+            cell_ex.className = "with-expansions";
+            td_ex.appendChild(cell_ex);
+
+            cell_ex.appendChild(document.createTextNode("Catan è un gioco da tavolo di strategia ambientato sull'isola " +
+                "di Catan. I giocatori raccolgono risorse e le scambiano con gli altri giocatori per costruire strade, città e insediamenti. " +
+                "Il primo giocatore a raggiungere un certo numero di punti vince il gioco." +
+                "" +
+                "Catan è un gioco da tavolo di strategia ambientato sull'isola " +
+                "di Catan. I giocatori raccolgono risorse e le scambiano con gli altri giocatori per costruire strade, città e insediamenti. " +
+                "Il primo giocatore a raggiungere un certo numero di punti vince il gioco."))
+            // addInfoRow(rowData);
+            let exp_height = "120px";
+            row_div.addEventListener("click", function()
+            {
+                cell_ex.style.height = exp_height;
+                cell_ex.style.margin = "2em";}
+            );
+        }
+
         row_div.addEventListener("click", function()
         {
-            openNav("info_out");
-//            let info_out = document.getElementById("info_out");
-//            info_out.className = "show info_out"
+            informationOnTheRight(info_out, rowData);}
+        );
+    });
+}
+
+function addInfoRow(rowData) {
+    // Create a new row for additional info
+    let infoRow = document.createElement("tr");
+    infoRow.className = "info-row"; // Add a class for styling
+
+    // Create a cell that spans all columns
+    let infoCell = document.createElement("td");
+    infoCell.colSpan = 6; // Adjust the number based on your table columns
+    infoCell.textContent = "Additional info: " + rowData["Titolo"] + " is a great game!"; // Example content
+
+    // Append the cell to the new row
+    infoRow.appendChild(infoCell);
+
+    // Insert the new row after the current row
+    this.parentNode.insertBefore(infoRow, this.nextSibling);
+}
+
+
+function openNav(div_id) {
+  document.getElementById(div_id).style.width = "clamp(250px, 30vw, 2000px)";
+}
+
+function closeNav(div_id) {
+  document.getElementById(div_id).style.width = "0";
+}
+
+function informationOnTheRight(info_out, rowData) {
+    openNav("info_out");
+    //            let info_out = document.getElementById("info_out");
+    //            info_out.className = "show info_out"
 
             info_out.removeChild(document.getElementById("info_in"));
 
@@ -127,18 +195,7 @@ function creaTabella(df) {
             info_in.appendChild(pp);
             pp.textContent = "Giocatori: da " + rowData["Gioc Min"]+" a "+rowData["Gioc Max"];
 
-            info_in.appendChild(document.createTextNode(rowData["Competizione"]));
-        });
-    });
-}
-
-function openNav(div_id) {
-  document.getElementById(div_id).style.width = "clamp(250px, 30vw, 2000px)";
-}
-
-function closeNav(div_id) {
-  document.getElementById(div_id).style.width = "0";
-}
+            info_in.appendChild(document.createTextNode(rowData["Competizione"]));}
 
 function gioele() {
     const lista = [
