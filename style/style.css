@@ -269,7 +269,7 @@ a li {
 
 
 #info_in {
-    margin: 3em
+    margin: 2em;
 }
 
 
@@ -400,4 +400,16 @@ tbody tr.norm:hover td {
 }
 
 
-
+/*GRIGLIA*/
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    padding: 0;
+    margin-top: 2em;
+}
+.grid:nth-child(even) p{
+    background-color: red;
+    color: blue;
+    text-align: right;
+}

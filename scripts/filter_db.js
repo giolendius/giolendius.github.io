@@ -27,26 +27,28 @@ function listen_filter_show(dati) {
     let s_collab = document.getElementById("s_collab");
     let s_complex = document.getElementById("s_complex");
     let s_time = document.getElementById("s_time");
-    [dati_filtrati, ciao] = create_db_and_filter(dati);
-    creaTabella(dati_filtrati)
+    [df, df_exp] = create_db(dati);
+    df_filtrato = filter_db(df);
+    creaTabella(df_filtrato)
+
     s_game_name.addEventListener("input", function () {
-        listener(s_game_name, 0, dati)
+        listener(s_game_name, 0, df)
     });
     s_players.addEventListener("input", function () {
-        listener(s_players, 1, dati)
+        listener(s_players, 1, df)
     });
     s_collab.addEventListener("input", function () {
-        listener(s_collab, 2, dati)
+        listener(s_collab, 2, df)
     });
     s_complex.addEventListener("input", function () {
-        listener(s_complex, 3, dati, true)
+        listener(s_complex, 3, df, true)
     });
     s_time.addEventListener("input", function () {
-        listener(s_time, 4, dati, true)
+        listener(s_time, 4, df, true)
     });
 }
 
-function listener(input, i, dati, vector_inside = false) {
+function listener(input, i, df, vector_inside = false) {
     if (vector_inside) {
         tmp = [];
         for (let j = 0; j < input.selectedOptions.length; j++) {
@@ -57,18 +59,31 @@ function listener(input, i, dati, vector_inside = false) {
         tmp = input.value
     }
     v[i] = tmp;
-    [db_filtrati, df_exp] = create_db_and_filter(dati);
+    df_filtrato = filter_db(df);
     console.log("printiamo");
-    df_exp.print();
-    creaTabella(db_filtrati);
+    creaTabella(df_filtrato);
 }
 
-function create_db_and_filter(array_dati) {
+function create_db(array_dati) {
+
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
     let cond_base = df["Exp"].eq("");
     df_exp = df.query(df["Exp"].ne(""));
-    // console.log(prova);
-    // df["Titolo"] = df["Titolo"].str.capitalize();
+    let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(0));
+    df.addColumn("NumeroEspansioni", zeroSeries, {inplace:true});
+    NumeroEspansioniIndex = df.columns.indexOf("NumeroEspansioni");
+    df_exp["Exp"].values.forEach(function(nome) {
+        vanilla_index = df.loc({rows: df["Titolo"].eq(nome)}).index[0];
+        if (vanilla_index) {
+            df.values[vanilla_index][NumeroEspansioniIndex] = df.values[vanilla_index][NumeroEspansioniIndex] + 1;
+        } else {
+            console.log("Problema nelle espansioni di " + nome)
+        }
+    });
+    return [df, df_exp]
+}
+
+function filter_db(df) {
     let cond0 = df["Titolo"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
     let cond1 = (df["Gioc Min"].le(Number(v[1]))
         .and(df["Gioc Max"].ge(Number(v[1]))))
@@ -83,7 +98,7 @@ function create_db_and_filter(array_dati) {
         cond4 = (df["Durata"].eq(v[4][h])).or(cond4);
     }
     // let cond4 = df["Durata"].eq(v[4]).or(v[4] === "");
-    return [df.query((cond_base).and(cond0).and(cond1).and(cond2).and(cond3).and(cond4)),df_exp];
+    return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4));
 
 }
 
@@ -107,7 +122,9 @@ function creaTabella(df) {
             cell.appendChild(document.createTextNode(rowData[key]));
         });
 
-        if (rowData["Titolo"] === "13 indizi") {
+        // CREATE EXPANSION
+        if (rowData["NumeroEspansioni"] >0) {
+            tablebody.appendChild(document.createElement("tr"));
             row_ex = document.createElement("tr")
             tablebody.appendChild(row_ex);
             // row_ex.className = "exp";
@@ -172,30 +189,42 @@ function closeNav(div_id) {
 
 function informationOnTheRight(info_out, rowData) {
     openNav("info_out");
-    //            let info_out = document.getElementById("info_out");
-    //            info_out.className = "show info_out"
 
-            info_out.removeChild(document.getElementById("info_in"));
+    info_out.removeChild(document.getElementById("info_in"));
 
-            let info_in = document.createElement("div");
-            info_in.id = "info_in";
-            info_out.appendChild(info_in);
+    let info_in = document.createElement("div");
+    info_in.id = "info_in";
+    info_out.appendChild(info_in);
 
-            let a = document.createElement("a");
-            info_in.appendChild(a);
-            a.href="javascript:closeNav('info_out')";
-            a.className="closebtn";
-            a.textContent="\u{279c}";
+    let a = document.createElement("a");
+    info_in.appendChild(a);
+    a.href = "javascript:closeNav('info_out')";
+    a.className = "closebtn";
+    a.textContent = "\u{279c}";
 
-            let h1=document.createElement("h1");
-            info_in.appendChild(h1);
-            h1.textContent = rowData["Titolo"];
+    let h1 = document.createElement("h4");
+    info_in.appendChild(h1);
+    h1.textContent = rowData["Titolo"];
 
-            let pp=document.createElement("p");
-            info_in.appendChild(pp);
-            pp.textContent = "Giocatori: da " + rowData["Gioc Min"]+" a "+rowData["Gioc Max"];
+    let grid = document.createElement("div");
+    grid.className = "grid";
+    info_in.appendChild(grid);
 
-            info_in.appendChild(document.createTextNode(rowData["Competizione"]));}
+    crea_container("p", grid, "Giocatori: ");
+    crea_container("p", grid, rowData["Gioc Min"] + " - "+ rowData["Gioc Max"]);
+
+    crea_container("p", grid, "Competizione: ");
+    crea_container("p", grid, rowData["Competizione"]);
+
+    crea_container("p", grid, "Anno: ");
+    crea_container("p", grid, rowData["Anno"]);
+
+    crea_container("p", grid, "Autori: ");
+    crea_container("p", grid, rowData["Autori"]);
+
+    crea_container("p", grid, "Casa Editrice: ");
+    crea_container("p", grid, rowData["Casa Editrice"]);
+}
 
 function gioele() {
     const lista = [
@@ -222,3 +251,10 @@ function gioele() {
 }
 
 
+
+
+function crea_container(tipo, padre, contenutotestuale) {
+    let elem = document.createElement(tipo);
+    padre.appendChild(elem);
+    elem.textContent = contenutotestuale;
+}
