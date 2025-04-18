@@ -1,46 +1,47 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
     <title>Cerca Giochi</title>
-    <link rel="stylesheet" href="../style/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" href="../style/style.css">
+    <!--    <link rel="stylesheet" href="../style/style.css">-->
+    <link rel="stylesheet" href="../style/new_style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
 </head>
-<body>
-<header>
-    <section>
-        <img id="meeple" src="../img/3d-meeple-svgrepo-com.svg">
-        <h3>Great Gallo Games</h3>
-    </section>
-</header>
 
-<nav class="sticktotop">
-    <ul>
-        <a href="../index.html">            <li>Home</li></a>
-        <a href="table.html">            <li>Cerca un gioco</li></a>
-        <a href="modify_source.html">            <li>Contribuisci</li></a>
-        <!--        <a href="esercizio.html">            <li>Esercizio</li></a>-->
-        <!--        <a href="learn.html">            <li>Learn</li></a>-->
-    </ul>
+
+<!--BODY-->
+<body class="bg-[#121212] text-[#e1e1e1] min-h-screen">
+<header class="bg-[#1e2d24] py-6 px-4 flex justify-between items-center border-b border-[#2d3e33]">
+    <img id="meeple" src="../img/3d-meeple-svgrepo-com.svg" class="w-12">
+    <h1 class="text-4xl font-bold text-[#b7e4c7]">Great Gallo Games</h1>
+</header>
+<!--NAVIGATION-->
+<nav class="bg-[#1b2a21] border-b border-[#2d3e33] px-6 py-3 flex space-x-6 text-[#d8f3dc] text-lg font-medium">
+    <a href="../index.html"> Home</a>
+    <a href="table.html"> Cerca un gioco</a>
+    <a href="modify_source.html"> Contribuisci</a>
 </nav>
 
 
-<main>
-    <section style="align-items:flex-start">
-<!--        Filter side bar-->
-        <article id="filters" class="scroll fullhight blu" style="flex: 0 20%; position: relative">
-            <div style=" right: 0; top: 8.5px; text-align: right; padding: 0 10%">
-                    <a href="javascript:closeFilters()" class="closebtn flip">
-                        &#10140</a></div>
-            <div class="space-evenly"><section class="vert" style="width:80%;">
-                <article><label for="s_game_name">Select name:</label><input type="text" id="s_game_name" placeholder="Filtra per nome"></article>
-                <article><label for="s_players">Numero di giocatori</label>
-                    <select id="s_players" style="width: auto">
+<!--MAIN PAGE START-->
+<div class="bg-black flex md:flex-row flex-col transition-all duration-300">
+<!--SIDEBAR-->
+    <aside id="sidebarWrapper"
+         class="sidebar md:w-64 w-full p-6 transition-all duration-300 z-10">
+
+        <div class="flex flex-col md:block md:space-y-6 space-y-0 space-x-4 md:space-x-0 md:mb-0 mb-4 md:text-left text-center">
+            <div class="mt-12 mb-4">
+                <label for="s_game_name" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Cerca per nome..</label>
+                <input id="s_game_name" type="text" placeholder="Cerca..."
+                       class="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]"/>
+            </div>
+            <div class="mb-4">
+                <label for="s_players" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Numero di giocatori</label>
+                <select id="s_players" class="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
                     <option value=""></option>
                     <option value=1>1</option>
                     <option value=2>2</option>
@@ -55,99 +56,120 @@
                     <option value=12>12</option>
                     <option value=14>14</option>
                     <option value=16>16+</option>
-                    </select>
-<!--                    <button>CCC</button>-->
-                </article>
-                <article>
-                    <label for="s_collab">Cooperazione: </label>
-                    <select id="s_collab" value="cooperativo">
+                </select>
+            </div>
+            <!--                    <button>CCC</button>-->
+
+            <div class="mb-4">
+                <label for="s_collab" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Cooperazione: </label>
+                <select id="s_collab" value="cooperativo" class="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
                     <option value="" selected></option>
                     <option value="cooperativo">COOPerativo</option>
                     <option value="competitivo">Tutti contro Tutti</option>
                     <option value="a squadre">A Squadre</option>
-                    </select>
-                </article>
+                </select>
+            </div>
 
-                <article>
-                    <label for="s_complex">Complessità:</label>
-                    <select multiple id="s_complex">
-                    <option value=""></option>
+            <div class="mb-4 ">
+                <label for="s_complex" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Complessità:</label>
+                <select multiple id="s_complex" class=" h-[11em] w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
+                    <option value="">Qualunque</option>
                     <option value="Facilissimo">Facilissimo</option>
                     <option value="Facile">Facile</option>
                     <option value="Medio">Medio</option>
                     <option value="Difficile">Difficile</option>
                     <option value="Molto complesso">Molto Complesso</option>
-                    </select>
-                </article>
-                <article>
-                    <label for="s_time">Durata: </label>
-                    <select multiple id="s_time">
-                        <option value=""></option>
-                        <option value="Molto breve">Molto breve</option>
-                        <option value="Breve">Breve</option>
-                        <option value="Medio">Medio</option>
-                        <option value="Lungo">Lungo</option>
-                        <option value="Molto lungo">Molto lungo</option>
-                    </select>
-                </article>
-                <article>
-                    <label for="s_new_select">New Select:</label>
-                    <div id="s_new_select" class="checkbox-select">
-                        <label><input type="checkbox" value="Option 1"> Option 1</label>
-                        <label><input type="checkbox" value="Option 2"> Option 2</label>
-<!--                        <label><input type="checkbox" value="Option 3"> Option 3</label>-->
-<!--                        <label><input type="checkbox" value="Option 4"> Option 4</label>-->
-                    </div>
-                </article>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="s_time" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Durata: </label>
+                <select multiple id="s_time"
+                        class="h-[11em] w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2] custom-scroll">
+                    <option value="">Qualunque</option>
+                    <option value="Molto breve">Molto breve</option>
+                    <option value="Breve">Breve</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Lungo">Lungo</option>
+                    <option value="Molto lungo">Molto lungo</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="s_new_select" class="block mb-1 text-sm font-medium text-[#b7e4c7]">New Select:</label>
+                <div id="s_new_select" class="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244]
+                focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
+                    <label><input type="checkbox" value="Option 1"> Option 1</label>
+                    <label><input type="checkbox" value="Option 2"> Option 2</label>
+                    <!--                        <label><input type="checkbox" value="Option 3"> Option 3</label>-->
+                    <!--                        <label><input type="checkbox" value="Option 4"> Option 4</label>-->
+                </div>
+            </div>
 
-                <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem dolores exercitationem incidunt praesentium. Atque consequuntur deleniti eius et ex laudantium modi nesciunt nisi nostrum possimus, praesentium provident reprehenderit, sit velit.-->
-                <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda dignissimos eos illo ipsum, molestiae natus necessitatibus nihil non repellendus voluptates!</p>-->
-                <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cum fugiat impedit molestias mollitia nam quisquam? Aspernatur autem consectetur, earum et iusto maiores nemo obcaecati officiis, pariatur quod rem repellat repellendus repudiandae sit ullam veniam, vitae? A ab assumenda at, aut dolorem doloribus eius id in ipsum quas. Adipisci alias aliquid aperiam consectetur cum delectus dolorum eaque eius eos est et ex expedita explicabo fugit incidunt, iste itaque labore laboriosam magni maxime mollitia nemo nostrum odit officiis pariatur quaerat quis quos repellendus rerum sapiente sed similique sunt totam unde velit voluptates voluptatibus. Atque consequatur hic incidunt laboriosam, quidem veniam voluptatibus.</p>-->
+            <div class="mb-4">
+                <div id="collab-options" class="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] space-y-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" value="cooperativo"/>
+                        <span>Cooperativo</span>
+                    </label>
 
-            </section>
-             </div>
-        </article>
-<!--        BUTTON vert line-->
-        <article id="btnOpenFilters" class="blu fullhight" style="flex: 0 0; direction: rtl">
-            <a  href="javascript:openFilters()" class="closebtn">  &#10140 </a>
-        </article>
-<!--        table-->
-        <article id="divtable" class="fullhight" style="flex: 5;">
-            <section class="title scroll">
-                <h1>
-                     Ricerca dei giochi
-                </h1>
-            <table id="tabella_giochi">
-                <!--            <thead>-->
-                <!--                <th></th>-->
-                <!--                <th colspan="2"></th>-->
-                <!--                &lt;!&ndash;                    "multiple" permette di far scegliere più opzioni&ndash;&gt;-->
-                <!--                <th></th>-->
-                <!--                <th></th>-->
-                <!--                <th></th>-->
-                <!--&lt;!&ndash;            </tr>&ndash;&gt;-->
-                <!--            </thead>-->
-                <tbody id="tbody_giochi"></tbody>
-            </table>
-            </section>
-        </article>
-        <article class="info_out" id="info_out">
-            <div id="info_in">Ciao amigos!</div>
-        </article>
-    </section>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" value="competitivo"
+                               class="accent-[#95d5b2] bg-[#2d3e33] border border-[#3a5244] rounded focus:ring-2 focus:ring-[#95d5b2]"/>
+                        <span>Competitivo</span>
+                    </label>
 
-<!--    <div class="m-5 evenly">-->
-<!--        <div></div>-->
-<!--    </div>-->
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" value="solitario"
+                               class="accent-[#95d5b2] bg-[#2d3e33] border border-[#3a5244] rounded focus:ring-2 focus:ring-[#95d5b2]"/>
+                        <span>Solitario</span>
+                    </label>
+                </div>
+            </div>
+
+            <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem dolores exercitationem incidunt praesentium. Atque consequuntur deleniti eius et ex laudantium modi nesciunt nisi nostrum possimus, praesentium provident reprehenderit, sit velit.-->
+            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda dignissimos eos illo ipsum, molestiae natus necessitatibus nihil non repellendus voluptates!</p>-->
+            <!--                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cum fugiat impedit molestias mollitia nam quisquam? Aspernatur autem consectetur, earum et iusto maiores nemo obcaecati officiis, pariatur quod rem repellat repellendus repudiandae sit ullam veniam, vitae? A ab assumenda at, aut dolorem doloribus eius id in ipsum quas. Adipisci alias aliquid aperiam consectetur cum delectus dolorum eaque eius eos est et ex expedita explicabo fugit incidunt, iste itaque labore laboriosam magni maxime mollitia nemo nostrum odit officiis pariatur quaerat quis quos repellendus rerum sapiente sed similique sunt totam unde velit voluptates voluptatibus. Atque consequatur hic incidunt laboriosam, quidem veniam voluptatibus.</p>-->
+        </div>
+        </aside>
+        <button id="sidebar-toggle" onclick="toggleSidebar()"
+                class="absolute top-4 left-60 z-20 p-3 bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r">
+            ➤
+        </button>
+    </aside>
 
 
-</main>
+    <main id="mainContent" class="main flex-1 p-20 transition-all duration-300">
+        <h1 class="m-12 text-4xl font-bold text-[#b7e4c7]"> Ricerca dei giochi </h1>
+         <!--TABLE-->
+        <div class="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
+                    <table id="tabella_giochi" class="min-w-full table-auto">
+<!--                        <thead class="bg-[#2a3c30] text-[#b7e4c7]">-->
+<!--                        <tr>-->
+<!--                            <th class="text-left px-6 py-4">Game</th>-->
+<!--                            <th class="text-left px-6 py-4">Min</th>-->
+<!--                            <th class="text-left px-6 py-4">Max</th>-->
+<!--                            <th class="text-left px-6 py-4">Competizione</th>-->
+<!--                            <th class="text-left px-6 py-4">Difficoltà</th>-->
+<!--                            <th class="text-left px-6 py-4">Tempo</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+                        <tbody id="tbody_giochi" class="text-[#e1e1e1]"></tbody>
+                    </table>
+        </div>
+    </main>
+</div>
+
 <footer>
     <p>La <a href="table.html">tabella dei giochi</a>
     </p>
+    <p>lorem ipsum sit dolor</p>
     <h4><a href="#">Torna su</a></h4>
 </footer>
 </body>
+
+
+
+
+
 <script src="../scripts/filter_db.js"></script>
 <script src="../scripts/sidebar.js"></script>
 </html>
