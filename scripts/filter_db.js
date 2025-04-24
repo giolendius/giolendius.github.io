@@ -29,7 +29,7 @@ function listen_filter_show(dati) {
     let s_time = document.getElementById("s_time");
     [df, df_exp] = create_db(dati);
     df_filtrato = filter_db(df);
-    creaTabella(df_filtrato)
+    creaTabella(df_filtrato, df_exp);
 
     s_game_name.addEventListener("input", function () {
         listener(s_game_name, 0, df)
@@ -61,7 +61,7 @@ function listener(input, i, df, vector_inside = false) {
     v[i] = tmp;
     df_filtrato = filter_db(df);
     console.log("printiamo");
-    creaTabella(df_filtrato);
+    creaTabella(df_filtrato, df_filtrato);
 }
 
 function create_db(array_dati) {
@@ -101,160 +101,163 @@ function filter_db(df) {
     return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4));
 
 }
+function showInfoModal(item) {
 
-function creaTabella(df) {
+  document.getElementById('modalTitle').innerText = item.Titolo;
+  document.getElementById('modalContent').innerText = item.Difficoltà;
+  document.getElementById('infoModal').classList.remove('hidden');
+}
+
+// Hide modal
+function closeInfoModal() {
+  document.getElementById('infoModal').classList.add('hidden');
+}
+
+function creaTabella(df, df_exp) {
     tabella_giochi.removeChild(document.getElementById("tbody_giochi"));
 
     let tablebody = document.createElement("tbody");
     tablebody.id = "tbody_giochi";
     tabella_giochi.appendChild(tablebody);
-    let array = df.loc({columns: ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"]}).values;
+    // let array = df.loc({columns: ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"]}).values;
 
-    dfd.toJSON(df).forEach(function (rowData) {
+    dfd.toJSON(df).forEach((rowData, index)=> {
         let row_div = document.createElement("tr");
-        row_div.className = "norm";
+        const bgClass = index % 2 === 0 ? "bg-[#253b2f]" : "bg-[#1f3127]";
+        row_div.className = `${bgClass} cursor-pointer hover:bg-[#36543f] transition-colors`;
         tablebody.appendChild(row_div);
 
-        let main_keys = ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"];
-        main_keys.forEach(function (key) {
-            let cell = document.createElement("td");
-            row_div.appendChild(cell);
-            cell.appendChild(document.createTextNode(rowData[key]));
-        });
+        row_div.innerHTML = `
+            <td class="px-4 py-2 flex items-center gap-3">
+            <div class="w-12"><img src="${rowData.LinkImmagine}" class="h-12 rounded shadow"/></div>
+            </td>
+            <td class="text-center px-4 py-3">
+              <span class="font-semibold px-2">${rowData.Titolo}</span>
+            </td>
+            <td class="text-center py-3">${rowData["Gioc Min"]}</td>
+            <td class="text-center py-3">${rowData["Gioc Max"]}</td>
+            <td class="text-center px-2 py-3">${rowData.Competizione}</td>
+            <td class="text-center px-2 py-3">${rowData.Difficoltà}</td>
+<!--            <td class="text-center px-4 py-3"">${rowData.Durata}</td>-->
+<!--            <td class="text-center px-2 py-3"><button class="text-xl" onclick=showInfoModal()>?!</button></td>-->
+          `;
+        const tdbutton = document.createElement('td');
+        tdbutton.className = 'text-center px-2 py-3';
+        row_div.appendChild(tdbutton);
+        const btn = document.createElement('button');
+        btn.className = 'text-xl';
+        btn.innerText = '!?';
+        btn.addEventListener('click', () => showInfoModal(rowData));
+        tdbutton.appendChild(btn);
+
 
         // CREATE EXPANSION
         if (rowData["NumeroEspansioni"] >0) {
-            tablebody.appendChild(document.createElement("tr"));
-            row_ex = document.createElement("tr")
-            tablebody.appendChild(row_ex);
-            // row_ex.className = "exp";
+            const firstCell = row_div.querySelectorAll("td")[1];
+            firstCell.innerHTML = `<span class="text-300 text-xl mr-4">⭐</span>${firstCell.textContent}`;
+            let exp_array = dfd.toJSON(df_exp.loc({rows: df_exp["Exp"].eq(rowData.Titolo)}));
+            row_div.addEventListener("click", () => {
+                row_div.classList.toggle("active");
+                let nextRow = row_div.nextElementSibling;
+                while (nextRow && nextRow.classList.contains("row-details")) {
+                    nextRow.style.display = nextRow.style.display === "table-row" ? "none" : "table-row";
+                    nextRow = nextRow.nextElementSibling;
+                }
+            });
 
-            td_ex = document.createElement("td");
-            td_ex.style.padding = "0 2em";
-            row_ex.appendChild(td_ex);
-            td_ex.colSpan = 6;
+            exp_array.forEach((exp) => {
+                let ExpansionRow = document.createElement("tr");
+                ExpansionRow.style.display='none';
+                ExpansionRow.className = "row-details bg-[#2d3e33]";
+                ExpansionRow.innerHTML = `
+                <td colspan="7" class="px-6 py-4 text-[#d8f3dc]">
+                  <strong>Expansion:</strong> ${exp.Exp} — <strong>Title:</strong> ${exp.Titolo}
+                </td>
+              `;
+                tablebody.appendChild(ExpansionRow);
+            });
 
-            cell_ex = document.createElement("div");
-            cell_ex.className = "with-expansions";
-            td_ex.appendChild(cell_ex);
-
-            cell_ex.appendChild(document.createTextNode("Catan è un gioco da tavolo di strategia ambientato sull'isola " +
-                "di Catan. I giocatori raccolgono risorse e le scambiano con gli altri giocatori per costruire strade, città e insediamenti. " +
-                "Il primo giocatore a raggiungere un certo numero di punti vince il gioco." +
-                "" +
-                "Catan è un gioco da tavolo di strategia ambientato sull'isola " +
-                "di Catan. I giocatori raccolgono risorse e le scambiano con gli altri giocatori per costruire strade, città e insediamenti. " +
-                "Il primo giocatore a raggiungere un certo numero di punti vince il gioco."))
-            // addInfoRow(rowData);
-            let exp_height = "120px";
-            row_div.addEventListener("click", function()
-            {
-                cell_ex.style.height = exp_height;
-                cell_ex.style.margin = "2em";}
-            );
         }
-
-        row_div.addEventListener("click", function()
-        {
-            informationOnTheRight(info_out, rowData);}
-        );
     });
 }
 
-function addInfoRow(rowData) {
-    // Create a new row for additional info
-    let infoRow = document.createElement("tr");
-    infoRow.className = "info-row"; // Add a class for styling
-
-    // Create a cell that spans all columns
-    let infoCell = document.createElement("td");
-    infoCell.colSpan = 6; // Adjust the number based on your table columns
-    infoCell.textContent = "Additional info: " + rowData["Titolo"] + " is a great game!"; // Example content
-
-    // Append the cell to the new row
-    infoRow.appendChild(infoCell);
-
-    // Insert the new row after the current row
-    this.parentNode.insertBefore(infoRow, this.nextSibling);
-}
-
-
-function openNav(div_id) {
-  document.getElementById(div_id).style.width = "clamp(250px, 30vw, 2000px)";
-}
-
-function closeNav(div_id) {
-  document.getElementById(div_id).style.width = "0";
-}
-
-function informationOnTheRight(info_out, rowData) {
-    openNav("info_out");
-
-    info_out.removeChild(document.getElementById("info_in"));
-
-    let info_in = document.createElement("div");
-    info_in.id = "info_in";
-    info_out.appendChild(info_in);
-
-    let a = document.createElement("a");
-    info_in.appendChild(a);
-    a.href = "javascript:closeNav('info_out')";
-    a.className = "closebtn";
-    a.textContent = "\u{279c}";
-
-    let h1 = document.createElement("h4");
-    info_in.appendChild(h1);
-    h1.textContent = rowData["Titolo"];
-
-    let grid = document.createElement("div");
-    grid.className = "grid";
-    info_in.appendChild(grid);
-
-    crea_container("p", grid, "Giocatori: ");
-    crea_container("p", grid, rowData["Gioc Min"] + " - "+ rowData["Gioc Max"]);
-
-    crea_container("p", grid, "Competizione: ");
-    crea_container("p", grid, rowData["Competizione"]);
-
-    crea_container("p", grid, "Anno: ");
-    crea_container("p", grid, rowData["Anno"]);
-
-    crea_container("p", grid, "Autori: ");
-    crea_container("p", grid, rowData["Autori"]);
-
-    crea_container("p", grid, "Casa Editrice: ");
-    crea_container("p", grid, rowData["Casa Editrice"]);
-}
-
-function gioele() {
-    const lista = [
-        ["Catan", "comp", "1-4"],
-        ["Spirit", "coop", "1-4"],
-        ["Monopoly", "comp", "2-6"],
-        ["Uno", "comp", "2-10"],
-        ["Scrabble", "comp", "2-4"],
-        ["Dixit", "comp", "3-6"],
-        ["Dobble", "comp", "2-8"],
-        ["Risiko", "comp", "2-6"],
-        ["Cluedo", "comp", "3-6"],
-        ["Taboo", "comp", "4-10"],
-        ["Bang", "comp", "4-7"],
-        ["Munchkin", "comp", "3-6"],
-        ["Carcassonne", "comp", "2-5"],
-        ["Dobble", "comp", "2-8"],
-        ["Risiko", "comp", "2-6"],
-        ["Cluedo", "comp", "3-6"],
-        ["Taboo", "comp", "4-10"],
-        ["Hanabi", "coop", "1-5"]
-    ];
-    return lista
-}
 
 
 
 
-function crea_container(tipo, padre, contenutotestuale) {
-    let elem = document.createElement(tipo);
-    padre.appendChild(elem);
-    elem.textContent = contenutotestuale;
-}
+// THIS IS OLD PLEASE DELETE
+//
+// function addInfoRow(rowData) {
+//     // Create a new row for additional info
+//     let infoRow = document.createElement("tr");
+//     infoRow.className = "info-row"; // Add a class for styling
+//
+//     // Create a cell that spans all columns
+//     let infoCell = document.createElement("td");
+//     infoCell.colSpan = 6; // Adjust the number based on your table columns
+//     infoCell.textContent = "Additional info: " + rowData["Titolo"] + " is a great game!"; // Example content
+//
+//     // Append the cell to the new row
+//     infoRow.appendChild(infoCell);
+//
+//     // Insert the new row after the current row
+//     this.parentNode.insertBefore(infoRow, this.nextSibling);
+// }
+//
+//
+// function openNav(div_id) {
+//   document.getElementById(div_id).style.width = "clamp(250px, 30vw, 2000px)";
+// }
+//
+// function closeNav(div_id) {
+//   document.getElementById(div_id).style.width = "0";
+// }
+//
+// function informationOnTheRight(info_out, rowData) {
+//     openNav("info_out");
+//
+//     info_out.removeChild(document.getElementById("info_in"));
+//
+//     let info_in = document.createElement("div");
+//     info_in.id = "info_in";
+//     info_out.appendChild(info_in);
+//
+//     let a = document.createElement("a");
+//     info_in.appendChild(a);
+//     a.href = "javascript:closeNav('info_out')";
+//     a.className = "closebtn";
+//     a.textContent = "\u{279c}";
+//
+//     let h1 = document.createElement("h4");
+//     info_in.appendChild(h1);
+//     h1.textContent = rowData["Titolo"];
+//
+//     let grid = document.createElement("div");
+//     grid.className = "grid";
+//     info_in.appendChild(grid);
+//
+//     crea_container("p", grid, "Giocatori: ");
+//     crea_container("p", grid, rowData["Gioc Min"] + " - "+ rowData["Gioc Max"]);
+//
+//     crea_container("p", grid, "Competizione: ");
+//     crea_container("p", grid, rowData["Competizione"]);
+//
+//     crea_container("p", grid, "Anno: ");
+//     crea_container("p", grid, rowData["Anno"]);
+//
+//     crea_container("p", grid, "Autori: ");
+//     crea_container("p", grid, rowData["Autori"]);
+//
+//     crea_container("p", grid, "Casa Editrice: ");
+//     crea_container("p", grid, rowData["Casa Editrice"]);
+// }
+//
+//
+//
+//
+// function crea_container(tipo, padre, contenutotestuale) {
+//     let elem = document.createElement(tipo);
+//     padre.appendChild(elem);
+//     elem.textContent = contenutotestuale;
+// }
+//
