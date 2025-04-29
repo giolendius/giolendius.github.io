@@ -7,27 +7,29 @@
     <title>Learn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../config/constants.js"></script>
-<style>
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: pink;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
-  z-index: 1;
-}
+<!--<style>-->
+<!--.dropdown-content {-->
+<!--  display: none;-->
+<!--  position: absolute;-->
+<!--  background-color: pink;-->
+<!--  min-width: 160px;-->
+<!--  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);-->
+<!--  padding: 12px 16px;-->
+<!--  z-index: 1;-->
+<!--}-->
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+<!--.dropdown:hover .dropdown-content {-->
+<!--  display: block;-->
+<!--}-->
 
 
-</style>
+<!--</style>-->
+    <link rel="stylesheet" href="../style/style.css">
+
 </head>
 
 <body>
-
+<main>
 <div class="dropdown">
   <span>Mouse over me</span>
   <div class="dropdown-content">
@@ -50,15 +52,15 @@
 
 <br>
 <aside>Proviamo questo aside</aside>
-<section>
-    <h1>Prova Slideshow</h1>
-    <h1 class="mySlides"> 5 </h1>
-    <h1 class="mySlides"> 4 </h1>
-    <h1 class="mySlides"> 3 </h1>
-    <h1 class="mySlides"> 2 </h1>
-    <h1 class="mySlides"> 1 </h1>
-    <h1> Sa contare </h1>
-</section>
+
+<h1>Prova Slideshow</h1>
+<h1 class="mySlides"> 5 </h1>
+<h1 class="mySlides"> 4 </h1>
+<h1 class="mySlides"> 3 </h1>
+<h1 class="mySlides"> 2 </h1>
+<h1 class="mySlides"> 1 </h1>
+<h1> Sa contare </h1>
+
 <script src="../scripts/counter.js"></script>
 
 <div><h1> Gioele adora sperimentare e prova selettore di auto</h1>
@@ -79,6 +81,31 @@
         input.value = value;
     })
 </script>
+</div>
+
+<div style="position: relative; width: 80%">
+    <table>
+        <tbody>
+        <tr class="norm">
+            <td>1</td>
+            <td>secondo</td>
+            <td>altro</td>
+            <td>ancora</td>
+        </tr>
+        <tr class="norm espa">
+            <td colspan="3">prima info bonus<td></tr>
+        <tr class="norm">
+            <td>dopo</td>
+            <td>altre cose</td>
+            <td>nuove</td>
+            <td>2</td>
+        </tr>
+        <tr class="norm">
+            <td><div><p>nuove info bonus</p>
+            <p>ancora più</p></div></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <div id="container" class="flex flex-wrap w-1/2 m-60">
@@ -143,5 +170,6 @@
 
     </script>
 <a href="../index.html">Back to Homepage</a>
+    </main>
 </body>
 </html>

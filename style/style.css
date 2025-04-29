@@ -44,17 +44,9 @@ header, footer {
     align-items: center;
 }
 
-a {
-    color: unset;
-}
-
-p a {
-    color: var(--c-contrasto2);
-}
-
 main {
+    position: relative;
     color: white;
-    padding: 4em 10%;
     background-color: var(--c-scuro1);
 }
 
@@ -63,19 +55,34 @@ section {
     flex-flow: row wrap;
     align-items: center;
 }
+section.vert {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: normal;
+    /*normal, inherit and initial sembra giustifichino ogni article i flex vert*/
+}
+article {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: 0.7s;
+    /*flex: clamp(500px,2vw,10vw);*/
+}
+.vert article {flex: 0 auto;
+padding: 1em 0;}
 
-
-.didascalia-immagine {
-    margin: 3em 3em;
+a {
+    color: unset;
 }
 
-article {
-        flex: clamp(500px,5vw,1vw);
-      }
+p a {
+    color: var(--c-contrasto2);
+}
+
 
 img {
     width: 100%
-    }
+}
 
 h1 {
     color: var(--c-chiarisssimo1);
@@ -93,38 +100,45 @@ h4 {
     color: var(--c-chiarisssimo1);
 }
 
-/*!*LISTS NAV BAR*!*/
+
+/* BUTTONS*/
 
 button {
-background-color: var(--c-contrasto3);
-border: 50px;
-padding: 1em 2em;
-border-radius:10%;
-cursor: pointer;
-box-shadow: 0 12px 0px 0 black;
-font-family: Merriweather, serif;
-transition: 0.1s;}
+    background-color: var(--c-contrasto3);
+    border: 50px;
+    padding: 1em 2em;
+    border-radius: 10%;
+    cursor: pointer;
+    box-shadow: 0 12px 0px 0 black;
+    font-family: Merriweather, serif;
+    transition: 0.1s;
+}
 
-button:hover {filter: saturate(75%);
-border: red;
-border: 5px;
+button:hover {
+    filter: saturate(75%);
+    border: red;
+    border: 5px;
 }
 
 button:active {
     transform: translateY(6px);
     box-shadow: 0 2px 0px 0 black;
     transition: 0.1s;
-        }
+}
 
-button span{opacity: 1;
-transition: 1s;
-padding-left: -20px}
-button:hover span{opacity: 1;
-    padding: 0px;}
+button span {
+    opacity: 1;
+    transition: 1s;
+    padding-left: -20px
+}
+
+button:hover span {
+    opacity: 1;
+    padding: 0px;
+}
 
 
-
-
+/*!*LISTS NAV BAR*!*/
 
 
 nav {
@@ -141,6 +155,7 @@ li {
     display: inline-block;
     list-style-type: none;
     padding: 20px 30px;
+    width: inherit;
 }
 
 a li {
@@ -152,24 +167,75 @@ a li {
 /*}*/
 
 
+
+
 /*CUSTOM CLASSES*/
 
+.scroll {
+    overflow-y: auto;
+}
+
+.didascalia-immagine {
+    margin: 3em 3em;
+}
+
+.fullhight {
+    height: 100vh;
+}
+
+.blu{
+    background-color: var(--c-contrasto1);
+}
+
+.title {
+    padding: 5em 3em;
+}
+
+.flex-vert {
+    display: flex;
+    flex-flow: column wrap;
+}
 .evenly {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
-.evenly-center {
-    width: 50%;
+.space-evenly {
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
+/*    horizontally, or actually main axis*/
 }
-.split-horiz {
-    justify-content: space-between;}
+.space-between {
+    justify-content: space-between;
+}
 
+.closebtn {
+    text-decoration: none;
+    color: var(--c-contrasto3);
+    font-size: 4em;
+}
 
+.flip {
+    transform: rotate(180deg);
+    display: inline-block;
+}
+
+.strano {
+    position: fixed;
+    background: green;
+    right: 1em;
+    display: none;
+    bottom: 50%;
+}
+
+.attivo button:active .strano {
+    background-color: red;
+}
+
+.attivo:hover .strano {
+    background-color: blue;
+    display: revert;
+}
 
 /*.center {*/
 /*    display: flex;*/
@@ -177,28 +243,41 @@ a li {
 /*}*/
 
 
-.m-5 {
-    margin: 5em 0;
-}
 
-.title {
-    margin: 5em;
-}
-
-.fullsize {
-    padding: 0;
-    width: 100%;
-}
 
 #meeple {
     width: 60px;
     height: 60px
 }
 
+.sticktotop {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
 
+.info_out {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: black;
+}
+
+
+#info_in {
+    margin: 2em;
+}
 
 
 /*SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT SELECT */
+label {
+    display: block;
+    margin-bottom: 0.2em;
+}
 
 select, input {
     background-color: var(--c-chiaro1);
@@ -206,7 +285,7 @@ select, input {
     height: auto;
     font-family: "Merriweather", serif;
     padding: 10px;
-    width: 70%;
+    width: 90%;
     text-align: center;
     color: var(--c-scuro1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
@@ -225,11 +304,10 @@ select option:last-child {
     border-bottom: none;
 }
 
-.prevent-select{
+.prevent-select {
     user-select: none;
-    -ms-user-select: none;}
-
-
+    -ms-user-select: none;
+}
 
 
 /*!* TABELLA TABELLA TABELLA TABELLA TABELLA TABELLA TABELLA TABELLA TABELLA *!*/
@@ -279,13 +357,26 @@ th {
     border-spacing: 5em 0;
 }
 
-tbody tr:nth-child(odd) td {
+tbody tr.norm:nth-child(odd) td {
     background-color: var(--c-chiaro1);
 }
 
-tbody tr:nth-child(even) td {
+tbody tr.norm:nth-child(even) td {
     background-color: var(--c-chiaro2);
 }
+
+
+.with-expansions {
+    background-color: var(--c-contrasto2);
+    overflow: hidden;
+    /*transform: translateY(-1em);*/
+    transition: 3s;
+    height: 0;
+    margin: 0;
+}
+
+.hide td {
+    padding: 0;}
 
 th:last-child, td:last-child {
     border-top-right-radius: var(--table-border-radius);
@@ -299,7 +390,7 @@ th:first-child, td:first-child {
 }
 
 
-tbody tr:hover td {
+tbody tr.norm:hover td {
     /*padding: 35px;*/
     /*height: 110%;*/
     transform: scale3d(1.1, 1.4, 0.1);
@@ -309,4 +400,16 @@ tbody tr:hover td {
 }
 
 
-
+/*GRIGLIA*/
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    padding: 0;
+    margin-top: 2em;
+}
+.grid:nth-child(even) p{
+    background-color: red;
+    color: blue;
+    text-align: right;
+}
