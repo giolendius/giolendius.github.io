@@ -27,24 +27,25 @@ function listen_filter_show(dati) {
     let s_collab = document.getElementById("s_collab");
     let s_complex = document.getElementById("s_complex");
     let s_time = document.getElementById("s_time");
-    [df, df_exp] = create_db(dati);
-    df_filtrato = filter_db(df);
+    [df_base, df_exp] = create_db(dati);
+    // df_filtrato = filter_db(df);
+    df_filtrato = filter_db(df_base);
     creaTabella(df_filtrato, df_exp);
 
     s_game_name.addEventListener("input", function () {
-        listener(s_game_name, 0, df)
+        listener(s_game_name, 0, df_base)
     });
     s_players.addEventListener("input", function () {
-        listener(s_players, 1, df)
+        listener(s_players, 1, df_base)
     });
     s_collab.addEventListener("input", function () {
-        listener(s_collab, 2, df)
+        listener(s_collab, 2, df_base)
     });
     s_complex.addEventListener("input", function () {
-        listener(s_complex, 3, df, true)
+        listener(s_complex, 3, df_base, true)
     });
     s_time.addEventListener("input", function () {
-        listener(s_time, 4, df, true)
+        listener(s_time, 4, df_base, true)
     });
 }
 
@@ -61,13 +62,14 @@ function listener(input, i, df, vector_inside = false) {
     v[i] = tmp;
     df_filtrato = filter_db(df);
     console.log("printiamo");
-    creaTabella(df_filtrato, df_filtrato);
+    creaTabella(df_filtrato, df_exp);
 }
 
 function create_db(array_dati) {
 
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
     let cond_base = df["Exp"].eq("");
+
     df_exp = df.query(df["Exp"].ne(""));
     let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(0));
     df.addColumn("NumeroEspansioni", zeroSeries, {inplace:true});
@@ -80,38 +82,31 @@ function create_db(array_dati) {
             console.log("Problema nelle espansioni di " + nome)
         }
     });
-    return [df, df_exp]
+    let df_base = df.query(df["Exp"].eq("")).resetIndex();
+    return [df_base, df_exp]
 }
 
-function filter_db(df) {
-    let cond0 = df["Titolo"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
-    let cond1 = (df["Gioc Min"].le(Number(v[1]))
-        .and(df["Gioc Max"].ge(Number(v[1]))))
+function filter_db(df1) {
+    let cond0 = df1["Titolo"].str.toLowerCase().str.includes(v[0].toLowerCase()).or("abc" === "");
+    let cond1 = (df1["Gioc Min"].le(Number(v[1]))
+        .and(df1["Gioc Max"].ge(Number(v[1]))))
         .or(v[1] == "");
-    let cond2 = df["Competizione"].str.toLowerCase().str.includes(v[2]).or(v[2] == "");
+    let cond2 = df1["Competizione"].str.toLowerCase().str.includes(v[2]).or(v[2] == "");
     let cond3 = (v[3][0] === "");
     for (let i = 0; i < v[3].length; i++) {
-        cond3 = (df["Difficoltà"].eq(v[3][i])).or(cond3);
+        cond3 = (df1["Difficoltà"].eq(v[3][i])).or(cond3);
     };
     let cond4 =  (v[4][0] === "");
     for (let h = 0; h < v[4].length; h++) {
-        cond4 = (df["Durata"].eq(v[4][h])).or(cond4);
+        cond4 = (df1["Durata"].eq(v[4][h])).or(cond4);
     }
-    // let cond4 = df["Durata"].eq(v[4]).or(v[4] === "");
-    return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4));
+    // let cond4 = df1["Durata"].eq(v[4]).or(v[4] === "");
+    return df1.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4));
 
 }
-function showInfoModal(item) {
 
-  document.getElementById('modalTitle').innerText = item.Titolo;
-  document.getElementById('modalContent').innerText = item.Difficoltà;
-  document.getElementById('infoModal').classList.remove('hidden');
-}
 
-// Hide modal
-function closeInfoModal() {
-  document.getElementById('infoModal').classList.add('hidden');
-}
+
 
 function creaTabella(df, df_exp) {
     tabella_giochi.removeChild(document.getElementById("tbody_giochi"));
@@ -127,26 +122,35 @@ function creaTabella(df, df_exp) {
         row_div.className = `${bgClass} cursor-pointer hover:bg-[#36543f] transition-colors`;
         tablebody.appendChild(row_div);
 
-        row_div.innerHTML = `
-            <td class="px-4 py-2 flex items-center gap-3">
-            <div class="w-12"><img src="${rowData.LinkImmagine}" class="h-12 rounded shadow"/></div>
+
+        innerHTMLst = `
+            <td class="px-2 md:px-4 py-2 flex items-center gap-3">
+                <div class="w-12"><img src="${rowData.LinkImmagine}" class="h-12 rounded shadow"/></div>
             </td>
-            <td class="text-center px-4 py-3">
+            <td class="text-center md:px-4 py-3">
               <span class="font-semibold px-2">${rowData.Titolo}</span>
             </td>
             <td class="text-center py-3">${rowData["Gioc Min"]}</td>
-            <td class="text-center py-3">${rowData["Gioc Max"]}</td>
+            <td class="text-center py-3">${rowData["Gioc Max"]}</td>`;
+
+        //if medium screen or larger, also show Competizione/Comp
+        const isMediumScreen = window.matchMedia("(min-width: 768px)").matches;
+        if (isMediumScreen) {
+            innerHTMLst+= `
             <td class="text-center px-2 py-3">${rowData.Competizione}</td>
             <td class="text-center px-2 py-3">${rowData.Difficoltà}</td>
-<!--            <td class="text-center px-4 py-3"">${rowData.Durata}</td>-->
-<!--            <td class="text-center px-2 py-3"><button class="text-xl" onclick=showInfoModal()>?!</button></td>-->
-          `;
+            <td class="text-center px-4 py-3">${rowData.Durata}</td>`;       }
+
+        row_div.innerHTML=innerHTMLst;
         const tdbutton = document.createElement('td');
-        tdbutton.className = 'text-center px-2 py-3';
+        tdbutton.className = 'text-center px-3 py-3 w-10';
         row_div.appendChild(tdbutton);
         const btn = document.createElement('button');
-        btn.className = 'text-xl';
-        btn.innerText = '!?';
+        // btn.className = 'text-xl';
+        btn.className = 'text-[#1f3127] bg-yellow-200 hover:bg-yellow-400 font-bold rounded-full w-10 h-10 ' +
+            'flex items-center justify-center text-xl shadow-md transition';
+
+        btn.innerText = '?';
         btn.addEventListener('click', () => showInfoModal(rowData));
         tdbutton.appendChild(btn);
 

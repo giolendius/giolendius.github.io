@@ -14,10 +14,11 @@
 
 
 <!--BODY-->
-<body class="bg-[#121212] text-[#e1e1e1] min-h-screen">
+<body class="bg-[#121212] text-[#e1e1e1] min-h-screen md:text-base text-xl">
+
 <header class="bg-[#1e2d24] py-6 px-4 flex justify-between items-center border-b border-[#2d3e33]">
-    <img id="meeple" src="../img/3d-meeple-svgrepo-com.svg" class="w-12">
-    <h1 class="text-4xl font-bold text-[#b7e4c7]">Great Gallo Games</h1>
+    <div class="bg-[#b7e4c7] ml-auto mr-2 rounded-full p-1"><img id="meeple" src="../img/3d-meeple-svgrepo-com.svg" class="w-12"></div>
+    <h1 class="text-4xl pb-2 font-bold text-[#b7e4c7]">Great Gallo Games</h1>
 </header>
 <!--NAVIGATION-->
 <nav class="bg-[#1b2a21] border-b border-[#2d3e33] px-6 py-3 flex space-x-6 text-[#d8f3dc] text-lg font-medium">
@@ -32,8 +33,9 @@
     <!--SIDEBAR-->
     <div id="sidebarWrapper"
          class="bg-[#121212] md:bg-black md:relative absolute top-0 left-0 sidebar w-64 h-full p-8 transition-all duration-300">
-        <h1 class="overflow-hidden m-12 text-2xl font-bold text-[#b7e4c7]"> Parametri </h1>
+
         <div class="flex sticky top-24 overflow-hidden flex-col md:block md:space-y-6 space-y-0 space-x-4 md:space-x-0 md:mb-0 mb-4 md:text-left ">
+            <h1 class="overflow-hidden m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri </h1>
             <div class="mt-12 mb-4">
                 <label for="s_game_name" class="block mb-1 text-sm font-medium text-[#b7e4c7]">Cerca per
                     nome..</label>
@@ -149,7 +151,7 @@
     </div>
 
     <!--MAIN CONTENT-->
-    <main id="mainContent" class="z-1 main flex-1 p-8 transition-all duration-300">
+    <main id="mainContent" class="z-1 main  flex-1 -ml-11 p-4 md:p-16 transition-all duration-300">
         <h1 class="m-10 text-4xl font-bold text-[#b7e4c7] z-2"> Ricerca dei giochi </h1>
         <!--TABLE-->
         <div class="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
@@ -179,14 +181,14 @@
 </body>
 
 <!--POP UP-->
-<div id="infoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white text-black rounded-lg p-6 w-[90%] max-w-xl relative">
+<div id="popup-blur" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-500">
+  <div id="popup-outer" class="bg-yellow-100 text-black rounded-lg py-10 px-16 max-w-[90%] relative transform scale-95 transition-transform duration-300">
     <button onclick="closeInfoModal()" class="absolute top-2 right-2 text-xl font-bold">&times;</button>
-    <h2 id="modalTitle" class="text-2xl font-bold mb-4">Title</h2>
-    <p id="modalContent">Content goes here...</p>
+    <div id="popup-inner">
+    </div>
   </div>
 </div>
-
+<script src="../scripts/game_info_popup.js"></script>
 <script src="../scripts/filter_db.js"></script>
 <script src="../scripts/sidebar.js"></script>
 </html>
