@@ -174,8 +174,8 @@ function creaTabella(df, df_exp) {
                 ExpansionRow.style.display='none';
                 ExpansionRow.className = "row-details bg-[#2d3e33]";
                 ExpansionRow.innerHTML = `
-                <td colspan="7" class="px-6 py-4 text-[#d8f3dc]">
-                  <strong>Expansion:</strong> ${exp.Exp} — <strong>Title:</strong> ${exp.Titolo}
+                <td colspan="8" class="px-6 py-4 text-[#d8f3dc]">
+                  <strong>Expansion:</strong> ${exp.Titolo}
                 </td>
               `;
                 tablebody.appendChild(ExpansionRow);

@@ -9,8 +9,11 @@
     padding: 0; /* optional: to collapse spacing too */
 }
 
-/*una mia prova per il bottone*/
-#sidebarWrapper.cicckalo {
-    background-color: #E22866;
-    left: 120px; /* optional: to collapse spacing too */
+#sidebarWrapper.collapsed > div {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#sidebarWrapper > div {
+    transition: width 0.3s ease-in-out;
 }
