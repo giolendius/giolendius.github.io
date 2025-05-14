@@ -118,7 +118,7 @@ function creaTabella(df, df_exp) {
 
     dfd.toJSON(df).forEach((rowData, index)=> {
         let row_div = document.createElement("tr");
-        const bgClass = index % 2 === 0 ? "bg-[#253b2f]" : "bg-[#1f3127]";
+        const bgClass = index % 2 === 0 ? "greenD" : "green-DD";
         row_div.className = `${bgClass} cursor-pointer hover:bg-[#36543f] transition-colors`;
         tablebody.appendChild(row_div);
 
@@ -147,7 +147,7 @@ function creaTabella(df, df_exp) {
         row_div.appendChild(tdbutton);
         const btn = document.createElement('button');
         // btn.className = 'text-xl';
-        btn.className = 'text-[#1f3127] bg-yellow-200 hover:bg-yellow-400 font-bold rounded-full w-10 h-10 ' +
+        btn.className = 'text-[#1f3127] bg-yellow-400 hover:bg-yellow-600 hover:text-white font-bold rounded-full w-10 h-10 ' +
             'flex items-center justify-center text-xl shadow-md transition';
 
         btn.innerText = '?';

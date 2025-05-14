@@ -6,31 +6,20 @@
 
     <title>Cerca Giochi</title>
     <!--    <link rel="stylesheet" href="../style/style.css">-->
-    <link rel="stylesheet" href="../style/new_style.css">
+    <link rel="stylesheet" href="../style/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
 </head>
-
+<script src="../scripts/onload.js"></script>
 
 <!--BODY-->
-<body class="bg-red-100 text-[#e1e1e1] min-h-screen md:text-base text-xl">
+<body class="bg-red-300 min-h-screen md:text-base text-xl">
 
-<!--TITOLO-->
-<header class="bg-[#1e2d24] p-4 flex justify-center md:justify-end items-center border-b border-[#2d3e33]">
-    <div class="flex items-center">
-        <div class="bg-[#b7e4c7] ml-auto mr-2 rounded-full p-1"><img id="meeple" src="../img/3d-meeple-svgrepo-com.svg" class="w-12"></div>
-        <h1 class="text-4xl pb-2 font-bold text-[#b7e4c7]">Great Gallo Games</h1>
-    </div>
-</header>
-
-<!--NAVIGATION-->
-<nav class="bg-[#1b2a21] border-b border-[#2d3e33] px-6 py-3 flex space-x-6 text-[#d8f3dc] text-lg font-medium">
-    <a href="../index.html"> Home</a>
-    <a href="table.html"> Cerca un gioco</a>
-    <a href="modify_source.html"> Contribuisci</a>
-</nav>
-
+<!--NAV BAR-->
+<div id="myheader" data-activelinkname="link-table">
+    <script>createNav('link-table')</script>
+</div>
 
 <!--MAIN PAGE START-->
 <div class="bg-black relative flex transition-all duration-300">
@@ -154,7 +143,7 @@
     </div>
 
     <!--MAIN CONTENT-->
-    <main id="mainContent" class="z-1 main  flex-1 -ml-11 p-4 md:p-16 transition-all duration-300">
+    <main id="mainContent" class="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
         <h1 class="m-10 text-4xl font-bold text-[#b7e4c7] z-2"> Ricerca dei giochi </h1>
         <!--TABLE-->
         <div class="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
@@ -196,18 +185,9 @@
 </button>
 
 <script>
-  function setMainMinHeight() {
-    const sidebar = document.querySelector("#sidebarWrapper > div");
-    const main = document.getElementById("mainContent");
-    console.log(sidebar.offsetHeight)
-    if (sidebar && main) {
-      main.style.minHeight = sidebar.offsetHeight +50+ "px";
-    }
-  }
-  setMainMinHeight();
-  // window.addEventListener("load", setMainMinHeight);
-  // window.addEventListener("resize", setMainMinHeight);
+
 </script>
+<script src="../scripts/miscellaneous.js"></script>
 <script src="../scripts/game_info_popup.js"></script>
 <script src="../scripts/filter_db.js"></script>
 <script src="../scripts/sidebar.js"></script>

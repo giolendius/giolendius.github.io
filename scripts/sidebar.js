@@ -21,14 +21,3 @@ function toggleSidebar() {
 
 
 
-const backToTopBtn = document.getElementById("backToTop");
-
-  // Show button when scrolled down
-  window.addEventListener("scroll", () => {
-    backToTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
-  });
-
-  // Scroll to top on click
-  backToTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
