@@ -1,6 +1,7 @@
+// import { NavLinkName} from "./types";
 function createNav(activeLinkName) {
     const headerHTML = `
-<base href="/gg/">
+<!--<base href="gg">-->
         <div class="bg-black px-4 py-6 my-flex-wrap switch">
           <div class="backdrop-blur-md rounded-lg border border-white/30 flex m-8">
                 <a id="link-home" href="/index.html"
