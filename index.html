@@ -16,7 +16,7 @@
 
 <body>
 <div id="cover" class="greenD">
-    <section class="section flex-o-center">
+    <section class="h-1vh flex-o-center">
         <div class="my-flex-wrap">
             <div class="meeple">
                 <img id="meeple" class=""
@@ -38,10 +38,10 @@
 </div>
 <script>
     createNav('link-home')</script>
-<section id="quanti-sono" class="greenDDD my-flex-wrap section">
+<section id="quanti-sono" class="greenDDD my-flex-wrap h-1vh">
     <div class="flex-v-center flex1">
         <div style="width: 80%">
-            <p class="h2"> Ma quanti sono?</p>
+            <h2> Ma quanti sono?</h2>
             <p>Quanti giochi abbiamo al momento? Possiamo fare un calcolo provvisorio, senza distinguere tra giochi
                 indipendenti ed espansioni... Ci sono i giochi dei nostri genitori, alcuni giochi con versioni
                 multiple
@@ -49,9 +49,9 @@
                 nostro database riguardo a.....</p>
         </div>
     </div>
-    <div class="flex-v-center card-container" style="flex: 2">
+    <div class="flex-o-center card-container" style="flex: 2">
         <div class="card" onclick="this.classList.add('flipped')">
-            <div class="card-front">
+            <div class="card-front enlarge">
                 <img style="height:100%; max-width: unset"
                      src="https://brandonthegamedev.com/wp-content/uploads/2017/09/Thirsty-Meeples-Shelfie-1024x681.jpg"
                 alt="Scaffale di giochi da tavolo">
@@ -59,9 +59,8 @@
             <div class="card-back flex-v-center">
                 <button id="calcola" class="mybutton">Calcola<span>>>></span></button>
                 <p></p>
-                <p class="h2" id="tot_giochi">??</p>
+                <h2 id="tot_giochi">??</h2>
             </div>
-            <!--            </div>-->
         </div>
     </div>
 </section>
@@ -97,10 +96,10 @@
     </div>
 </div>
 
-<section class="greenDD section my-flex-wrap">
-    <div class="card-container flex-o-center">
-        <div class="card uffa" onclick="this.classList.toggle('flipped')">
-            <div class="card-front flex-o-center">
+<section class="greenDD h-1vh my-flex-wrap">
+    <div class="card-container enlarge flex-o-center">
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-front flex-v-center">
                 <img src=https://i.ytimg.com/vi/0hS0653xJu0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZShYMA8=&rs=AOn4CLBh-SC8pj6KhMWyfsye3j0ZRdmnvg"" alt="Barrage">
             </div>
             <div class="card-back">
@@ -110,19 +109,19 @@
         </div>
     </div>
 </section>
-<section class="greenDDD section my-flex-wrap">
+<!--<section class="greenDDD section my-flex-wrap">-->
 
-    <div>
-        <img src="https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg">
-    </div>
-
-
-    <div>
-        <img src="https://i.ytimg.com/vi/0hS0653xJu0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZShYMA8=&rs=AOn4CLBh-SC8pj6KhMWyfsye3j0ZRdmnvg">
-    </div>
+<!--    <div>-->
+<!--        <img src="https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg">-->
+<!--    </div>-->
 
 
-</section>
+<!--    <div>-->
+<!--        <img src="https://i.ytimg.com/vi/0hS0653xJu0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZShYMA8=&rs=AOn4CLBh-SC8pj6KhMWyfsye3j0ZRdmnvg">-->
+<!--    </div>-->
+
+
+<!--</section>-->
 
 
 <script src="./scripts/slideshow.js"></script>
