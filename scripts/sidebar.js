@@ -2,12 +2,12 @@ let SidebarisHidden = false;
 
 function toggleSidebar() {
     const sidebarWrapper = document.getElementById("sidebarWrapper");
-    // const mainContent = document.getElementById("mainContent");
     const toggleBtn = document.getElementById("sidebar-toggle");
     const buttonwrap = document.getElementById("buttonwrap");
 
     sidebarWrapper.classList.toggle('collapsed');
     buttonwrap.classList.toggle("left-60");
+    // toggleBtn.classList.toggle("ml-60");
     if (SidebarisHidden) {
         // When showing, rotate
         toggleBtn.classList.add("rotate-180");  // arrow pointing right
@@ -18,4 +18,6 @@ function toggleSidebar() {
 
     SidebarisHidden = !SidebarisHidden;
 }
+
+
 
