@@ -65,10 +65,16 @@ jobs:
       - name: Build with Typescript Gioele
 #        run: npx tsc
         run: npm run build
+        env:
+          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
       - name: was it copied?
         run: |
           echo "in build ci sono"
           ls -l ./build
+      - name: do i trust you?
+        run: echo ${{ secrets.SuperSecret }}
+      - name: do i trust you really?
+        run: echo "${{ secrets.SuperSecret }}"
 
   deploy:
     environment:
@@ -84,7 +90,11 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: build/
+          path: '.'
+        env:
+          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        env:
+          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
