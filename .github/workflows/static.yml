@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: curiosa
+        run: head -n 3 index.html
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -78,6 +80,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: curiosa
+        run: head -n 3 index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
