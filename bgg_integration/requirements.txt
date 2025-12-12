@@ -1,9 +1,7 @@
 bs4
 click
-
 gspread
 google-api-python-client
 pandas
 requests
-selenium
-webdriver-manager
+xmltodict

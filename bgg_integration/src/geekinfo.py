@@ -5,7 +5,7 @@ import requests
 from typing import List
 import os
 from urllib.parse import quote_plus
-from selenium.common import TimeoutException
+import xmltodict
 
 from .constants import Column
 
@@ -43,61 +43,15 @@ def direct_api():
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
-        "Authorization": os.getenv('BGG_AUTHORIZATION')
+        "Authorization": f'Bearer {os.getenv('BGG_AUTHORIZATION')}'
     }
 
     url = "https://api.geekdo.com/xmlapi2/thing?id=418059&stats=1"
     url2 = "https://boardgamegeek.com/xmlapi2/thing?id=418059&stats=1"
     resp = requests.get(url2, headers=headers)
-    print(resp.status_code)
 
-
-def get_complete_html_with_selenium(url):
-    from selenium import webdriver
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from webdriver_manager.chrome import ChromeDriverManager
-
-    logger.info('Started Selenium')
-    # Avvia Chrome in modalità headless
-    options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get(url)
-    # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    try:
-        element_present = EC.presence_of_element_located((By.ID, 'whatever'))
-        WebDriverWait(driver, 10).until(element_present)
-    except TimeoutException:
-        "Timed out waiting for page to load"
-
-    # Aspetta che un elemento chiave sia presente (ad esempio il tempo di gioco)
-    # WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span[itemprop="ratingValue"]')))
-    # WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CLASS_NAME, "rating-overall-callout-container")))
-    # WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, "overall-rating")))
-    logger.info('Selenium done')
-    params = {}
-
-    game_div = driver.find_element(By.CLASS_NAME, 'game-header')
-    params['rating'] = driver.find_element(By.CSS_SELECTOR, 'span[itemprop="ratingValue"]').text
-    print(f"Rating: {params['rating']}")
-    four_info = game_div.find_element(By.CLASS_NAME, 'gameplay')
-    four_info.find_elements(By.XPATH, "./child::*")
-    params['weight'] = driver.find_element(By.CLASS_NAME, 'gameplay-weight-medium').text
-    print("Weight:", params['weight'])
-    params['Duration'] = driver.find_element(By.CLASS_NAME, 'gameplay-item-primary').text
-
-
-
-
-    html = driver.page_source
-
-    driver.quit()
-    return html
-
+    xml_str = resp.text
+    dict_game = xmltodict.parse(xml_str)
 
 
 def get_bgg_url(game_name: str):

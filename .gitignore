@@ -1,4 +1,4 @@
-secrets/
+bgg_integration/secrets/
 build/
 *.env
 *.secret.json
