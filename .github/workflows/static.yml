@@ -62,9 +62,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Typescript
-        run: npx tsc
-
+      - name: Build with Typescript Gioele
+#        run: npx tsc
+        run: npm run build
   enjoy:
     runs-on: ubuntu-latest
 
@@ -75,6 +75,13 @@ jobs:
       - name: testiamo se so
         run: npm run imparo
 
+      - name: ma ci sono script?
+        run: |
+          if [ -d "/path/to/folder" ]; then
+            ls -l "/path/to/folder"
+          else
+            echo "Folder does not exist"
+          fi
 
   deploy:
     environment:
