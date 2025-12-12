@@ -60,6 +60,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      - name: first trust
+        run: echo "${{ secrets.SUPER_SECRET }}"
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Typescript Gioele
@@ -72,9 +74,9 @@ jobs:
           echo "in build ci sono"
           ls -l ./build
       - name: do i trust you?
-        run: echo ${{ secrets.SuperSecret }}
+        run: echo ${{ secrets.SUPER_SECRET }}
       - name: do i trust you really?
-        run: echo "${{ secrets.SuperSecret }}"
+        run: echo "${{ secrets.SUPER_SECRET }}"
 
   deploy:
     environment:
