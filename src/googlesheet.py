@@ -15,7 +15,7 @@ logger = getLogger('GoogleSheet')
 
 def access_spreadsheet():
     creds = Credentials.from_service_account_file(
-        "modifica-service-account.secret.json",
+        "secrets/modifica-service-account.secret.json",
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
 
