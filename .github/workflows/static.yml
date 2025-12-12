@@ -65,23 +65,10 @@ jobs:
       - name: Build with Typescript Gioele
 #        run: npx tsc
         run: npm run build
-  enjoy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: echo only
-        run: echo "starting my step"
-
-      - name: testiamo se so
-        run: npm run imparo
-
-      - name: ma ci sono script?
+      - name: was it copied?
         run: |
-          if [ -d "/path/to/folder" ]; then
-            ls -l "/path/to/folder"
-          else
-            echo "Folder does not exist"
-          fi
+          echo "in build ci sono"
+          ls -l ./build
 
   deploy:
     environment:
@@ -99,7 +86,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: '.'
+          path: 'build'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
