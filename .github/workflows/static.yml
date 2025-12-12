@@ -22,14 +22,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  enjoy:
-    runs-on: ubuntu-latest
-
-    steps:
-        - name: echo only
-          run: echo "starting my step"
-
-
   build:
     runs-on: ubuntu-latest
 
@@ -62,16 +54,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Build with Typescript
+        run: npx tsc
 
-#      - name: Build with typescript
-#        run: |
-#          npm install
-#          npx webpack
+  enjoy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: echo only
+        run: echo "starting my step"
+
       - name: testiamo se so
         run: npm run imparo
 
-      - name: Build with Typescript
-        run: npx tsc
 
   deploy:
     environment:
