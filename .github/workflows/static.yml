@@ -68,6 +68,8 @@ jobs:
         run: npm ci
       - name: Build with Typescript Gioele
         run: npm run build
+      - name: copy
+        run: npm run build:copy-html
 
 
   deploy:
