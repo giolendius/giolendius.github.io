@@ -86,7 +86,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository with '.'
-          path: frontend/build/ #upload only file inside frontend, so it uses html.index there
+          path: frontend/ #upload only file inside frontend, so it uses html.index there
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
