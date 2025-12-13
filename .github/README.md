@@ -1,88 +1,40 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy Ts to Pages
+# Workflows
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main", "feat/typescript"]
+Crash course on workflows
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    jobs:
+      UN-NOME-BELLO:
+        runs-on: ubuntu-latest
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+        steps:
+          - name: checkout
+            uses: actions/checkout@v4
+          - name: verifica
+            run: npm run basic_test
+          - name: Detect package manager
+            id: detect-package-manager
+            run: |
+              if [ -f "${{ github.workspace }}/yarn.lock" ]; then
+                echo "manager=yarn" >> $GITHUB_OUTPUT
+                echo "command=install" >> $GITHUB_OUTPUT
+                exit 0
+              elif [ -f "${{ github.workspace }}/frontend/package.json" ]; then
+                echo "manager=npm" >> $GITHUB_OUTPUT
+                echo "command=ci" >> $GITHUB_OUTPUT
+                exit 0
+              elif [ -f "${{ github.workspace }}/README.md" ]; then
+                echo "there is md here"
+                exit 0
+              else
+                echo "Unable to determine package manager"
+                exit 1
+              fi
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
+If you write under a job:
 
     strategy:
       matrix:
         node-version: [20.x]
+then you get back values with:
 
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-#        with:
-#          ref: feat/typescript
-      - name: verifica
-        run: npm run basic_test
-        working-directory: frontend #with this line, it looks for package.json inside frontend/
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/frontend/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/README.md" ]; then
-            echo "there is md here"
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
-        working-directory: frontend
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-#      - name: Install dependencies
-#        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Installare dipendenze
-        run: npm ci
-      - name: Build with Typescript Gioele
-        run: npm run build
-
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository with '.'
-          path: frontend/build/ #upload only file inside frontend, so it uses html.index there
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    ${{ matrix.node-version }}
