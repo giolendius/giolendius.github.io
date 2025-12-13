@@ -4,10 +4,9 @@
   "description": "the website for our games",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "imparo": "echo \"ha preso file giusto\" ",
+    "test": "echo \"ha preso file in frontend\" ",
     "build": "tsc && npm run build:copy-html",
-    "build:copy-html": "cp ./index.html ./build",
+    "build:copy-html": "cp ./src/index.html ./build",
     "type": "tsc --noEmit"
   },
   "repository": {
