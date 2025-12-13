@@ -5,8 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "basic_test": "echo \"ha preso file in frontend\" ",
-    "build": "tsc",
-    "build_all": "tsc && npm run build:copy-html",
+    "build": "tsc && npm run build:copy-html",
     "build:copy-html": "cp ./src/index.html ./build",
     "type": "tsc --noEmit"
   },
