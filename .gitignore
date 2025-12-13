@@ -6,3 +6,4 @@ bgg_integration/secrets/
 *.log
 logs
 npm-debug.log*
+.idea/

@@ -30,6 +30,8 @@ Crash course on workflows
                 exit 1
               fi
 
+## Using matrix
+
 If you write under a job:
 
     strategy:
