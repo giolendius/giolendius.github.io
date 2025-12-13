@@ -29,6 +29,9 @@ jobs:
       matrix:
         node-version: [20.x]
 
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -36,7 +39,7 @@ jobs:
 #          ref: feat/typescript
       - name: verifica
         run: npm run basic_test
-        working-directory: frontend #with this line, it looks for package.json inside frontend/
+#        working-directory: frontend #with this line, it looks for package.json inside frontend/
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -55,7 +58,6 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
-        working-directory: frontend
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
