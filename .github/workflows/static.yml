@@ -35,7 +35,7 @@ jobs:
         with:
           ref: feat/typescript
       - name: verifica
-        run: npm run imparo
+        run: npm run basic_test
         working-directory: frontend #with this line, it looks for package.json inside frontend/
       - name: Detect package manager
         id: detect-package-manager
