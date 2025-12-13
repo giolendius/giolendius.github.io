@@ -77,11 +77,16 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: controlla cosa c'è
+        run: ls
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

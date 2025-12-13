@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "outDir": "build",
+    "outDir": "./build",
     "sourceMap": true,
     "target": "ES6",
     "noImplicitAny": true,
