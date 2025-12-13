@@ -91,11 +91,14 @@ jobs:
         uses: actions/configure-pages@v5
       - name: controlla cosa c'è
         run: ls
+      - name: controlla cosa sotto
+        run: ls
+        working-directory: frontend
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository with '.'
-          path: frontend/build #upload only file inside frontend, so it uses html.index there
+          path: /frontend/build #upload only file inside frontend, so it uses html.index there
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
