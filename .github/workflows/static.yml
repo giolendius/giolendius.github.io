@@ -34,6 +34,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: feat/typescript
+      - name: verifica
+        run: npm run imparo
+        working-directory: frontend #with this line, it looks for package.json inside frontend/
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -52,6 +55,7 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
+        working-directory: frontend
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -60,11 +64,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 #      - name: Build with Typescript Gioele
 #        run: npm run build
-      - name: verifica 1
-        run: npm run imparo
-      - name: verifica 2
-        run: npm run imparo
-        working-directory: frontend #with this line, it looks for package.json inside frontend/
+
 
   deploy:
     environment:
