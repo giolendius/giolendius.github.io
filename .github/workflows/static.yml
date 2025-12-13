@@ -24,6 +24,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     strategy:
       matrix:
@@ -56,16 +59,20 @@ jobs:
         with:
           # Upload entire repository with '.'
           path: frontend/build #upload only file inside frontend, so it uses html.index there
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs:
-      build
-    steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+
+          #  deploy:
+          #    environment:
+          #      name: github-pages
+          #      url: ${{ steps.deployment.outputs.page_url }}
+          #    runs-on: ubuntu-latest
+          #    needs:
+          #      build
+          #    steps:
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
