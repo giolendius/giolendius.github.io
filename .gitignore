@@ -1,5 +1,8 @@
+# Python Files
 bgg_integration/secrets/
-build/
+bgg_integration/constants/types.py
 *.env
 *.secret.json
 
+# Frontend Files
+build/

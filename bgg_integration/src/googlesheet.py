@@ -3,12 +3,6 @@ import gspread
 import pandas as pd
 from logging import getLogger
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-
-# The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
-SAMPLE_RANGE_NAME = "Class Data!A2:E"
 
 logger = getLogger('GoogleSheet')
 
@@ -24,7 +18,7 @@ def access_spreadsheet():
     # --- OPEN GOOGLE SHEET ---
     spreadsheet = client.open_by_url(_link)
     logger.info('Spreadsheet Loaded')
-    backup_sheet1_into_sheet2(spreadsheet)
+
     return spreadsheet
 
 
@@ -36,6 +30,9 @@ def backup_sheet1_into_sheet2(spreadsheet):
     sheet2.clear()
     sheet2.update("A1", data)
     logger.info('BackUp Copy completed')
+
+
+
 
 
 def update_column(sheet: gspread.Worksheet, values, col_name: str):
@@ -61,5 +58,35 @@ def update_column(sheet: gspread.Worksheet, values, col_name: str):
     )
 
 
+def upload_df_to_sheet(sheet: gspread.Worksheet, df: pd.DataFrame, start_row: int = 1, start_col: int = 1):
+    """
+    Upload a whole pandas DataFrame to a Google Sheet.
 
+    Parameters
+    ----------
+    sheet : gspread.Worksheet
+        Target Google Sheet worksheet.
+    df : pd.DataFrame
+        DataFrame to upload.
+    start_row : int, optional
+        Row index where the DataFrame should start (default is 1).
+    start_col : int, optional
+        Column index where the DataFrame should start (default is 1).
+    """
+
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("df must be a pandas DataFrame")
+
+    # Convert DataFrame to list of lists (include headers)
+    values = [df.columns.tolist()] + df.values.tolist()
+
+    # Calculate range
+    end_row = start_row + len(values) - 1
+    end_col = start_col + len(values[0]) - 1
+
+    range_name = gspread.utils.rowcol_to_a1(start_row, start_col) + ":" + \
+                 gspread.utils.rowcol_to_a1(end_row, end_col)
+    range_name2 = gspread.utils.rowcol_to_a1(start_row, start_col)
+    # Upload to Google Sheets
+    sheet.update(range_name=range_name2, values=values)
 

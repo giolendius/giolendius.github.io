@@ -1,26 +1,28 @@
 from bs4 import BeautifulSoup
-from logging import getLogger
+
 import pandas as pd
 import requests
+from time import sleep
 from typing import List
 import os
 from urllib.parse import quote_plus
 import xmltodict
 
-from .constants import Column
+from constants.types import ColumnNames
+from .utils import setup_logger
+
 
 headers = {"User-Agent": "Mozilla/5.0"}
-logger = getLogger('GEEK')
-
+logger = setup_logger('GEEK')
+sleep_time = 0.5
 
 def get_boardgame_image_url(game_name):
     game_url = get_bgg_url(game_name)
 
     logger.info(f'Got url: {game_url}')
-    html = get_complete_html_with_selenium(game_url)
-    game_soup = BeautifulSoup(html, 'html.parser')
+    # game_soup = BeautifulSoup(html, 'html.parser')
 
-    game_div = game_soup.find("div", class_="game-header")
+    # game_div = game_soup.find("div", class_="game-header")
 
     # game_soup.find_all("p", class_="gameplay")
 
@@ -30,8 +32,8 @@ def get_boardgame_image_url(game_name):
     #     return f"No image found for {game_name}"
 
     path = "src/miooutput.html"
-    html = game_div.prettify()
-    print(html)
+    # html = game_div.prettify()
+    # print(html)
     # with open(path, "w", encoding="utf-8") as f:
     #     f.write("<!doctype html>\n")
     #     f.write(html)
@@ -39,22 +41,9 @@ def get_boardgame_image_url(game_name):
     return None  # image_tag["src"]
 
 
-def direct_api():
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
-        "Authorization": f'Bearer {os.getenv('BGG_AUTHORIZATION')}'
-    }
-
-    url = "https://api.geekdo.com/xmlapi2/thing?id=418059&stats=1"
-    url2 = "https://boardgamegeek.com/xmlapi2/thing?id=418059&stats=1"
-    resp = requests.get(url2, headers=headers)
-
-    xml_str = resp.text
-    dict_game = xmltodict.parse(xml_str)
 
 
-def get_bgg_url(game_name: str):
+def get_bgg_url(game_name: str) -> str:
     """Search a game in BGG and return the URL"""
     search_url = f"https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={quote_plus(game_name)}"
     search_response = requests.get(search_url)
@@ -77,42 +66,87 @@ def get_bgg_url(game_name: str):
             return "https://boardgamegeek.com" + href
 
 
-def update_game_info(df, column_names: Column | List[Column]):
-    def __update_game_info(row: pd.Series):
-        info_dict = {}
-        if Column.LINK in column_names:
-            if not row[Column.LINK]:
-                info_dict[Column.LINK] = get_bgg_url(row[Column.NAME])
-        # info_dict['Luogo'] = 'ViaBologna'
-        return pd.Series(info_dict)
+def get_bgg_id_from_url(bgg_url: str) -> str:
+    string_from_id = bgg_url.strip('https://boardgamegeek.com/boardgame/')
+    game_id = string_from_id[:string_from_id.find('/')]
+    return game_id
 
-    if isinstance(column_names, Column):
+
+def direct_api(game_id: str) -> dict:
+    sleep_time = 1
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
+        "Authorization": f'Bearer {os.getenv('BGG_AUTHORIZATION')}'
+    }
+
+    url = f"https://boardgamegeek.com/xmlapi2/thing?id={game_id}&stats=1"
+
+    resp = requests.get(url, headers=headers)
+    if resp.status_code == 401:
+        raise ConnectionError(f"Unauthorized to use BGG Api")
+    elif resp.status_code in [500, 503]:
+        logger.warning('Too many calls maybe!')
+        sleep_time += 1
+
+    sleep(sleep_time)
+    xml_str = resp.text
+    dict_xml_game = xmltodict.parse(xml_str)['items']['item']
+
+    polished_dict_game = {
+        ColumnNames.PLAYERS_MIN: dict_xml_game['minplayers']['@value'],
+        ColumnNames.PLAYERS_MAX: dict_xml_game['maxplayers']['@value'],
+        'duration_val': dict_xml_game['playingtime']['@value'],
+        ColumnNames.YEAR: dict_xml_game['yearpublished']['@value'],
+        ColumnNames.LINK_IMG: dict_xml_game['image']
+    }
+
+    return polished_dict_game
+
+
+def update_game_df(df, column_names: ColumnNames | List[ColumnNames] = 'all') -> pd.DataFrame:
+    """Update the df with BGG_LINK and """
+    if column_names == 'all':
+        column_names = list(ColumnNames)
+    elif isinstance(column_names, ColumnNames):
         column_names = [column_names]
-    minidf = df.iloc[13:15]
-    minidf[column_names] = minidf.apply(__update_game_info, axis=1)
 
+    # Remove info which are our private knowledge and move BGG_LINK as first feature
+    for column_to_remove in [ColumnNames.LINK_BGG, ColumnNames.TITLE, ColumnNames.PLACE_CURRENT]:
+        if column_to_remove in column_names:
+            column_names.remove(column_to_remove)
+    column_names.insert(0, ColumnNames.LINK_BGG)
 
-boardgames = [
+    def __update_game_info(row: pd.Series) -> pd.Series:
+        game_info_dict = row[column_names].to_dict()
 
-    "Civilization",
-    "Cluedo conspiracy",
-    "Cluedo Harry Potter",
-    "Cluedo Portatile",
-    "Co-mix",
-    "Codice fantasma",
-    "Coloretto",
-    "Concept",
-    "Corsari",
-    "Crack",
-    "Cranium",
-    "Cross clues",
-    "Cryptid",
-    "Darwin's Journey",
-    "Dead of winter",
-    "Decrypto",
-    "Detective - sulla scena del crimine",
-    "Diceforge",
-    "Dixit",
-    "Dixit: disney",
-    "Dobble"
-]
+        # LINK BGG
+        found_url = get_bgg_url(row[ColumnNames.TITLE])
+        if not row[ColumnNames.LINK_BGG]:
+            game_info_dict[ColumnNames.LINK_BGG] = found_url
+        elif row[ColumnNames.LINK_BGG] == found_url:
+            pass
+        else:
+            logger.warning(f'Differenti LinkBGG per {row[ColumnNames.TITLE]}')
+            return row[column_names]
+
+        game_id = get_bgg_id_from_url(found_url)
+        new_info_dict = direct_api(game_id)
+
+        common_keys = game_info_dict.keys() & new_info_dict.keys()
+        updating_fields = {field_name: [game_info_dict[field_name], new_info_dict[field_name]] for field_name in common_keys
+                           if '' != game_info_dict[field_name] != new_info_dict[field_name]}
+        num_updating_fields = len(updating_fields)
+
+        if num_updating_fields:
+            logger.warning(f'Different fields for game {row[ColumnNames.TITLE]}\n'
+                           f'Found URL was {found_url}\n'
+                           f'{updating_fields}\n Not updating')
+        else:
+            game_info_dict.update(new_info_dict)
+
+        return pd.Series(game_info_dict)
+
+    df = df.iloc[30:32].copy()
+    df[column_names] = df.apply(__update_game_info, axis=1)
+    return df
+
