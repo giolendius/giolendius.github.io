@@ -25,7 +25,7 @@ def generate_enum():
     python_enum_str += ['']
     enum_path = CONSTANTS_DIRECTORY / 'types.py'
 
-    enum_path.write_text('\n'.join(python_enum_str))
+    enum_path.write_text('\n'.join(python_enum_str), encoding='utf-8')
     logger.info(f'Enum generated successfully')
 
 

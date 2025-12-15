@@ -1,4 +1,4 @@
-# Python Files
+# BGG Python Files
 bgg_integration/secrets/
 bgg_integration/constants/types.py
 *.env
@@ -6,3 +6,6 @@ bgg_integration/constants/types.py
 
 # Frontend Files
 build/
+
+# Tests and miscellaneous
+prove/
