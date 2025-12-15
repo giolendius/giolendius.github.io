@@ -1,19 +1,24 @@
 {
-  "TITLE": "Titolo",
-  "PLAYERS_MIN": "Gioc Min",
-  "PLAYERS_MAX": "Gioc Max",
-  "PLAYERS_BEST": "Gioc Best",
-  "COMPETITION": "Competizione",
-  "DIFFICULTY_CAT": "Difficoltà",
-  "DURATION_CAT": "Durata",
-  "DURATION_VAL": "Durata (min)",
-  "TYPOLOGIES": "Tipologie",
-  "PUBLISHER": "Casa Editrice",
-  "YEAR": "Anno",
-  "YEAR_FOR_US": "Anno di arrivo da noi",
-  "PLACE_CURRENT": "Luogo",
-  "AUTHORS": "Autori",
-  "LINK_BGG": "Link BGG",
-  "LINK_IMG": "LinkImmagine",
-  "EXPANSION": "Exp"
+  "BGG": {
+    "TITLE": "Titolo",
+    "PLAYERS_MIN": "Gioc Min",
+    "PLAYERS_MAX": "Gioc Max",
+    "PLAYERS_BEST": "Gioc Best",
+    "DIFFICULTY_WEIGHT": "Weight",
+    "DURATION_VAL": "Durata (min)",
+    "PUBLISHER": "Casa Editrice",
+    "YEAR": "Anno",
+    "AUTHORS": "Autori",
+    "LINK_BGG": "Link BGG",
+    "LINK_IMG": "LinkImmagine"
+  },
+  "OURS": {
+    "DURATION_CAT": "Durata",
+    "YEAR_FOR_US": "Anno di arrivo da noi",
+    "PLACE_CURRENT": "Luogo",
+    "EXPANSION": "Exp",
+    "COMPETITION_CAT": "Competizione",
+    "DIFFICULTY_CAT": "Difficoltà",
+    "TYPOLOGIES": "Tipologie"
+  }
 }

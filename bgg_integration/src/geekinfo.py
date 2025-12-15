@@ -8,26 +8,38 @@ import os
 from urllib.parse import quote_plus
 import xmltodict
 
-from constants.types import ColumnNames
-from .googlesheet import GoogleSheet
+from constants.types import BGGColumnNames
+from .googlesheet import GoogleSheetLoader
 from .utils import setup_logger
 
 
 class BggUpdater:
-    column_names: List[ColumnNames]
+    column_names: List[BGGColumnNames]
+    google_sheet: GoogleSheetLoader
+
     def __init__(self):
         self.logger = setup_logger('GEEK')
-        self.google_sheet = GoogleSheet()
-        self.df = self.google_sheet.get_dataframe()
         self.sleep_time = 0.5
+        self.df = pd.DataFrame()
 
+    def load_worksheet(self):
+        self.google_sheet = GoogleSheetLoader()
+        self.df = self.google_sheet.get_dataframe()
 
     def get_bgg_url(self, game_name: str) -> str:
         """Search a game in BGG and return the URL"""
 
         self.logger.debug(f'Searching BGG for {game_name}')
-        search_url = f"https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={quote_plus(game_name)}"
+        search_url = (f"https://boardgamegeek.com/geeksearch.php?action="
+                      f"search&objecttype=boardgame&q={quote_plus(game_name)}")
         search_response = requests.get(search_url)
+        if search_response.status_code == 429:
+            m = 5
+            s = 1
+            for i in range(m):
+                self.logger.info(f'Too many call, waiting.. {i+1}/{m}')
+                sleep(s)
+            search_response = requests.get(search_url)
         if search_response.status_code != 200:
             raise f"Failed to search for {game_name}"
 
@@ -49,24 +61,28 @@ class BggUpdater:
 
         return link or ''
 
-
     @staticmethod
     def get_bgg_id_from_url(bgg_url: str) -> str:
-
-        string_from_id = bgg_url.strip('https://boardgamegeek.com/boardgame/')
+        string_from_id = bgg_url.lstrip('https://boardgamegeek.com/boardgamexpansion')
         game_id = string_from_id[:string_from_id.find('/')]
         return game_id
 
-
     def direct_api(self, game_id: str) -> dict:
+
+        try:
+            int(game_id)
+        except ValueError:
+            self.logger.warning('Invalid game id for Api, call not possible')
+            return {}
+
         headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
             "Authorization": f"Bearer {os.getenv('BGG_AUTHORIZATION')}"
         }
 
-        url = f"https://boardgamegeek.com/xmlapi2/thing?id={game_id}&stats=1"
+        api_url = f"https://boardgamegeek.com/xmlapi2/thing?id={game_id}&stats=1"
 
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(api_url, headers=headers)
         if resp.status_code == 401:
             raise ConnectionError(f"Unauthorized to use BGG Api")
         elif resp.status_code in [500, 503]:
@@ -78,55 +94,68 @@ class BggUpdater:
         dict_xml_game = xmltodict.parse(xml_str)['items']['item']
 
         polished_dict_game = {
-            ColumnNames.PLAYERS_MIN: dict_xml_game['minplayers']['@value'],
-            ColumnNames.PLAYERS_MAX: dict_xml_game['maxplayers']['@value'],
-            ColumnNames.DURATION_VAL: dict_xml_game['playingtime']['@value'],
-            ColumnNames.YEAR: dict_xml_game['yearpublished']['@value'],
-            ColumnNames.LINK_IMG: dict_xml_game['image']
+            BGGColumnNames.PLAYERS_MIN: dict_xml_game['minplayers']['@value'],
+            BGGColumnNames.PLAYERS_MAX: dict_xml_game['maxplayers']['@value'],
+            BGGColumnNames.DURATION_VAL: dict_xml_game['playingtime']['@value'],
+            BGGColumnNames.YEAR: dict_xml_game['yearpublished']['@value'],
+            BGGColumnNames.LINK_IMG: dict_xml_game['image']
         }
 
         return polished_dict_game
 
-
-    def update_games_and_upload(self, column_names: ColumnNames | List[ColumnNames] = 'all') -> pd.DataFrame:
+    def update_games_and_upload(self,
+                                column_names_to_update: BGGColumnNames | List[BGGColumnNames] = 'all'):
         """Update the df with BGG_LINK and """
-        if column_names == 'all':
-            column_names = list(ColumnNames)
-        elif isinstance(column_names, ColumnNames):
-            column_names = [column_names]
+        if column_names_to_update == 'all':
+            column_names_to_update = list(BGGColumnNames)
+        elif isinstance(column_names_to_update, BGGColumnNames):
+            column_names_to_update = [column_names_to_update]
 
+        # Remove Title and move BGG_LINK as first feature
+        for column_to_remove in [BGGColumnNames.LINK_BGG, BGGColumnNames.TITLE]:
+            if column_to_remove in column_names_to_update:
+                column_names_to_update.remove(column_to_remove)
+        column_names_to_update.insert(0, BGGColumnNames.LINK_BGG)
+        self.column_names = column_names_to_update
 
-        # Remove info which are our private knowledge and move BGG_LINK as first feature
-        for column_to_remove in [ColumnNames.LINK_BGG, ColumnNames.TITLE, ColumnNames.PLACE_CURRENT]:
-            if column_to_remove in column_names:
-                column_names.remove(column_to_remove)
-        column_names.insert(0, ColumnNames.LINK_BGG)
-        self.column_names = column_names
-
-        self.logger.info(f'Starting Updating columns: {column_names}')
+        self.logger.info(f'Starting updating columns: {column_names_to_update}')
 
         updated_df = self.df
-        updated_df[column_names] = updated_df.apply(self._update_game_info, axis=1)
+        updated_df[column_names_to_update] = updated_df.apply(self._update_game_info, axis=1)
 
-        self.logger.info(f'Updated {len(updated_df)} rows of {column_names}')
-        self.google_sheet.upload_df(updated_df)
-        return updated_df
+        self.logger.info(f'Updated {len(updated_df)} rows of {column_names_to_update}')
 
+        confirmation: str = input("Are you sure you want to update Google Sheet? (Y)")
+        if confirmation.lower() == 'y':
+            self.google_sheet.upload_df(updated_df)
 
     def _update_game_info(self, row: pd.Series) -> pd.Series:
+        """For a given row-game, find a link and update the game"""
         game_info_dict = row[self.column_names].to_dict()
-        title = row[ColumnNames.TITLE]
-        self.logger.info(f'Updating {title}')
+        title = row[BGGColumnNames.TITLE]
+        previous_url = row[BGGColumnNames.LINK_BGG]
 
-        # LINK BGG
-        found_url = self.get_bgg_url(title)
-        if not row[ColumnNames.LINK_BGG]:
-            game_info_dict[ColumnNames.LINK_BGG] = found_url
-        elif row[ColumnNames.LINK_BGG] == found_url:
+        # GET LINK BGG
+        if not previous_url:
+            found_url = self.get_bgg_url(title)
+        else:
+            found_url = None
+
+        if not len([field for field in game_info_dict.values() if not field]):
+            self.logger.info(f"♥️ Game {title} has all information")
+            return row[self.column_names]
+        if not previous_url and not found_url:
+            self.logger.warning(f"😡🔍 BGG URL not found for {title}. Skipping")
+            return row[self.column_names]
+        elif not row[BGGColumnNames.LINK_BGG]:
+            # no previous link
+            game_info_dict[BGGColumnNames.LINK_BGG] = found_url
+        elif row[BGGColumnNames.LINK_BGG] == found_url:
+            # two link matches
             pass
         else:
-            self.logger.warning(f'Differenti LinkBGG per {title}. \n'
-                                f'Existing: {row[ColumnNames.LINK_BGG]}\n'
+            self.logger.warning(f'❓ Different LinkBGG for {title}. \n'
+                                f'Existing: {row[BGGColumnNames.LINK_BGG]}\n'
                                 f'Found URL: {found_url}\n Not updating')
             return row[self.column_names]
 
@@ -135,19 +164,23 @@ class BggUpdater:
 
         common_keys = game_info_dict.keys() & new_info_dict.keys()
         updating_fields = {field_name: [game_info_dict[field_name], new_info_dict[field_name]] for field_name in
-                           common_keys
-                           if '' != game_info_dict[field_name] != new_info_dict[field_name]}
-        num_updating_fields = len(updating_fields)
+                           common_keys}
+        updating_fields_not_empty = {name: (old_val, new_val) for name, (old_val, new_val) in updating_fields.items() if '' != old_val != new_val}
+        num_updating_fields = len(updating_fields_not_empty)
 
         if num_updating_fields:
-            self.logger.warning(f'Different fields for game {title}\n'
-                                f'Found URL was {found_url}\n'
-                                f'{updating_fields}\n Not updating')
+            update_registry = '\n'.join([f"    Changing {field}\n"
+                                         f"    from {old_val}\n"
+                                         f"    to {new_val}"
+                                         for field, (old_val, new_val) in updating_fields_not_empty.items()])
+            self.logger.warning(f' ⁉️ Different fields for game {title}\n'
+                                f'    Found URL was {found_url}\n'
+                                f"{update_registry}\n Not updating")
         else:
+            self.logger.info(f'Updating {len(updating_fields)} fields in "{title}"')
             game_info_dict.update(new_info_dict)
 
         return pd.Series(game_info_dict)
-
 
     def get_boardgame_image_url(self, game_name):
         """Old function to get html from url and extract image url"""

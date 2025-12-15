@@ -16,9 +16,11 @@ def main(test):
     if test:
         logger.info('Entered test mode')
         seti_id = '418059'
-        BggUpdater().direct_api(seti_id)
+        bggu = BggUpdater()
+        bggu.direct_api(seti_id)
     else:
         bggu = BggUpdater()
+        bggu.load_worksheet()
         bggu.update_games_and_upload()
 
 

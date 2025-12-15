@@ -5,13 +5,12 @@ import pandas as pd
 from . import setup_logger
 
 
-class GoogleSheet:
+class GoogleSheetLoader:
     def __init__(self):
         self.logger = setup_logger('GoogleSheet')
         spreadsheet = self.access_spreadsheet()
         self.backup_sheet1_into_sheet2(spreadsheet)
         self.worksheet = spreadsheet.worksheet('Database')
-
 
     def access_spreadsheet(self):
         creds = Credentials.from_service_account_file(
@@ -20,10 +19,11 @@ class GoogleSheet:
         )
 
         client = gspread.authorize(creds)
-        _link = 'https://docs.google.com/spreadsheets/d/1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8/edit?pli=1&gid=1973594395#gid=1973594395'
+        _link = (f'https://docs.google.com/spreadsheets/d/1RnaUmV5fSHc3oyI'
+                 f'f62DhY3m21oLaS6xh2ss3KcMzKn8/edit?pli=1&gid=1973594395#gid=1973594395')
         # --- OPEN GOOGLE SHEET ---
         spreadsheet = client.open_by_url(_link)
-        self.logger.info('Succesfully accessed spreadsheet')
+        self.logger.info('Successfully accessed spreadsheet')
         return spreadsheet
 
     def backup_sheet1_into_sheet2(self, spreadsheet):
@@ -62,7 +62,6 @@ class GoogleSheet:
         self.worksheet.update(range_name=range_name, values=values)
         self.logger.info('Upload done')
 
-
     def update_column(self, values, col_name: str):
         """Update the Google sheet colum with the new values"""
         headers = self.worksheet.row_values(1)
@@ -84,7 +83,3 @@ class GoogleSheet:
             range_name=gspread.utils.rowcol_to_a1(row_index, col_index),
             values=[[v] for v in new_values]
         )
-
-
-
-
