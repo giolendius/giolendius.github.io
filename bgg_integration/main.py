@@ -10,18 +10,19 @@ from src import setup_logger
 def main(test):
     """Main Function to update google sheet with new information"""
 
-    logger = setup_logger('MAIN')
+    logger = setup_logger('MAIN', True)
     logger.info('Starting...')
 
     if test:
         logger.info('Entered test mode')
-        seti_id = '418059'
+        game_id = '418059' #seti
         bggu = BggUpdater()
-        bggu.direct_api(seti_id)
+        bggu.direct_api(game_id)
+        game_id = '120677' #TerraMystica
     else:
-        bggu = BggUpdater()
+        bggu = BggUpdater(verbose=True)
         bggu.load_worksheet()
-        bggu.update_games_and_upload()
+        bggu.update_games_and_upload(ask_for_input=True)
 
 
 if __name__ == "__main__":

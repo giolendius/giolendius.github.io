@@ -9,16 +9,19 @@ from urllib.parse import quote_plus
 import xmltodict
 
 from constants.types import BGGColumnNames
+from constants.constants import ITPublishers
 from .googlesheet import GoogleSheetLoader
 from .utils import setup_logger
+
 
 
 class BggUpdater:
     column_names: List[BGGColumnNames]
     google_sheet: GoogleSheetLoader
+    ask_for_input: bool
 
-    def __init__(self):
-        self.logger = setup_logger('GEEK')
+    def __init__(self, verbose = False):
+        self.logger = setup_logger('GEEK', verbose)
         self.sleep_time = 0.5
         self.df = pd.DataFrame()
 
@@ -69,6 +72,7 @@ class BggUpdater:
 
     def direct_api(self, game_id: str) -> dict:
 
+
         try:
             int(game_id)
         except ValueError:
@@ -93,18 +97,32 @@ class BggUpdater:
         xml_str = resp.text
         dict_xml_game = xmltodict.parse(xml_str)['items']['item']
 
+        best = [a['@value'] for a in dict_xml_game['poll-summary']['result'] if a['@name']=='bestwith'][0]
+        recomm = [a['@value'] for a in dict_xml_game['poll-summary']['result'] if a['@name']=='recommmendedwith'][0]
+        authors = ', '.join([v['@value'] for v in dict_xml_game['link'] if v['@type'] == 'boardgamedesigner'])
+        publishers = [v['@value'] for v in dict_xml_game['link'] if v['@type'] == 'boardgamepublisher']
+        publisher_it = list(set(publishers) & ITPublishers)
+        publisher_it = publisher_it[0] if publisher_it else ''
+
         polished_dict_game = {
             BGGColumnNames.PLAYERS_MIN: dict_xml_game['minplayers']['@value'],
             BGGColumnNames.PLAYERS_MAX: dict_xml_game['maxplayers']['@value'],
+            BGGColumnNames.PLAYERS_BEST: best,
+            BGGColumnNames.PLAYERS_RECOMMENDED: recomm,
+            BGGColumnNames.AUTHORS: authors,
+            BGGColumnNames.PUBLISHER: publishers[0] if publishers else '',
+            BGGColumnNames.PUBLISHER_IT: publisher_it,
             BGGColumnNames.DURATION_VAL: dict_xml_game['playingtime']['@value'],
             BGGColumnNames.YEAR: dict_xml_game['yearpublished']['@value'],
-            BGGColumnNames.LINK_IMG: dict_xml_game['image']
+            BGGColumnNames.LINK_IMG: dict_xml_game['image'],
+            BGGColumnNames.DIFFICULTY_WEIGHT: dict_xml_game['statistics']['ratings']['averageweight']['@value'],
         }
 
         return polished_dict_game
 
     def update_games_and_upload(self,
-                                column_names_to_update: BGGColumnNames | List[BGGColumnNames] = 'all'):
+                                column_names_to_update: BGGColumnNames | List[BGGColumnNames] = 'all',
+                                ask_for_input: bool = False):
         """Update the df with BGG_LINK and """
         if column_names_to_update == 'all':
             column_names_to_update = list(BGGColumnNames)
@@ -117,6 +135,7 @@ class BggUpdater:
                 column_names_to_update.remove(column_to_remove)
         column_names_to_update.insert(0, BGGColumnNames.LINK_BGG)
         self.column_names = column_names_to_update
+        self.ask_for_input = ask_for_input
 
         self.logger.info(f'Starting updating columns: {column_names_to_update}')
 
@@ -134,50 +153,72 @@ class BggUpdater:
         game_info_dict = row[self.column_names].to_dict()
         title = row[BGGColumnNames.TITLE]
         previous_url = row[BGGColumnNames.LINK_BGG]
+        flg_url_confirmed = True if row[BGGColumnNames.FLG_LINK_BGG]=='TRUE' else False
 
         # GET LINK BGG
-        if not previous_url:
+        if not flg_url_confirmed:
             found_url = self.get_bgg_url(title)
         else:
-            found_url = None
+            found_url = previous_url
 
-        if not len([field for field in game_info_dict.values() if not field]):
+        if not len([empty_field for empty_field in game_info_dict.values() if not empty_field]):
             self.logger.info(f"♥️ Game {title} has all information")
             return row[self.column_names]
-        if not previous_url and not found_url:
+        if not flg_url_confirmed and not found_url:
             self.logger.warning(f"😡🔍 BGG URL not found for {title}. Skipping")
             return row[self.column_names]
-        elif not row[BGGColumnNames.LINK_BGG]:
-            # no previous link
+        elif not previous_url:
+            # no previous link: we take it
             game_info_dict[BGGColumnNames.LINK_BGG] = found_url
-        elif row[BGGColumnNames.LINK_BGG] == found_url:
-            # two link matches
-            pass
+        elif previous_url == found_url:
+            # two link matches, true if URL was confirmed
+            game_info_dict[BGGColumnNames.LINK_BGG] = found_url
         else:
             self.logger.warning(f'❓ Different LinkBGG for {title}. \n'
                                 f'Existing: {row[BGGColumnNames.LINK_BGG]}\n'
                                 f'Found URL: {found_url}\n Not updating')
-            return row[self.column_names]
+            # return row[self.column_names]
 
+        self.logger.debug(f'Calling API for: {title}. \n Found URL is {found_url}')
         game_id = self.get_bgg_id_from_url(found_url)
         new_info_dict = self.direct_api(game_id)
 
-        common_keys = game_info_dict.keys() & new_info_dict.keys()
-        updating_fields = {field_name: [game_info_dict[field_name], new_info_dict[field_name]] for field_name in
-                           common_keys}
-        updating_fields_not_empty = {name: (old_val, new_val) for name, (old_val, new_val) in updating_fields.items() if '' != old_val != new_val}
-        num_updating_fields = len(updating_fields_not_empty)
 
-        if num_updating_fields:
-            update_registry = '\n'.join([f"    Changing {field}\n"
+        common_fields = {field_name: [game_info_dict[field_name], new_info_dict[field_name]] for field_name in
+                           game_info_dict.keys() & new_info_dict.keys()}
+
+        updating_fields_previously_empty = {name: (old_val, new_val) for name, (old_val, new_val) in common_fields.items() if '' == old_val}
+        # updating_fields_not_empty_equals = {name: (old_val, new_val) for name, (old_val, new_val) in common_fields.items() if '' != old_val == new_val}
+        updating_fields_not_empty_but_different = {name: (old_val, new_val) for name, (old_val, new_val) in common_fields.items() if '' != old_val != new_val}
+        # pre_empty + n_e_equals + n_e_diffe = common_keys
+
+        num_problematic_updating_fields = len(updating_fields_not_empty_but_different)
+
+        if flg_url_confirmed:
+            self.logger.info(f'In game "{title}" added {len(updating_fields_previously_empty)} fields and automatically changed {num_problematic_updating_fields} fields as URL was confirmed')
+            game_info_dict.update(new_info_dict)
+        elif num_problematic_updating_fields:
+            update_registry = '\n'.join([f"Changing {field}:\n"
                                          f"    from {old_val}\n"
                                          f"    to {new_val}"
-                                         for field, (old_val, new_val) in updating_fields_not_empty.items()])
-            self.logger.warning(f' ⁉️ Different fields for game {title}\n'
+                                         for field, (old_val, new_val) in updating_fields_not_empty_but_different.items()])
+            self.logger.error(f' ⁉️ Different fields for game {title}\n'
                                 f'    Found URL was {found_url}\n'
-                                f"{update_registry}\n Not updating")
+                                f"{update_registry}\n")
+            if self.ask_for_input:
+                user_input = input(f'Do you want to update {num_problematic_updating_fields} fields for "{title}"? (Y/N)')
+                if user_input.lower() == 'y':
+                    self.logger.info(f'Updating {num_problematic_updating_fields} fields in "{title}"')
+                    game_info_dict.update(new_info_dict)
+                    game_info_dict.update({BGGColumnNames.FLG_LINK_BGG: 'TRUE'})
+                else:
+                    self.logger.info(f'Skipping update for "{title}" as per user request')
+            else:
+                self.logger.error(f'Not updating')
+                game_info_dict.update(new_info_dict)
+                game_info_dict.update({BGGColumnNames.FLG_LINK_BGG: 'TRUE'})
         else:
-            self.logger.info(f'Updating {len(updating_fields)} fields in "{title}"')
+            self.logger.info(f'In game "{title}" added {len(updating_fields_previously_empty)} fields')
             game_info_dict.update(new_info_dict)
 
         return pd.Series(game_info_dict)

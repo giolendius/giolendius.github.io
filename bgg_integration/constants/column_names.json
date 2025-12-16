@@ -4,13 +4,16 @@
     "PLAYERS_MIN": "Gioc Min",
     "PLAYERS_MAX": "Gioc Max",
     "PLAYERS_BEST": "Gioc Best",
+    "PLAYERS_RECOMMENDED": "Gioc suggeriti",
     "DIFFICULTY_WEIGHT": "Weight",
     "DURATION_VAL": "Durata (min)",
     "PUBLISHER": "Casa Editrice",
+    "PUBLISHER_IT": "Casa Editrice It",
     "YEAR": "Anno",
     "AUTHORS": "Autori",
     "LINK_BGG": "Link BGG",
-    "LINK_IMG": "LinkImmagine"
+    "LINK_IMG": "LinkImmagine",
+    "FLG_LINK_BGG": "Link corretto"
   },
   "OURS": {
     "DURATION_CAT": "Durata",
