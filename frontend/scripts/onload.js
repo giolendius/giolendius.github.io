@@ -6,9 +6,9 @@ function createNav(activeLinkName) {
           <div class="backdrop-blur-md rounded-lg border border-white/30 flex m-8">
                 <a id="link-home" href="/index.html"
                    class="rounded-l-lg nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Home</a>
-                <a id="link-table" href="/html/table.html"
+                <a id="link-table" href="/frontend/html/table.html"
                    class="nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Cerca </a>
-                <a id="link-contribuisci" href="/html/modify_source.html"
+                <a id="link-contribuisci" href="/frontend/html/modify_source.html"
                    class="rounded-r-lg nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Contribuisci </a>
             </div>
             <div class="flex items-center bg-[#1e2d24] rounded-full p-2 m-4 border-2 border-[#b7e4c7]">

@@ -74,14 +74,17 @@ function create_db(array_dati) {
     let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(0));
     df.addColumn("NumeroEspansioni", zeroSeries, {inplace:true});
     NumeroEspansioniIndex = df.columns.indexOf("NumeroEspansioni");
-    df_exp["Exp"].values.forEach(function(nome) {
-        vanilla_index = df.loc({rows: df["Titolo"].eq(nome)}).index[0];
-        if (vanilla_index) {
-            df.values[vanilla_index][NumeroEspansioniIndex] = df.values[vanilla_index][NumeroEspansioniIndex] + 1;
-        } else {
-            console.log("Problema nelle espansioni di " + nome)
-        }
-    });
+
+//    The Following code was blocking execution. But the idea could still be interesting
+
+//    df_exp["Exp"].values.forEach(function(nome) {
+//        vanilla_index = df.loc({rows: df["Titolo"].eq(nome)}).index[0];
+//        if (vanilla_index) {
+//            df.values[vanilla_index][NumeroEspansioniIndex] = df.values[vanilla_index][NumeroEspansioniIndex] + 1;
+//        } else {
+//            console.log("Problema nelle espansioni di " + nome)
+//        }
+//    });
     let df_base = df.query(df["Exp"].eq("")).resetIndex();
     return [df_base, df_exp]
 }
