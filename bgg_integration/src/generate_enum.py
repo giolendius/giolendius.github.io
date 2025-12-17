@@ -10,7 +10,7 @@ CONSTANTS_DIRECTORY = Path.cwd() / 'constants'
 def generate_enum():
     """Generate a python Enum from the json file"""
 
-    logger = setup_logger('GENERATE - ENUM')
+    logger = setup_logger('GENERATE - ENUM', True, 0)
 
     json_file_path = CONSTANTS_DIRECTORY / 'column_names.json'
     dict_columns = json.loads(json_file_path.read_bytes())

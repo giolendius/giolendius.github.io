@@ -10,7 +10,7 @@ from src import setup_logger
 def main(test):
     """Main Function to update google sheet with new information"""
 
-    logger = setup_logger('MAIN', True)
+    logger = setup_logger('MAIN')
     logger.info('Starting...')
 
     if test:
