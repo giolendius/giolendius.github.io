@@ -1,6 +1,6 @@
 # BGG Python Files
 bgg_integration/secrets/
-bgg_integration/constants/types.py
+bgg_integration/constants/column_names.py
 *.env
 *.secret.json
 

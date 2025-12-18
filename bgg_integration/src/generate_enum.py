@@ -24,7 +24,7 @@ def generate_enum():
         'class BGGColumnNames(StrEnum):']
     python_enum_str += [f"""    {key} = "{value}" """ for key, value in dict_bgg_columns.items()]
     python_enum_str += ['']
-    enum_path = CONSTANTS_DIRECTORY / 'types.py'
+    enum_path = CONSTANTS_DIRECTORY / 'column_names.py'
 
     enum_path.write_text('\n'.join(python_enum_str), encoding='utf-8')
     logger.info(f'Enum generated successfully')

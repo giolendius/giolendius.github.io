@@ -1,26 +1,27 @@
 {
   "BGG": {
+    "LINK_BGG": "Link BGG",
     "TITLE": "Titolo",
     "PLAYERS_MIN": "Gioc Min",
     "PLAYERS_MAX": "Gioc Max",
     "PLAYERS_BEST": "Gioc Best",
     "PLAYERS_RECOMMENDED": "Gioc suggeriti",
+    "COMPETITION_CAT": "Competizione",
     "DIFFICULTY_WEIGHT": "Weight",
     "DURATION_VAL": "Durata (min)",
-    "PUBLISHER": "Casa Editrice",
-    "PUBLISHER_IT": "Casa Editrice It",
     "YEAR": "Anno",
     "AUTHORS": "Autori",
-    "LINK_BGG": "Link BGG",
+    "RANK": "Rank BGG",
     "LINK_IMG": "LinkImmagine",
-    "FLG_LINK_BGG": "Link corretto"
+    "FLG_LINK_BGG": "Link corretto",
+    "PUBLISHER": "Casa Editrice",
+    "PUBLISHER_IT": "Casa Editrice It"
   },
   "OURS": {
     "DURATION_CAT": "Durata",
     "YEAR_FOR_US": "Anno di arrivo da noi",
     "PLACE_CURRENT": "Luogo",
     "EXPANSION": "Exp",
-    "COMPETITION_CAT": "Competizione",
     "DIFFICULTY_CAT": "Difficoltà",
     "TYPOLOGIES": "Tipologie"
   }

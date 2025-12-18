@@ -1,15 +1,17 @@
+import time
+
 from bs4 import BeautifulSoup
 
 import pandas as pd
 import requests
 from time import sleep
-from typing import List
+from typing import List, Dict
 import os
 from urllib.parse import quote_plus
 import xmltodict
 
-from constants.types import BGGColumnNames
-from constants.constants import ITPublishers
+from constants.column_names import BGGColumnNames
+from constants.constants import ITPublishers, CompetitionType
 from .googlesheet import GoogleSheetLoader
 from .utils import setup_logger, logging
 
@@ -23,8 +25,11 @@ class BggUpdater:
     def __init__(self, verbose = False):
         self.logger = setup_logger('GEEK', verbose, 1)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
-        self.sleep_time = 0.5
+        self.sleep_time = 1
         self.df = pd.DataFrame()
+        self.games_not_changed = 0
+        self.games_automatically_update_col = 0
+        self.games_updated_with_user_confirmation = 0
 
     def load_worksheet(self):
         self.google_sheet = GoogleSheetLoader()
@@ -70,28 +75,15 @@ class BggUpdater:
         game_id = string_from_id[:string_from_id.find('/')]
         return game_id
 
-    def direct_api(self, game_id: str, title: str = '') -> dict:
 
-
+    def call_and_format_api(self, game_id: str, title: str = '') -> dict:
         try:
             int(game_id)
         except ValueError:
             self.logger.warning('Invalid game id for Api, call not possible')
             return {}
 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
-            "Authorization": f"Bearer {os.getenv('BGG_AUTHORIZATION')}"
-        }
-
-        api_url = f"https://boardgamegeek.com/xmlapi2/thing?id={game_id}&stats=1"
-
-        resp = requests.get(api_url, headers=headers)
-        if resp.status_code == 401:
-            raise ConnectionError(f"Unauthorized to use BGG Api")
-        elif resp.status_code in [500, 503]:
-            self.logger.warning('Too many calls maybe!')
-            self.sleep_time += 1
+        resp = self.api_call(game_id)
 
         sleep(self.sleep_time)
         xml_str = resp.text
@@ -99,18 +91,22 @@ class BggUpdater:
 
         best = [a['@value'] for a in dict_xml_game['poll-summary']['result'] if a['@name']=='bestwith'][0]
         recomm = [a['@value'] for a in dict_xml_game['poll-summary']['result'] if a['@name']=='recommmendedwith'][0]
+        competition = get_competition(dict_xml_game['link'])
         authors = ', '.join([v['@value'] for v in dict_xml_game['link'] if v['@type'] == 'boardgamedesigner'])
+        rank = get_rank(dict_xml_game)
 
         polished_dict_game = {
             BGGColumnNames.PLAYERS_MIN: dict_xml_game['minplayers']['@value'],
             BGGColumnNames.PLAYERS_MAX: dict_xml_game['maxplayers']['@value'],
             BGGColumnNames.PLAYERS_BEST: best,
             BGGColumnNames.PLAYERS_RECOMMENDED: recomm,
-            BGGColumnNames.AUTHORS: authors,
+            BGGColumnNames.COMPETITION_CAT: competition,
+            BGGColumnNames.DIFFICULTY_WEIGHT: dict_xml_game['statistics']['ratings']['averageweight']['@value'],
             BGGColumnNames.DURATION_VAL: dict_xml_game['playingtime']['@value'],
             BGGColumnNames.YEAR: dict_xml_game['yearpublished']['@value'],
+            BGGColumnNames.AUTHORS: authors,
+            BGGColumnNames.RANK: rank,
             BGGColumnNames.LINK_IMG: dict_xml_game['image'],
-            BGGColumnNames.DIFFICULTY_WEIGHT: dict_xml_game['statistics']['ratings']['averageweight']['@value'],
         }
 
         publishers = [v['@value'] for v in dict_xml_game['link'] if v['@type'] == 'boardgamepublisher']
@@ -118,11 +114,36 @@ class BggUpdater:
         self.logger.debug(
             f'For game {title} found publishers: \n {publishers} \n So IT publisher we got: {publisher_it}')
         if publishers:
-            polished_dict_game |= {BGGColumnNames.PUBLISHER: publishers[0]}
+            polished_dict_game |= {
+                BGGColumnNames.PUBLISHER: publishers[0]
+            }
         if publisher_it:
-            polished_dict_game |= {BGGColumnNames.PUBLISHER_IT: ITPublishers[publisher_it[0]]}
+            polished_dict_game |= {
+                BGGColumnNames.PUBLISHER_IT: ITPublishers[publisher_it[0]]
+            }
 
         return polished_dict_game
+
+    def api_call(self, game_id: str) -> requests.Response:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
+            "Authorization": f"Bearer {os.getenv('BGG_AUTHORIZATION')}"
+        }
+        api_url = f"https://boardgamegeek.com/xmlapi2/thing?id={game_id}&stats=1"
+        success, resp = False, None
+        while not success:
+            resp = requests.get(api_url, headers=headers)
+            if resp.status_code == 200:
+                success = True
+            elif resp.status_code == 401:
+                raise ConnectionError(f"Unauthorized to use BGG Api")
+            elif resp.status_code in [429, 500, 503]:
+                self.logger.warning('Too many calls maybe!')
+                time.sleep(10)
+                self.sleep_time += 1
+            else:
+                raise ConnectionError(f"Failed to get data for game id {game_id}, status code: {resp.status_code}")
+        return resp
 
     def update_games_and_upload(self,
                                 column_names_to_update: BGGColumnNames | List[BGGColumnNames] = 'all',
@@ -168,9 +189,11 @@ class BggUpdater:
 
         if not len([empty_field for empty_field in game_info_dict.values() if not empty_field]):
             self.logger.info(f"♥️ Game {title} has all information")
+            self.games_not_changed +=1
             return row[self.column_names]
         if not flg_url_confirmed and not found_url:
             self.logger.critical(f"😡🔍 BGG URL not found for {title}. Skipping")
+            self.games_not_changed += 1
             return row[self.column_names]
         elif not previous_url:
             # no previous link: we take it
@@ -187,7 +210,7 @@ class BggUpdater:
             # return row[self.column_names]
 
         game_id = self.get_bgg_id_from_url(found_url)
-        new_info_dict = self.direct_api(game_id, title)
+        new_info_dict = self.call_and_format_api(game_id, title)
 
 
         common_fields = {field_name: [game_info_dict[field_name], new_info_dict[field_name]] for field_name in
@@ -203,6 +226,7 @@ class BggUpdater:
         if flg_url_confirmed:
             self.logger.info(f'In game "{title}" added {len(updating_fields_previously_empty)} fields and automatically changed {num_problematic_updating_fields} fields as URL was confirmed')
             game_info_dict.update(new_info_dict)
+            self.games_automatically_update_col +=1
         elif num_problematic_updating_fields:
             update_registry = '\n'.join([f"Changing {field}:\n"
                                          f"    from {old_val}\n"
@@ -217,15 +241,17 @@ class BggUpdater:
                     self.logger.info(f'Updating {num_problematic_updating_fields} fields in "{title}"')
                     game_info_dict.update(new_info_dict)
                     game_info_dict.update({BGGColumnNames.FLG_LINK_BGG: 'TRUE'})
+                    self.games_updated_with_user_confirmation +=1
                 else:
                     self.logger.info(f'Skipping update for "{title}" as per user request')
+                    self.games_not_changed += 1
             else:
-                self.logger.critical(f'Not updating')
-                game_info_dict.update(new_info_dict)
-                game_info_dict.update({BGGColumnNames.FLG_LINK_BGG: 'TRUE'})
+                self.logger.critical(f'Not updating {title}')
+                self.games_not_changed += 1
         else:
             self.logger.info(f'In game "{title}" added {len(updating_fields_previously_empty)} fields')
             game_info_dict.update(new_info_dict)
+            self.games_automatically_update_col +=1
 
         return pd.Series(game_info_dict)
 
@@ -254,3 +280,26 @@ class BggUpdater:
             f.write(html)
         self.logger.info('Html printed')
         return None
+
+    def print_report(self):
+        self.logger.info(f'Games not changed: {self.games_not_changed}')
+        self.logger.info(f'Games automatically updated: {self.games_automatically_update_col}')
+        self.logger.info(f'Games updated with user confirmation: {self.games_updated_with_user_confirmation}')
+
+def get_competition(dict_xmg_game_links: List[dict]) -> str:
+    competition_dict: Dict[str, str] = {'Cooperative Game': CompetitionType.COOP,
+                        'Team-Based Game': CompetitionType.TEAMS,
+                        'Semi-Cooperative Game': CompetitionType.SEMI_COOP,
+                        'Solo / Solitaire Game': CompetitionType.SOLO}
+    competition_preliminary = [competition_dict[mechanic['@value']]
+                               for mechanic in dict_xmg_game_links if mechanic['@value'] in competition_dict.keys()]
+    if not competition_preliminary or competition_preliminary == [CompetitionType.SOLO]:
+        competition_preliminary += [CompetitionType.COMP]
+
+    competition = ', '.join(competition_preliminary)
+    return competition
+
+def get_rank(dict_xml_game) -> str:
+    ranks = dict_xml_game['statistics']['ratings']['ranks']['rank']
+    ranks_list = ranks if isinstance(ranks, list) else [ranks]
+    return [rank['@value'] for rank in ranks_list if rank['@name'] == 'boardgame'][0]
