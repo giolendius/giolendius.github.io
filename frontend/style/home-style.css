@@ -1,0 +1,243 @@
+/*#sidebarWrapper {*/
+/*        width: 16rem; !* default md:w-64 *!*/
+/*        transition: width 0.3s ease-in-out;*/
+/*        !*overflow: hidden;*!*/
+/*    }*/
+
+/*#sidebarWrapper.collapsed {*/
+/*    width: 0;*/
+/*    padding: 0; !* optional: to collapse spacing too *!*/
+/*}*/
+
+/*#sidebarWrapper.collapsed > div {*/
+
+/*-----------------------*/
+/*        PARALLAX       */
+/*-----------------------*/
+.parallax-container {
+    position: relative;
+    max-height: 40rem;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.parallax-image {
+    background-image: url('https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    height: 150%; /* Taller for parallax effect */
+    /*width: 100%;*/
+    transform: translateY(0);
+    will-change: transform;
+    z-index: -1;
+}
+
+
+/*-----------------------*/
+/*        SLIDESHOW      */
+/*-----------------------*/
+
+.slideshow {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding: 2rem;
+    background: #d3d3d3;
+    overflow: hidden;
+}
+.slides {
+  position: relative;
+  /*overflow: hidden;*/
+  height: 180px; /* or adapt */
+    width: 1000px;
+}
+
+.slide {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0a0a23;
+}
+/*cubic-bezier(0.65, 0, 0.35, 1)*/
+.slide.active {
+    /*transition: transform 3s ease;*/
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 2;
+}
+.slow-transition {
+    transition: transform 1s cubic-bezier(0.5, 0, 0.7, 1), opacity 1s cubic-bezier(0.6, 0, 0.7, 0.7);
+}
+
+
+.slide.to-left {
+    transform: translateX(-100%);
+}
+.slide.to-right {
+  transform: translateX(100%);
+}
+
+.slide h4 {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+.dots {
+  /*margin-top: 1.5rem;*/
+    flex-basis: 100%;
+}
+
+.dot {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: #333;
+  border-radius: 50%;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.dot.active {
+  opacity: 1;
+}
+
+.arrow {
+  font-size: 6rem;
+  /*cursor: pointer; automatic for button*/
+  color: #333;
+  padding: 0 1rem;
+    z-index: 3;
+  /*user-select: none; automatic for button*/
+}
+
+.arrow.left {
+  left: 0;
+}
+
+.arrow.right {
+  right: 0;
+}
+
+/*-----------------------*/
+/*    FLIPPING CARDS     */
+/*-----------------------*/
+
+.card-container {
+    perspective: 50em;
+    width: 100%;
+    height: 100%;
+}
+.card {
+    width: 30em;
+    max-width: 60%;
+    height: 80%;
+    max-height: 44em;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+p {
+    text-align: justify}
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    text-align: center;
+    border-radius: 18px;
+    overflow: hidden; /* to have image with rounded corners */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.6s;
+    background-color: #c33333;
+
+}
+.card-back {
+    transform: rotateY(180deg);
+    background-color:  #b7e4c7;
+    color: #253b2f;
+    /*color: white;*/
+}
+.card.flipped {
+    transform: rotateY(-180deg);
+}
+.card img {
+    height:100%;
+    object-fit: cover; /*    the div outside will crop the image*/
+}
+
+.enlarge {
+    transition: transform 0.6s ease;}
+.enlarge:hover {
+    transform: scale(1.1);
+}
+/*.card-back:hover {*/
+/*    transform: rotateY(180deg) scale(1.1);*/
+/*}*/
+
+
+
+/*-----------------------*/
+/*     BUTTON CERCA      */
+/*-----------------------*/
+
+.mybutton {
+    background-color: #bd5909; /* Tailwind orange-600 */
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    opacity: 100; !important;
+}
+
+
+/*    padding-left: 0;*/
+/*    padding-right: 0;*/
+/*}*/
+
+/*#sidebarWrapper > div {*/
+/*    transition: width 0.3s ease-in-out;*/
+/*}*/
+
+/*.nav-link.active {*/
+/*    background-color: #bd5909; !* Tailwind orange-600 *!*/
+/*}*/
+
+/*!*create a orange div with 0 width *!*/
+/*.nav-link::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    bottom: 0.25rem;*/
+/*    left: 50%;*/
+/*    transform: translateX(-50%);*/
+/*    width: 0;*/
+/*    height: 2px;*/
+/*    background-color: #bd5909; !* #ea580c; !* Tailwind orange-600 *!*!*/
+/*    transition: width 1s ease;*/
+/*}*/
+/*!*when hover or active make it larger*!*/
+/*.nav-link:hover::after{*/
+/*    width: 75%;*/
+/*}*/
+/*.nav-link.active::after {*/
+/*    width: 75%;*/
+/*    background-color: white;*/
+/*}*/

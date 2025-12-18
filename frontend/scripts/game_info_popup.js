@@ -24,11 +24,11 @@ function showInfoModal(game) {
     const div = document.getElementById('popup-inner');
     div.innerHTML = ''; // Clear previous
 
-    // Create image
+    // Image
     const img = document.createElement('img');
     img.src = game.LinkImmagine;
     img.alt = " "//game.Titolo || 'Game Image';
-    img.className = "mx-auto mb-4 rounded-lg shadow-lg w-auto max-h-60 object-cover";
+    img.className = "mx-auto mb-4 rounded-lg shadow-lg w-auto max-h-48 md:max-h-80 object-cover";
     div.appendChild(img);
 
     // Title

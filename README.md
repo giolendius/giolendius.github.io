@@ -22,6 +22,9 @@ h1, h2 {
 
 This is the repository for the website <a href="http://giolendius.github.io">Great Gallo Games.</a>
 
+All information displayed comes from the google sheets linked in the webpage.
+
+
 "We don’t stop playing because we grow old; We grow old because we stop playing."
 
 
