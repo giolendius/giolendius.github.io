@@ -1,0 +1,28 @@
+{
+  "name": "great_gallo_games",
+  "version": "1.0.0",
+  "description": "the website for our games",
+  "main": "index.ts",
+  "scripts": {
+    "basic_test": "echo \"ha preso file in frontend\" ",
+    "build": "tsc && npm run build:copy-html",
+    "build:copy-html": "cp ./src/index.html ./build",
+    "type": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giolendius/giolendius.github.io.git"
+  },
+  "keywords": [
+    "boardgames"
+  ],
+  "author": "Gioele",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giolendius/giolendius.github.io/issues"
+  },
+  "homepage": "https://github.com/giolendius/giolendius.github.io#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
