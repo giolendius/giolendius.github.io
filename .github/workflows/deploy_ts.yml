@@ -4,7 +4,7 @@ name: Deploy Ts to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "feat/typescript"]
+    branches: ["main", "feat/typescript-reformat"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,9 +31,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: verifica
-        run: npm run basic_test
-#        working-directory: frontend #with this line, it looks for package.json inside frontend/
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
@@ -46,7 +43,7 @@ jobs:
         run: npm run build
       - name: controlla cosa c'è in frontend/build
         run: cd build && ls
-        working-directory: frontend
+#        working-directory: frontend
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
