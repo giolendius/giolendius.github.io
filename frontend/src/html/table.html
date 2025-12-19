@@ -10,16 +10,15 @@
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
 </head>
-<script src="../scripts/onload.ts"></script>
 
 <!--BODY-->
 <!--bg-red-300 -FOR TESTING -->
 <body class="bg-black min-h-screen md:text-base text-xl">
 
 <!--NAV BAR-->
-<div id="myheader" data-activelinkname="link-table">
-    <script>createNav('link-table')</script>
-</div>
+<div id="linkToPages" ></div>
+<script type="module" src="../views/table.ts" ></script>
+
 
 <!--MAIN PAGE START-->
 <div class="bg-black relative flex transition-all duration-300">
@@ -188,7 +187,7 @@
 
 </script>
 <script src="../scripts/miscellaneous.js"></script>
-<script src="../scripts/game_info_popup.js"></script>
+<script src="../scripts/game_info_popup.ts"></script>
 <script src="../scripts/filter_db.js"></script>
 <script src="../scripts/sidebar.js"></script>
 </html>

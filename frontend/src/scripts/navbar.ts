@@ -1,4 +1,5 @@
 import {NavLinkName} from "../utils/types";
+import {getElementById} from "../utils/view.utils";
 
 export function createNav(activeLinkName: NavLinkName) {
     const headerHTML = `
@@ -19,11 +20,8 @@ export function createNav(activeLinkName: NavLinkName) {
             </div>
         
         </div>`;
-    const div = document.getElementById('linkToPages');
-    if (div) {
-        div.innerHTML = headerHTML
-    }
-    // document.write(headerHTML);
+    const div = getElementById('linkToPages');
+    div.innerHTML = headerHTML
     console.log(`Navbar created with active link: ${activeLinkName}`);
     const activeLink = document.getElementById(activeLinkName);
     if (activeLink) {

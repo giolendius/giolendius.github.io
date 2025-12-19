@@ -1,10 +1,12 @@
+import {getElementById} from "../utils/view.utils";
+
 // Hide the information windows
 function closeInfoModal() {
-  const modal = document.getElementById('popup-blur');
+  const modal = getElementById('popup-blur');
   modal.classList.add('opacity-0', 'pointer-events-none');
 
   // Optional: animate the inner div
-  const modalContent  = document.getElementById('popup-outer');
+  const modalContent  = getElementById('popup-outer');
   modalContent.classList.remove('scale-100');
   modalContent.classList.add('scale-85');
 }
