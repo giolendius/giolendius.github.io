@@ -5,5 +5,9 @@ module.exports = {
     emptyOutDir: true, // also necessary
   },
   preview: {
-  port: 3000}
+    port: 3000
+  },
+  server: {
+    port: 8080
+  }
 }

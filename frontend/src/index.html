@@ -10,10 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
           rel="stylesheet">
-    <script src="config/constants.js"></script>
-    <script src="scripts/onload.js"></script>
 </head>
-<script type="module" src="/index.js" ></script>
+
 <body>
 <div id="cover" class="greenD">
     <section class="h-1vh flex-o-center">
@@ -26,6 +24,7 @@
         </div>
     </section>
 </div>
+<div id="radice"></div>
 <div id="barrage-behind" class="parallax-container flex-o-center">
     <div class="parallax-image"></div>
     <div class="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center">
@@ -36,8 +35,7 @@
         <div class="mybutton"><a href="html/table.html">Ricerca</a></div>
     </div>
 </div>
-<script>
-    createNav('link-home')</script>
+<div id="linkToPages"></div>
 <section id="quanti-sono" class="greenDDD my-flex-wrap h-1vh">
     <div class="flex-v-center flex1">
         <div style="width: 80%">
@@ -126,7 +124,7 @@
 
 <script src="./scripts/slideshow.js"></script>
 
-
+<script type="module" src="./index.ts" ></script>
 <script>
     window.addEventListener('scroll', () => {
         const scrolled = window.scrollY;
