@@ -15,7 +15,8 @@ ITPublishers = {
     'Stratelibri': 'Stratelibri',
     'Oliphante': 'Oliphante',
     'Scribabs': 'Scribabs',
-'Giochi Preziosi':'Giochi Preziosi',
+    'Giochi Preziosi': 'Giochi Preziosi',
+    'Studio Supernova': 'Studio Supernova',
 
     'Asmodee Italia': 'Asmodee',
     'asmodee': 'Asmodee',

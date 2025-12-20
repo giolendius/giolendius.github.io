@@ -1,14 +1,13 @@
 import click
 
-
-from src.geekinfo import BggUpdater
 from src import setup_logger
+from src.geekinfo import BggUpdater
 
 
 @click.command()
 @click.option("--test", is_flag=True, default=False)
-@click.option("--user-input", is_flag=True, default=False)
-def main(test, user_input):
+@click.option("--no-user-input", is_flag=False, default=False)
+def main(test, no_user_input):
     """Main Function to update google sheet with new information"""
 
     logger = setup_logger('MAIN')
@@ -16,16 +15,17 @@ def main(test, user_input):
 
     if test:
         logger.info('Entered test mode')
-        game_id = '418059' #seti
-        game_id = '162886' #spirit
-        bggu = BggUpdater()
-        bggu.call_and_format_api(game_id)
-        game_id = '120677' #TerraMystica
+        bgg_up = BggUpdater()
+
+        for game_id in {'Seti': '418059',
+                        'spirit': '162886',  # spirit
+                        'terraM': '120677'}.values():
+            bgg_up.call_and_format_api(game_id)
     else:
-        bggu = BggUpdater(verbose=True)
-        bggu.load_worksheet()
-        bggu.update_games_and_upload(ask_for_input=user_input)
-        bggu.print_report()
+        bgg_up = BggUpdater(verbose=True)
+        bgg_up.load_worksheet()
+        bgg_up.update_games_and_upload(ask_for_input=not no_user_input)
+        bgg_up.print_report()
 
 
 if __name__ == "__main__":
