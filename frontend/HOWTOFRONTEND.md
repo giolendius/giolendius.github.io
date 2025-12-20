@@ -1,8 +1,29 @@
 # HOW TO FRONTEND
 
+
+## Needs:
+
+You need Node.js which comes with npm, node package manager.
+On windows: install choco
+``` commandline
+choco install nodejs
+```
+On Unix/mac you can use 
+
+``` commandline
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+
+# Download and install Node.js:
+nvm install 24
+```
+Then check installation with:
+```node -v``` or ```node --version```
+
 ## Initial Configuration
 
-- You need node.js... which comes with npm, node package manager
+- you need node (see above)
 - Run 'npm init' to create a package.json
 - 'npm i typescript' will install typescript and write it on the dependencies
 - in the future npm install will install what is there

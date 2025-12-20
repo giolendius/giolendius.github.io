@@ -3,17 +3,25 @@
 body {
     font-size: 150% !important;
 }
-/*p {*/
-/*    font-size: 100% !important;*/
-/*color: green;*/
-/*}*/
+p {
+    font-size: 100% !important;
+[//]: # (    color: black;)
+}
 </style>
 
-This is the repository for the website <a href="http://giolendius.github.io">Great Gallo Games.</a>
+This is the repository for the webpage of the games we own.
 
-All information displayed comes from the google sheets linked in the webpage.
+In the ``frontend`` sub-folder you'll find the code for the creation of the GitHubPage 
+<a href="http://giolendius.github.io">Great Gallo Games.</a>. Since the is no option for a backend, 
+we do not have one. This means that the site database is implemented as a simple, accessible google sheets 
+linked in the webpage.
 
-"We don’t stop playing because we grow old; We grow old because we stop playing."
+In the sub-folder ``bgg_integration`` there is a python script, executable locally to retrieve and integrate google_sheet 
+information with the statistics provided by BGG 
+<a href="http://boardgamegeek.com">BGG</a>. 
+
+
+_"We don’t stop playing because we grow old; We grow old because we stop playing."_
 
 [//]: # (- first month debt  )
 
