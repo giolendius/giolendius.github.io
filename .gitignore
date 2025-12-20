@@ -1,0 +1,11 @@
+# BGG Python Files
+bgg_integration/secrets/
+bgg_integration/constants/column_names.py
+*.env
+*.secret.json
+
+# Frontend Files
+build/
+
+# Tests and miscellaneous
+prove/
