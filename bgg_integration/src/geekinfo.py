@@ -154,6 +154,11 @@ class BggUpdater:
                                 column_names_to_update: BGGColumnNames | List[BGGColumnNames] = 'all',
                                 ask_for_input: bool = False):
         """Update the df with BGG_LINK and """
+        try:
+            self.start_row = int(input('From which row to start? (1,2,...)'))
+        except ValueError:
+            print('you did not insert a valid number. Starting from above')
+            self.start_row = 1
         if column_names_to_update == 'all':
             column_names_to_update = list(BGGColumnNames)
         elif isinstance(column_names_to_update, BGGColumnNames):
@@ -195,7 +200,7 @@ class BggUpdater:
         If the BGG link is confirmed, any value retrieved from the api is automatically updated.
         """
 
-        if self.skip_to_end:
+        if self.skip_to_end or row.name +1 < self.start_row:
             self.games_not_changed += 1
             return row[self.column_names]
         game_info_dict = row[self.column_names].to_dict()

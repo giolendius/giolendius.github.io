@@ -6,6 +6,7 @@ ITPublishers = {
     'Asterion Press': 'Asterion Press',
     'Dal Negro': 'Dal Negro',
     'Little Rocket Games': 'Little Rocket Games',
+    'Playagame Edizioni':'Playagame Edizioni',
 
     'dV Giochi': 'dV Giochi',
     'dV Games': 'dV Giochi',
