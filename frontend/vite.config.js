@@ -1,3 +1,6 @@
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+
 module.exports = {
   root: 'src',
   build: {
@@ -9,5 +12,5 @@ module.exports = {
   },
   server: {
     port: 8080
-  }
-}
+  },
+};
