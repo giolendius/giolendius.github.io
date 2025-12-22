@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giochi</title>
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
+<!--    <link rel="stylesheet" type="text/css" href="./style/home-style.css">-->
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+<div id="radice"></div>
+<div id="cover" class="greenD">
+    <section class="h-1vh flex-o-center">
+        <div class="my-flex-wrap">
+            <div class="meeple">
+                <img id="meeple" class=""
+                     src="img/3d-meeple-svgrepo-com.svg" alt="meeple">
+            </div>
+            <h1 class="text-8xl pb-2 font-bold text-[#b7e4c7] m-4">Great Gallo Games</h1>
+        </div>
+    </section>
+</div>
+
+<div id="barrage-behind" class="parallax-container flex-o-center">
+    <div class="parallax-image"></div>
+    <div class="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center">
+        <h1 class="text-2xl p-4 font-bold text-[#bd5909] m-4">Ma stasera a che si gioca?</h1>
+        <p>Che tu cerchi un veloce Party Game o un cinghialone che duri tutta la sera, qui puoi trovare
+            ispirazione.</p>
+        <p>Vai alla sezione Ricerca e trova il più adatto a te!</p>
+        <div class="mybutton"><a href="html/table.html">Ricerca</a></div>
+    </div>
+</div>
+
+<div id="linkToPages"></div>
+<section id="quanti-sono" class="greenDDD my-flex-wrap h-1vh">
+    <div class="flex-v-center flex1">
+        <div style="width: 80%">
+            <h2> Ma quanti sono?</h2>
+            <p>Quanti giochi abbiamo al momento? Possiamo fare un calcolo provvisorio, senza distinguere tra giochi
+                indipendenti ed espansioni... Ci sono i giochi dei nostri genitori, alcuni giochi con versioni
+                multiple
+                molto simili tra loro... Però se proprio vuoi sapere un numero, al momento abbiamo informazioni nel
+                nostro database riguardo a.....</p>
+        </div>
+    </div>
+    <div class="flex-o-center card-container" style="flex: 2">
+        <div class="card" onclick="this.classList.add('flipped')">
+            <div class="card-front enlarge">
+                <img style="height:100%; max-width: unset"
+                     src="https://brandonthegamedev.com/wp-content/uploads/2017/09/Thirsty-Meeples-Shelfie-1024x681.jpg"
+                alt="Scaffale di giochi da tavolo">
+            </div>
+            <div class="card-back flex-v-center">
+                <button id="calcola" class="mybutton">Calcola<span>>>></span></button>
+                <p></p>
+                <h2 id="tot_giochi">??</h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="slideshow">
+    <button class="arrow" onclick="ArrowToSlide(-1)">&#10094;</button>
+
+    <div class="slides">
+        <div class="slide active flex-v-center">
+            <p>"We don’t stop playing because we grow old; We grow old because we stop playing."</p>
+            <h4>George Bernard Shaw</h4>
+        </div>
+        <div class="slide to-right flex-v-center">
+            <p>Quando il gioco si fa duro, i duri cominciano a giocare</p>
+            <h4>John Belushi</h4>
+        </div>
+        <div class="slide flex-v-center">
+            <p>"The goal is to win, but it is the goal that is important, not the winning." </p>
+            <h4>Reiner Knizia</h4>
+        </div>
+        <div class="slide flex-v-center">
+            <p>GG, well played</p>
+            <p>Serio, non sapevo che scrivere</p>
+            <h4>Me</h4>
+        </div>
+    </div>
+    <button class="arrow right" onclick="ArrowToSlide(1)">&#10095;</button>
+    <div class="dots">
+        <span class="dot active" onclick="DotToSlide(0)"></span>
+        <span class="dot" onclick="DotToSlide(1)"></span>
+        <span class="dot" onclick="DotToSlide(2)"></span>
+        <span class="dot" onclick="DotToSlide(3)"></span>
+    </div>
+</div>
+
+<section class="greenDD h-1vh my-flex-wrap">
+    <div class="card-container enlarge flex-o-center">
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-front flex-v-center">
+                <img src=https://i.ytimg.com/vi/0hS0653xJu0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZShYMA8=&rs=AOn4CLBh-SC8pj6KhMWyfsye3j0ZRdmnvg"" alt="Barrage">
+            </div>
+            <div class="card-back">
+                <h2>Nome in Codice</h2>
+                <p>Un gioco sulle parole particolarmente interessante</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!--<section class="greenDDD section my-flex-wrap">-->
+
+<!--    <div>-->
+<!--        <img src="https://www.boardgamequest.com/wp-content/uploads/2019/11/Barrage-Header.jpg">-->
+<!--    </div>-->
+
+
+<!--    <div>-->
+<!--        <img src="https://i.ytimg.com/vi/0hS0653xJu0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZShYMA8=&rs=AOn4CLBh-SC8pj6KhMWyfsye3j0ZRdmnvg">-->
+<!--    </div>-->
+
+
+<!--</section>-->
+
+
+<script src="components/views/homeView/slideshow.ts"></script>
+<script type="module" src="./index.tsx" ></script>
+<script>
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        const parallax = document.querySelector('.parallax-image');
+        const gravity_factor = 0.5;
+        // infl how much image is dragged down.
+        // at gf=0 it scrolls normally up, at 1 scroll balances translation and stay fixed
+
+        parallax.style.transform = `translateY(${scrolled * gravity_factor}px)`;
+        parallax.style.bottom = `${500 * gravity_factor}px`;
+    });
+</script>
+
+</body>
+</html>

@@ -7,3 +7,4 @@ bgg_integration/secrets/
 logs
 npm-debug.log*
 .idea/
+prove/

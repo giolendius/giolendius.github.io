@@ -1,9 +1,13 @@
-* {
+@import "tailwindcss";
+
+@layer base {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
 }
-
 body, html {
     height: 100%;
     font-family: sans-serif;
@@ -26,6 +30,9 @@ body h3 {
     text-align: center;
 margin-bottom: 1rem;}
 
+button {
+    cursor: pointer;
+}
 
 .fittare {
     width: 100%;
@@ -128,7 +135,7 @@ margin-bottom: 1rem;}
     transition: width 0.3s ease-in-out;
 }
 
-a.active {
+button.active, a.active{
     background-color: #bd5909; /* Tailwind orange-600 */
 }
 

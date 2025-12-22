@@ -116,7 +116,7 @@
 
 .arrow {
   font-size: 6rem;
-  /*cursor: pointer; automatic for button*/
+  cursor: pointer;/* automatic for button*/
   color: #333;
   padding: 0 1rem;
     z-index: 3;
