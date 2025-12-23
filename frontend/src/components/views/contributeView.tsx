@@ -1,6 +1,8 @@
 import React from "react";
+import { useRef} from 'react';
 import {NewNavbar} from "../navbar";
 import {setPageT} from "./views";
+import {BUILD_DATE} from "../utils/build-date.ts"
 
 export default function ContributeView({setPage}: {setPage: setPageT}) {
     return <>
@@ -36,8 +38,9 @@ function GoooleSheet() {
 }
 
 function GitHub() {
+    const referenza = useRef<HTMLDivElement | null>();
     return <section className="h-vh-2 flex-o-center greenDD">
-        <div>
+        <div ref={referenza}>
             <h2>Guarda il codice!</h2>
             <p>Vuoi vedere il codice sorgente di questo sito? Trovi il codice su github:</p>
             <div className="flex-o-center relative">
@@ -47,7 +50,8 @@ function GitHub() {
                 </a>
             </div>
             <p>Accedi alla pagina e visualizza il codice sul branch main!</p>
-            <p></p>
+            <p>             <button onClick={()=>{referenza.current?.scrollIntoView()}}>Ciaooo</button>
+</p>
         </div>
     </section>
 }
@@ -63,7 +67,7 @@ function Spunti() {
         <div>
             <h3>Ultimi aggiornamenti</h3>
             <p>Game DB: 2024-12-22</p>
-            <p>Site layout: 2025-12-11</p>
+            <p>Site layout: {BUILD_DATE}</p>
         </div>
     </section>
 }

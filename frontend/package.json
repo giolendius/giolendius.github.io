@@ -7,10 +7,11 @@
     "old-build": "tsc && npm run build:copy-html",
     "build:copy-html": "cp ./index.html ./build",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run write-date && tsc && vite build",
     "preview": "vite preview",
     "prod": "npm run build && npm run preview",
-    "write-date": "echo \"export const buildDate = '$(date -Iseconds)';\" > src/utils/buildDate.ts"
+    "write-date": "echo \"export const BUILD_DATE = '$(date '+%d / %m / %Y')';\" > src/components/utils/build-date.ts"
+
   },
   "repository": {
     "type": "git",

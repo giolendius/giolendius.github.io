@@ -25,11 +25,6 @@ export default function HomeView({setPage}: { setPage: setPageT }) {
     return <div>
         <MeepleCover/>
         <NewNavbar setPage={setPage} activeLinkName={'home'}/>
-        <div className='flex bg-green-100'>
-            <h1>Welcome to the Home View number </h1>
-            <p>This is the main content of the home view.</p>
-            <p>fuck off</p>
-        </div>
         <BarrageBehind/>
         <QuantiSono/>
         <Slideshow/>
@@ -87,7 +82,7 @@ function QuantiSono() {
     }
 
     return <section id="quanti-sono" className="greenDDD my-flex-wrap h-1vh">
-        <div className="flex-v-center flex1">
+        <div className="flex-v-center mt-8">
             {/*<div className="w-80">*/}
             <div style={{width: '80%'}}>
                 <h2> Ma quanti sono?</h2>
@@ -98,7 +93,7 @@ function QuantiSono() {
                     nostro database riguardo a.....</p>
             </div>
         </div>
-        <div className="flex-o-center card-container flex-grow">
+        <div className="flex-o-center card-container">
             <div className={`card ${flipped ? 'flipped' : ''}`} onClick={() => {
                 setFlipped(true)
             }}>

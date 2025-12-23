@@ -1,4 +1,4 @@
-import {getElementById} from "../utils/view.utils";
+import {getElementById} from "./utils/view.utils";
 import {ViewNames, NavigatorArguments} from "./views/views";
 import {ReactElement} from "react";
 
@@ -6,10 +6,14 @@ import {ReactElement} from "react";
 export function NewNavbar({setPage, activeLinkName}: NavigatorArguments):
     ReactElement {
 
+
     function ButtonLink(
         {DisplayText, ViewName, additionalClasses = ''}:
         { DisplayText: string, ViewName: ViewNames, additionalClasses: string }) {
-        return <button onClick={() => setPage(ViewName)}
+        function handleClick() {
+        setPage(ViewName);
+        };
+        return <button onClick={() => handleClick()}
                        className={`nav-link px-4 py-2 text-white text-lg relative transition duration-300 
                        ${ViewName == activeLinkName ? 'active' : ''} ${additionalClasses}`}> {DisplayText} </button>
 
