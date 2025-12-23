@@ -1,4 +1,4 @@
-import {getElementById} from "./utils/view.utils";
+import {getElementById} from "./utils/utils";
 import {ViewNames, NavigatorArguments} from "./views/views";
 import {ReactElement} from "react";
 
@@ -42,9 +42,9 @@ function createNav(activeLinkName: ViewNames) {
           <div class="backdrop-blur-md rounded-lg border border-white/30 flex m-8">
                 <a id="link-home" href="/home_page.html"
                    class="rounded-l-lg nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Home</a>
-                <a id="link-table" href="/html/table.html"
+                <a id="link-table" href="/old_frontend/html/table.html"
                    class="nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Cerca </a>
-                <a id="link-contribuisci" href="/html/modify_source.html"
+                <a id="link-contribuisci" href="/old_frontend/html/modify_source.html"
                    class="rounded-r-lg nav-link px-4 py-2 text-white text-lg relative transition duration-300"> Contribuisci </a>
             </div>
             <div class="flex items-center bg-[#1e2d24] rounded-full p-2 m-4 border-2 border-[#b7e4c7]">
@@ -55,7 +55,7 @@ function createNav(activeLinkName: ViewNames) {
             </div>
         
         </div>`;
-    const div = getElementById('linkToPages');
+    const div = document.getElementById('linkToPages')!;
     div.innerHTML = headerHTML
     console.log(`Navbar created with active link: ${activeLinkName}`);
     const activeLink = document.getElementById(activeLinkName);

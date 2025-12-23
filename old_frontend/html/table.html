@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>Cerca Giochi</title>
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../../frontend/src/style/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../config/constants.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js">/*Import danfo */</script>
@@ -17,7 +17,7 @@
 
 <!--NAV BAR-->
 <div id="linkToPages" ></div>
-<script type="module" src="../components/views/tableView.tsx" ></script>
+<!--<script type="module" src="../../frontend/src/components/views/tableView/tableView.tsx" ></script>-->
 
 
 <!--MAIN PAGE START-->
@@ -26,7 +26,7 @@
     <div id="sidebarWrapper"
          class="bg-[#121212] md:bg-black md:relative absolute top-0 left-0 sidebar w-64 h-full py-2 transition-all duration-300">
 
-        <div class="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block md:space-y-6 space-y-0
+        <div class="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block space-y-0
                 md:space-y-6  space-x-4 md:space-x-0 md:mb-0 md:text-left ">
             <h1 class="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri </h1>
             <div class="mt-12 mb-4">
@@ -147,16 +147,16 @@
         <!--TABLE-->
         <div class="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
             <table id="tabella_giochi" class="min-w-full table-auto">
-                <!--                        <thead class="bg-[#2a3c30] text-[#b7e4c7]">-->
-                <!--                        <tr>-->
-                <!--                            <th class="text-left px-6 py-4">Game</th>-->
-                <!--                            <th class="text-left px-6 py-4">Min</th>-->
-                <!--                            <th class="text-left px-6 py-4">Max</th>-->
-                <!--                            <th class="text-left px-6 py-4">Competizione</th>-->
-                <!--                            <th class="text-left px-6 py-4">Difficoltà</th>-->
-                <!--                            <th class="text-left px-6 py-4">Tempo</th>-->
-                <!--                        </tr>-->
-                <!--                        </thead>-->
+<!--                                        <thead class="bg-[#2a3c30] text-[#b7e4c7]">-->
+<!--                                        <tr>-->
+<!--                                            <th class="text-left px-6 py-4">Game</th>-->
+<!--                                            <th class="text-left px-6 py-4">Min</th>-->
+<!--                                            <th class="text-left px-6 py-4">Max</th>-->
+<!--                                            <th class="text-left px-6 py-4">Competizione</th>-->
+<!--                                            <th class="text-left px-6 py-4">Difficoltà</th>-->
+<!--                                            <th class="text-left px-6 py-4">Tempo</th>-->
+<!--                                        </tr>-->
+<!--                                        </thead>-->
                 <tbody id="tbody_giochi" class="text-[#e1e1e1]"></tbody>
             </table>
         </div>
@@ -186,8 +186,8 @@
 <script>
 
 </script>
-<script src="../scripts/miscellaneous.js"></script>
-<script src="../scripts/game_info_popup.ts"></script>
+<script src="../miscellaneous.js"></script>
+<script src="../../frontend/src/components/views/tableView/game_info_popup.ts"></script>
 <script src="../scripts/filter_db.js"></script>
 <script src="../scripts/sidebar.js"></script>
 </html>

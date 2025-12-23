@@ -2,7 +2,7 @@ import React from "react";
 import { useRef} from 'react';
 import {NewNavbar} from "../navbar";
 import {setPageT} from "./views";
-import {BUILD_DATE} from "../utils/build-date.ts"
+import {BUILD_DATE} from "../utils/build-date"
 
 export default function ContributeView({setPage}: {setPage: setPageT}) {
     return <>
@@ -38,7 +38,7 @@ function GoooleSheet() {
 }
 
 function GitHub() {
-    const referenza = useRef<HTMLDivElement | null>();
+    const referenza = useRef<HTMLDivElement | null>(null);
     return <section className="h-vh-2 flex-o-center greenDD">
         <div ref={referenza}>
             <h2>Guarda il codice!</h2>

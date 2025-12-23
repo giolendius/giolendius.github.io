@@ -3,6 +3,7 @@ import {NewNavbar} from "../../navbar";
 import {setPageT} from "../views"
 import {ArrowToSlide, DotToSlide} from "./slideshow";
 // import {Response} from "../../../utils/types";
+import {env, keys} from "../../utils/constants";
 
 
 export default function HomeView({setPage}: { setPage: setPageT }) {
@@ -52,6 +53,8 @@ function QuantiSono() {
 
     function animateValue(obj: HTMLElement, start: number, end: number, duration: number) {
         let startTimestamp: number | null = null;
+
+
         const step = (timestamp: number) => {
             if (!startTimestamp) {
                 startTimestamp = timestamp
@@ -68,17 +71,13 @@ function QuantiSono() {
     function calcola_numero_giochi() {
 
         const obj: HTMLElement | null = document.getElementById("tot_giochi");
-        if (!obj) throw new Error("Elemento 'tot_giochi' non trovato");
-        //
+        if (!obj) {
+            throw new Error("Elemento 'tot_giochi' non trovato")
+        }
         // let tot: number = json["values"].length - 1;
         let tot = 666;
+        animateValue(obj, 0, tot, 2000)
 
-        let bottone = document.getElementById("calcola");
-        if (bottone) {
-            bottone.addEventListener("click", function () {
-                animateValue(obj, 0, tot, 2000)
-            });
-        }
     }
 
     return <section id="quanti-sono" className="greenDDD my-flex-wrap h-1vh">

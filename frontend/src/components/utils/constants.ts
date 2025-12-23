@@ -1,4 +1,3 @@
-export const countdown_timeout = 1000;
 export const env = "prod2";
 export const keys = {
     "dev": "j5yLYFOBinCuQ",

@@ -1,7 +1,7 @@
 # HOW TO FRONTEND
 
 
-## Needs:
+# Needs:
 
 You need Node.js which comes with npm, node package manager.
 On windows: install choco
@@ -21,13 +21,24 @@ nvm install 24
 Then check installation with:
 ```node -v``` or ```node --version```
 
-## Initial Configuration
+# Initial Configuration with vanilla typescript and node.js
 
 - you need node (see above)
 - Run 'npm init' to create a package.json
 - 'npm i typescript' will install typescript and write it on the dependencies
 - in the future npm install will install what is there
 - create a tsconfig.json, which give ts basic configuration
+
+The guy in the package.json used this 2 scripts:
+
+``` JSON
+{
+    "scripts": {
+    "old-build": "tsc && npm run build:copy-html",
+    "build:copy-html": "cp ./index.html ./build",
+    }
+}
+```
 
 ## Using vite
 
