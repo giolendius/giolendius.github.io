@@ -1,5 +1,4 @@
-import {getElementById} from "../utils/view.utils";
-import {jsonGame} from "./dbHandler";
+import {GameItem} from "./gameType";
 
 // Hide the information windows
 function closeInfoModal() {
@@ -14,7 +13,7 @@ function closeInfoModal() {
 
 
 //Populate and show the information windows
-export function showInfoModal(game: jsonGame) {
+export function showInfoModal(game: GameItem) {
     console.log(game)
     // show
     const popup_blur = document.getElementById('popup-blur');

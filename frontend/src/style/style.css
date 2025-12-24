@@ -185,6 +185,9 @@ button.active, a.active{
 .greenM {
     background-color: #36543f;
 }
+.hover-lighten:hover {
+    background-color: #36543f
+}
 
 .greenLL {
     background-color: #b7e4c7;

@@ -1,23 +1,49 @@
 import React from 'react';
 import {NewNavbar} from "../../navbar";
 import {setPageT} from "../views";
-import {dbHandler, jsonGame} from "./dbHandler";
+import {dbHandler} from "./dbHandler";
+import {GameItem} from "./gameType";
+import '../../../style/table-style.css';
 
 type TableViewProps = {
     setPage: setPageT; PromiseSheetData: Promise<string[][]>
 };
 
-export default function TableView(props: TableViewProps) {
+export default function TableView({setPage, PromiseSheetData}: TableViewProps) {
+
+    const [rows, setRows] = React.useState<GameItem[]>([]);
+    // const [columns, setColumns] = React.useState<string[]>([]);
+    const columns = ['Titolo', 'Gioc Min', 'Gioc Max', 'Competizione', 'Difficoltà', 'Durata'] as (keyof GameItem)[];
+    const [selectedGame, setSelectedGame] = React.useState<GameItem | null>(null);
+
+    React.useEffect(() => {
+        PromiseSheetData.then(array => dbHandler(array)).then(games => {
+            // let a = dfd.toJSON(games);
+            setRows(games);
+            // setColumns(Object.keys(games));
+        });
+    }, [PromiseSheetData]);
 
     return <div>
-        <NewNavbar setPage={props.setPage} activeLinkName={'table'}/>
+        <NewNavbar setPage={setPage} activeLinkName={'table'}/>
         <div className="bg-black relative flex transition-all duration-300">
             <Sidebar/>
             <OpenCloseButton/>
-            <MainTable PromiseSheetData={props.PromiseSheetData}/>
+            <MainTable>
+                <TableBody
+                    rows={rows}
+                    columns={columns}
+                    showGame={setSelectedGame}
+                />
+            </MainTable>
+            {selectedGame && <InfoPopUp
+                gameItem={selectedGame}
+                onClose={() => setSelectedGame(null)}
+            />}
         </div>
     </div>
 }
+
 
 function Sidebar() {
     return <div id="sidebarWrapper"
@@ -143,42 +169,18 @@ function OpenCloseButton() {
 }
 
 
-function MainTable({PromiseSheetData}: { PromiseSheetData: Promise<string[][]> }) {
+function MainTable({children}: { children: React.ReactNode }) {
     return <main id="mainContent" className="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
         <h1 className="m-10 text-4xl font-bold text-[#b7e4c7] z-2"> Ricerca dei giochi </h1>
-
         <div className="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
             <table id="tabella_giochi" className="min-w-full table-auto">
-                {/*<thead className="bg-[#2a3c30] text-[#b7e4c7]">*/}
-                {/*<tr>*/}
-                {/*    <th className="text-left px-6 py-4">Game</th>*/}
-                {/*    <th className="text-left px-6 py-4">Min</th>*/}
-                {/*    <th className="text-left px-6 py-4">Max</th>*/}
-                {/*    <th className="text-left px-6 py-4">Competizione</th>*/}
-                {/*    <th className="text-left px-6 py-4">Difficoltà</th>*/}
-                {/*    <th className="text-left px-6 py-4">Tempo</th>*/}
-                {/*</tr>*/}
-                {/*</thead>*/}
-                <TableBody PromiseSheetData={PromiseSheetData}/>
+                {children}
             </table>
         </div>
     </main>
 }
 
-function TableBody({PromiseSheetData}: { PromiseSheetData: Promise<string[][]> }) {
-
-
-    const [rows, setRows] = React.useState<jsonGame[]>([]);
-    // const [columns, setColumns] = React.useState<string[]>([]);
-    const columns = ['Titolo', 'Gioc Min', 'Gioc Max', 'Competizione', 'Difficoltà', 'Durata'] as (keyof jsonGame)[];
-
-    React.useEffect(() => {
-        PromiseSheetData.then(array => dbHandler(array)).then(games => {
-            // let a = dfd.toJSON(games);
-            setRows(games);
-            // setColumns(Object.keys(games));
-        });
-    }, [PromiseSheetData]);
+function TableBody({rows, showGame, columns}: { rows: GameItem[], showGame: showGameT, columns: (keyof GameItem)[] }) {
 
     if (rows.length === 0) {
         return <tbody>
@@ -188,20 +190,28 @@ function TableBody({PromiseSheetData}: { PromiseSheetData: Promise<string[][]> }
         </tbody>;
     }
     return <tbody className="text-[#e1e1e1]">
-    {rows.map((row, index) => (<TableRow rowData={row} columns={columns} isEven={index % 2 === 1}/>))}
+    {rows.map((row, index) => (
+        <TableRow rowData={row}
+                  showGame={showGame}
+                  isEven={index % 2 === 1}/>
+    ))}
     </tbody>;
 }
 
+type showGameT = (e: GameItem) => void;
+
 type TableRowProps = {
-    rowData: jsonGame; columns: (keyof jsonGame)[]; isEven: boolean;
+    rowData: GameItem;
+    showGame: showGameT;
+    isEven: boolean;
 };
 
 
-function TableRow({rowData, columns, isEven}: TableRowProps) {
+function TableRow({rowData, showGame, isEven}: TableRowProps) {
     const isMediumScreen = window.matchMedia("(min-width: 768px)").matches;
 
     return <>
-        <tr className={`${isEven ? "greenD" : "green-DD"} cursor-pointer hover:bg-[#36543f] transition-colors`}>
+        <tr className={`${isEven ? "greenD" : "greenDD"} cursor-pointer hover-lighten transition-colors`}>
             <td className="px-2 md:px-4 py-2 flex items-center gap-3">
                 <div className="w-12 flex-o-center">
                     <img src={rowData.LinkImmagine} className="h-12 rounded shadow" alt=''/></div>
@@ -219,24 +229,45 @@ function TableRow({rowData, columns, isEven}: TableRowProps) {
                 </>
             )}
             <td className='text-center px-3 py-3 w-10'>
-                {/*TODO QUI AGGIUNGERE MODALE PER CAPIRE*/}
-                {/*<button onClick={()=>showInfoModal(rowData)}*/}
-                {/*    className={"text-[#1f3127] bg-yellow-400 hover:bg-yellow-600 hover:text-white font-bold rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md transition"}>*/}
-                {/*    */}
-                {/*</button>*/}
+                <button onClick={() => showGame(rowData)}
+                        className={"text-[#1f3127] bg-yellow-400 hover:bg-yellow-600 hover:text-white font-bold rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md transition"}>
+                    ?
+                </button>
             </td>
         </tr>
     </>
 }
 
-function InfoModal() {
-    return <div id="popup-blur"
-         className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div id="popup-outer"
-             className="bg-yellow-100 text-black rounded-lg p-[10%] md:py-20 max-w-[90%] relative transform scale-95 transition-transform duration-300">
-            <button onClick={() => closeInfoModal()} className="absolute top-2 right-2 text-xl font-bold">&times;</button>
-            <div id="popup-inner">
+function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => void }) {
+    const [show, setShow] = React.useState(false);
+
+    React.useEffect(() => {
+        setTimeout(() => setShow(true), 10); // trigger animazione dopo mount
+    }, []);
+
+    return <>
+        <div id="popup-blur"
+             className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm transition-opacity duration-500">
+            <div id="popup-outer"
+                 className=
+                     {`bg-yellow-100 text-black rounded-lg p-[10%] md:py-20 max-w-[90%] relative transform transition-transform duration-300 ${show ? "scale-100" : "scale-25"}`}>
+                <button onClick={() => {
+                    setShow(false);
+                    setTimeout(onClose, 200);}}
+                        className="absolute top-2 right-2 text-xl font-bold">&times;</button>
+                <div id="popup-inner">
+                    <img src={gameItem.LinkImmagine} alt=" "
+                         className="mx-auto mb-4 rounded-lg shadow-lg w-auto max-h-48 md:max-h-80 object-cover"/>
+                    <h2 className={'text-3xl font-bold text-center mb-4 text-[#95d5b2]'}>{gameItem.Titolo}</h2>
+                    <div className="space-y-2 text-center text-base">
+                        {Object.entries(gameItem)
+                            .filter(([key]) => ["Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata",].includes(key))
+                            .map(([key, value]) => (
+                                <p key={key}><b>{key}:</b> {String(value)}</p>
+                            ))}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </>
 }

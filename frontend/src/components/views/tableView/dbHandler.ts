@@ -1,24 +1,14 @@
 // import {showInfoModal} from "./infoModal";
 import {getElementById} from "../../utils/utils";
 import * as dfd from "danfojs"
+import {GameItem} from "./gameType";
 
 type riga = string[];
 
-export interface jsonGame {
-    Titolo: string,
-    LinkImmagine: string,
-    "Gioc Min": number,
-    "Gioc Max": number,
-    Competizione: string,
-    Difficoltà: string,
-    Durata: string,
-    Exp: string
-}
-
-export function dbHandler(dati: riga[]): jsonGame[] {
+export function dbHandler(dati: riga[]): GameItem[] {
     console.log('chiamato dbhandler', dati)
     let filtered_db: dfd.DataFrame = listen_filter_show(dati);
-    return dfd.toJSON(filtered_db) as jsonGame[];
+    return dfd.toJSON(filtered_db) as GameItem[];
 }
 
 let v = ["", "", "", [""], [""], ""];

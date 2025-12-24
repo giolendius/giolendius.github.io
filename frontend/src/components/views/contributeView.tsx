@@ -1,10 +1,9 @@
-import React from "react";
-import { useRef} from 'react';
+import React, {useRef} from "react";
 import {NewNavbar} from "../navbar";
 import {setPageT} from "./views";
 import {BUILD_DATE} from "../utils/build-date"
 
-export default function ContributeView({setPage}: {setPage: setPageT}) {
+export default function ContributeView({setPage}: { setPage: setPageT }) {
     return <>
         <NewNavbar setPage={setPage} activeLinkName={'contribute'}/>
         <GoooleSheet/>
@@ -50,24 +49,33 @@ function GitHub() {
                 </a>
             </div>
             <p>Accedi alla pagina e visualizza il codice sul branch main!</p>
-            <p>             <button onClick={()=>{referenza.current?.scrollIntoView()}}>Ciaooo</button>
-</p>
+            {/*<p>*/}
+            {/*    <button onClick={() => {*/}
+            {/*        referenza.current?.scrollIntoView()*/}
+            {/*    }}>Ciaooo*/}
+            {/*    </button>*/}
+            {/*</p>*/}
         </div>
     </section>
 }
 
+
 function Spunti() {
-    return <section className="h-vh-2 flex-o-center bg-black">
-        <div>
-            <h3>Suggerimenti su futuri miglioramenti</h3>
-            <p>Ricerca avanzata: tipologie, autori...</p>
-            <p>Pagina con visuale dettagliata del gioco</p>
-            <p> Sviluppare le espansioni</p>
-        </div>
-        <div>
-            <h3>Ultimi aggiornamenti</h3>
-            <p>Game DB: 2024-12-22</p>
-            <p>Site layout: {BUILD_DATE}</p>
-        </div>
-    </section>
+    const [stato, setStato] = React.useState(0);
+    return <>
+        <section className="h-vh-2 flex-o-center bg-black">
+            <div>
+                <h3>Suggerimenti su futuri miglioramenti</h3>
+                <p>Ricerca avanzata: tipologie, autori...</p>
+                <p>Pagina con visuale dettagliata del gioco</p>
+                <p> Sviluppare le espansioni</p>
+            </div>
+            <div>
+                <h3>Ultimi aggiornamenti</h3>
+                <p>Game DB: 2024-12-22</p>
+                <p>Site layout: {BUILD_DATE}</p>
+            </div>
+
+        </section>
+    </>
 }
