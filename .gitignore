@@ -1,11 +1,18 @@
+# BGG Python Files
+bgg_integration/secrets/
+bgg_integration/constants/column_names.py
+*.env
+*.secret.json
+
+# Frontend Files
+build/
+
+# Tests and miscellaneous
 frontend/node_modules/
 frontend/build/
-
-bgg_integration/secrets/
 
 *.log
 logs
 npm-debug.log*
 .idea/
-prove/
 prove/

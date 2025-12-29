@@ -1,12 +1,23 @@
 # giolendius.github.io
+
 <style>
 body {
-    font-size: 150% !important;
+    font-size: 150% !important
+    color: green;
 }
 p {
-    font-size: 100% !important;
-[//]: # (    color: black;)
+font-size: 100%
 }
+
+
+
+h1, h2 {
+    font-size: 250% !important;
+    color: red;
+}
+
+
+
 </style>
 
 This is the repository for the webpage of the games we own.
@@ -21,25 +32,20 @@ information with the statistics provided by BGG
 <a href="http://boardgamegeek.com">BGG</a>. 
 
 
-_"We don’t stop playing because we grow old; We grow old because we stop playing."_
+"We don’t stop playing because we grow old; We grow old because we stop playing."
 
-[//]: # (- first month debt  )
 
-[//]: # ($C&#40;1+i&#41;-R$)
+_______
 
-[//]: # (- third month:  )
+## How To GoogleApi
 
-[//]: # ($&#40;&#40;C&#40;1+i&#41;-R&#41;&#40;1+i&#41;-R&#41;&#40;1+i&#41;-R$)
+Go to https://console.cloud.google.com/welcome?project=progettogiochi
 
-[//]: # (- n-th month  )
+### Service Account
 
-[//]: # ($C&#40;1+i&#41;^n- R \sum_{j=0}^{n-1}&#40;1+i&#41;^j$)
+Dalla pagina https://console.cloud.google.com/, vai sul menù in alto a sinistra, e seleziona API e 
+Servizi -| Credenziali. Crea Credenziali -| Service Account, e crea.
 
-[//]: # ()
-[//]: # (Since $\sum_{j=0}^{n}a^j=\frac{a^{n+1}-1}{a-1}$ we get)
-
-[//]: # ($$C&#40;1+i&#41;^n- R \frac{&#40;1+i&#41;^n-1}{&#40;1+i&#41;-1}=0$$)
-
-[//]: # (And so we get)
-
-[//]: # ($$R=Ci \frac{&#40;1+i&#41;^n}{&#40;1+i&#41;^n-1}$$)
+Dalla pagina https://console.cloud.google.com/, vai sul menù in alto a sinistra, e seleziona 
+IAM e Amministrazione -> Service Account e seleziona l'account creato. 
+Vai sul Tab chiavi, 
