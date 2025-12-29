@@ -1,7 +1,7 @@
 import {keys, env} from "./constants";
+import {SheetData} from "./types";
 
-
-export default async function fetchSheet(): Promise<string[][]> {
+export default async function fetchSheet(): Promise<SheetData> {
     let chiave = keys[env]
     let schl = {
         "dev": "1WgYYSWL6uOdjfEGFeQ",

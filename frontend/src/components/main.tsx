@@ -3,19 +3,22 @@ import HomeView from './views/homeView/homeView';
 import TableView from './views/tableView/tableView';
 import ContributeView from './views/contributeView';
 import fetchSheet from "./utils/fetchSheet";
-
+import {SheetData} from "./utils/types";
+import {defineUserInputsStates, userInputs} from "./views/tableView/SideBar";
 
 export default function App() {
-    const [page, setPage] = React.useState('table');
-    let SheetData = fetchSheet()
+    let PromiseSheetData: Promise<SheetData> = fetchSheet()
 
-    return <MioContext.Provider value={'ciao'}>
-    <div className='text-black'>
-        {page === "home" && <HomeView setPage={setPage}/>}
-        {page === "table" && <TableView setPage={setPage} PromiseSheetData={SheetData}/>}
-        {page === "contribute" && <ContributeView setPage={setPage}/>}
-    </div></MioContext.Provider>;
+    return <div className='text-black'>
+        <ThreeViews PromiseSheetData={PromiseSheetData}/>
+    </div>;
 };
 
-const MioContext = React.createContext('ciao');
-export const NonCapisco = () => React.useContext(MioContext)
+
+function ThreeViews({PromiseSheetData}:{PromiseSheetData:Promise<SheetData>}) {
+    const [page, setPage] = React.useState('table');
+    const userInputs: userInputs = defineUserInputsStates();
+    return <>{page === "home" && <HomeView setPage={setPage}/>}
+        {page === "table" && <TableView setPage={setPage} PromiseSheetData={PromiseSheetData} userInputs={userInputs}/>}
+        {page === "contribute" && <ContributeView setPage={setPage}/>}</>;
+}

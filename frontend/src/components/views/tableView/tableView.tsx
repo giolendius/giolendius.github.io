@@ -3,155 +3,62 @@ import {NewNavbar} from "../../navbar";
 import {setPageT} from "../views";
 import {dbHandler} from "./dbHandler";
 import {GameItem} from "./gameType";
+import {SheetData} from "../../utils/types";
 import '../../../style/table-style.css';
+import {Sidebar, userInputs} from "./SideBar";
+
 
 type TableViewProps = {
-    setPage: setPageT; PromiseSheetData: Promise<string[][]>
+    setPage: setPageT; PromiseSheetData: Promise<SheetData>, userInputs: userInputs
 };
 
-export default function TableView({setPage, PromiseSheetData}: TableViewProps) {
+export default function TableView({setPage, PromiseSheetData, userInputs}: TableViewProps) {
 
-    const [rows, setRows] = React.useState<GameItem[]>([]);
+    const [rows, setRows] = React.useState<GameItem[] | null>(null);
     // const [columns, setColumns] = React.useState<string[]>([]);
     const columns = ['Titolo', 'Gioc Min', 'Gioc Max', 'Competizione', 'Difficoltà', 'Durata'] as (keyof GameItem)[];
     const [selectedGame, setSelectedGame] = React.useState<GameItem | null>(null);
 
+
+    // React.useEffect(() => {
+    //     PromiseSheetData.then(array => dbHandler(array, userInputs)).then(games => {
+    //         // let a = dfd.toJSON(games);
+    //         setRows(games);
+    //         // setColumns(Object.keys(games));
+    //     });
+    // }, [userInputs]);
     React.useEffect(() => {
-        PromiseSheetData.then(array => dbHandler(array)).then(games => {
-            // let a = dfd.toJSON(games);
-            setRows(games);
-            // setColumns(Object.keys(games));
-        });
-    }, [PromiseSheetData]);
+            dbHandler(PromiseSheetData, userInputs, setRows);
+        },
+        [userInputs]
+    )
+    ;
 
     return <div>
         <NewNavbar setPage={setPage} activeLinkName={'table'}/>
+        <div className={`bg-red-500`}>Ciaooooooo
+            testo è {userInputs.search.curValue}
+            pl={userInputs.players.curValue}
+            diff={userInputs.complexity.curValue}
+            categ sono {userInputs.categ.curValue.length} invece array
+            è {['ciao', 'amico ', 'caro  !'].length}</div>
         <div className="bg-black relative flex transition-all duration-300">
-            <Sidebar/>
+
+            <Sidebar userInputs={userInputs}/>
             <OpenCloseButton/>
             <MainTable>
+                <tbody className="text-[#e1e1e1]">
                 <TableBody
                     rows={rows}
                     columns={columns}
                     showGame={setSelectedGame}
                 />
+                </tbody>
             </MainTable>
             {selectedGame && <InfoPopUp
                 gameItem={selectedGame}
                 onClose={() => setSelectedGame(null)}
             />}
-        </div>
-    </div>
-}
-
-
-function Sidebar() {
-    return <div id="sidebarWrapper"
-                className="bg-[#121212] md:bg-black md:relative absolute top-0 left-0 sidebar w-64 h-full py-2 transition-all duration-300">
-
-        <div className="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block space-y-0
-                md:space-y-6  space-x-4 md:space-x-0 md:mb-0 md:text-left ">
-            <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri </h1>
-            <div className="mt-12 mb-4">
-                <label htmlFor="s_game_name" className="block mb-1 text-sm font-medium text-[#b7e4c7]">Cerca per
-                    nome..</label>
-                <input id="s_game_name" type="text" placeholder="Cerca..."
-                       className="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]"/>
-            </div>
-            <div className="mb-4">
-                <label htmlFor="s_players" className="block mb-1 text-sm font-medium text-[#b7e4c7]">Numero di
-                    giocatori</label>
-                <select id="s_players"
-                        className="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
-                    {/*<option value=""></option>*/}
-                    {/*<option value=1>1</option>*/}
-                    {/*<option value=2>2</option>*/}
-                    {/*<option value=3>3</option>*/}
-                    {/*<option value=4>4</option>*/}
-                    {/*<option value=5>5</option>*/}
-                    {/*<option value=6>6</option>*/}
-                    {/*<option value=7>7</option>*/}
-                    {/*<option value=8>8</option>*/}
-                    {/*<option value=9>9</option>*/}
-                    {/*<option value=10>10</option>*/}
-                    {/*<option value=12>12</option>*/}
-                    {/*<option value=14>14</option>*/}
-                    {/*<option value=16>16+</option>*/}
-                </select>
-            </div>
-            <div className="mb-4">
-                <label htmlFor="s_collab"
-                       className="block mb-1 text-sm font-medium text-[#b7e4c7]">Cooperazione: </label>
-                <select id="s_collab"
-                        className="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
-                    <option value="" selected></option>
-                    <option value="cooperativo">COOPerativo</option>
-                    <option value="competitivo">Tutti contro Tutti</option>
-                    <option value="a squadre">A Squadre</option>
-                </select>
-            </div>
-
-            <div className="mb-4 ">
-                <label htmlFor="s_complex"
-                       className="block mb-1 text-sm font-medium text-[#b7e4c7]">Complessità:</label>
-                <select multiple id="s_complex"
-                        className=" h-[11em] w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2]">
-                    <option value="">Qualunque</option>
-                    <option value="Facilissimo">Facilissimo</option>
-                    <option value="Facile">Facile</option>
-                    <option value="Medio">Medio</option>
-                    <option value="Difficile">Difficile</option>
-                    <option value="Molto complesso">Molto Complesso</option>
-                </select>
-            </div>
-            <div className="mb-4">
-                <label htmlFor="s_time" className="block mb-1 text-sm font-medium text-[#b7e4c7]">Durata: </label>
-                <select multiple id="s_time"
-                        className="h-[11em] w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] focus:outline-none focus:ring-2 focus:ring-[#95d5b2] custom-scroll">
-                    <option value="">Qualunque</option>
-                    <option value="Molto breve">Molto breve</option>
-                    <option value="Breve">Breve</option>
-                    <option value="Medio">Medio</option>
-                    <option value="Lungo">Lungo</option>
-                    <option value="Molto lungo">Molto lungo</option>
-                </select>
-            </div>
-
-            <div className="mb-4">
-                <label htmlFor="style" className="block mb-1 text-sm font-medium text-[#b7e4c7]">New Select:</label>
-                <div id="style"
-                     className="w-full p-2 rounded bg-[#2d3e33] text-white border border-[#3a5244] space-y-2">
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Scotland Yard"/>
-                        <span>Scotland Yard</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Piazzamento Lavoratori"/>
-                        <span>Piazzamento Lavoratori</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Gestionale"/>
-                        <span>Gestionale</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Deduzione Sociale"/>
-                        <span>Deduzione Sociale</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Deduzione Sociale"/>
-                        <span>Deduzione Sociale</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" value="Deduzione Sociale"/>
-                        <span>Deduzione Sociale</span>
-                    </label>
-                </div>
-            </div>
         </div>
     </div>
 }
@@ -170,7 +77,8 @@ function OpenCloseButton() {
 
 
 function MainTable({children}: { children: React.ReactNode }) {
-    return <main id="mainContent" className="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
+    return <main id="mainContent"
+                 className="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
         <h1 className="m-10 text-4xl font-bold text-[#b7e4c7] z-2"> Ricerca dei giochi </h1>
         <div className="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
             <table id="tabella_giochi" className="min-w-full table-auto">
@@ -180,22 +88,34 @@ function MainTable({children}: { children: React.ReactNode }) {
     </main>
 }
 
-function TableBody({rows, showGame, columns}: { rows: GameItem[], showGame: showGameT, columns: (keyof GameItem)[] }) {
+function TableBody({rows, showGame, columns}: {
+    rows: GameItem[] | null,
+    showGame: showGameT,
+    columns: (keyof GameItem)[]
+}) {
+    console.log('rows are', rows)
 
-    if (rows.length === 0) {
-        return <tbody>
-        <tr>
+    if (rows?.length === 0) {
+        return <tr>
+            <td colSpan={columns.length}> Nessun risultato trovato...</td>
+        </tr>;
+    }
+    if (!rows) {
+        console.log('adadadwawd')
+        return <tr>
             <td colSpan={columns.length}>Caricamento...</td>
         </tr>
-        </tbody>;
+            ;
     }
-    return <tbody className="text-[#e1e1e1]">
-    {rows.map((row, index) => (
-        <TableRow rowData={row}
-                  showGame={showGame}
-                  isEven={index % 2 === 1}/>
-    ))}
-    </tbody>;
+
+
+    return <>
+        {rows.map((row, index) => (
+            <TableRow rowData={row}
+                      index={index}
+                      showGame={showGame}/>
+        ))}
+    </>
 }
 
 type showGameT = (e: GameItem) => void;
@@ -203,15 +123,16 @@ type showGameT = (e: GameItem) => void;
 type TableRowProps = {
     rowData: GameItem;
     showGame: showGameT;
-    isEven: boolean;
+    index: number;
 };
 
 
-function TableRow({rowData, showGame, isEven}: TableRowProps) {
+function TableRow({rowData, showGame, index}: TableRowProps) {
     const isMediumScreen = window.matchMedia("(min-width: 768px)").matches;
 
     return <>
-        <tr className={`${isEven ? "greenD" : "greenDD"} cursor-pointer hover-lighten transition-colors`}>
+        <tr key={index}
+            className={`${index % 2 === 1 ? "greenD" : "greenDD"} cursor-pointer hover-lighten transition-colors`}>
             <td className="px-2 md:px-4 py-2 flex items-center gap-3">
                 <div className="w-12 flex-o-center">
                     <img src={rowData.LinkImmagine} className="h-12 rounded shadow" alt=''/></div>
@@ -245,18 +166,21 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
         setTimeout(() => setShow(true), 10); // trigger animazione dopo mount
     }, []);
 
+    function onCloseHandler() {
+        setShow(false);
+        setTimeout(onClose, 200);
+    }
+
     return <>
-        <div id="popup-blur"
+        <div id="popup-blur" onClick={onCloseHandler}
              className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm transition-opacity duration-500">
-            <div id="popup-outer"
+            <div id="popup-outer" onClick={(e) => e.stopPropagation()}
                  className=
-                     {`bg-yellow-100 text-black rounded-lg p-[10%] md:py-20 max-w-[90%] relative transform transition-transform duration-300 ${show ? "scale-100" : "scale-25"}`}>
-                <button onClick={() => {
-                    setShow(false);
-                    setTimeout(onClose, 200);}}
+                     {`bg-yellow-100 text-black rounded-lg p-[5%] md:py-20 max-w-[90%] relative transform transition-transform duration-300 ${show ? "scale-100" : "scale-25"}`}>
+                <button onClick={onCloseHandler}
                         className="absolute top-2 right-2 text-xl font-bold">&times;</button>
                 <div id="popup-inner">
-                    <img src={gameItem.LinkImmagine} alt=" "
+                    <img src={gameItem.LinkImmagine !== "" ? gameItem.LinkImmagine : undefined} alt=" "
                          className="mx-auto mb-4 rounded-lg shadow-lg w-auto max-h-48 md:max-h-80 object-cover"/>
                     <h2 className={'text-3xl font-bold text-center mb-4 text-[#95d5b2]'}>{gameItem.Titolo}</h2>
                     <div className="space-y-2 text-center text-base">

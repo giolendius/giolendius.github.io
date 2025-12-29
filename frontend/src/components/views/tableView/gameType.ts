@@ -4,7 +4,7 @@ export interface GameItem {
     "Gioc Min": number,
     "Gioc Max": number,
     Competizione: string,
-    Difficoltà: string,
+    "Difficoltà": string,
     Durata: string,
     Exp: string
 }
