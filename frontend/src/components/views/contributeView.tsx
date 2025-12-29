@@ -61,7 +61,6 @@ function GitHub() {
 
 
 function Spunti() {
-    const [stato, setStato] = React.useState(0);
     return <>
         <section className="h-vh-2 flex-o-center bg-black">
             <div>

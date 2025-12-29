@@ -90,7 +90,7 @@ function MainTable({children}: { children: React.ReactNode }) {
 
 function TableBody({rows, showGame, columns}: {
     rows: GameItem[] | null,
-    showGame: showGameT,
+    showGame: showGame,
     columns: (keyof GameItem)[]
 }) {
     console.log('rows are', rows)
@@ -118,11 +118,11 @@ function TableBody({rows, showGame, columns}: {
     </>
 }
 
-type showGameT = (e: GameItem) => void;
+type showGame = (e: GameItem) => void;
 
 type TableRowProps = {
     rowData: GameItem;
-    showGame: showGameT;
+    showGame: showGame;
     index: number;
 };
 

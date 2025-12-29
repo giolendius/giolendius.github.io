@@ -5,7 +5,7 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main",
-#               "feat/typescript-reformat"
+               "feat/typescript-reformat"
     ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -42,7 +42,7 @@ jobs:
       - name: Installare dipendenze
         run: npm ci
       - name: Build with Typescript Gioele
-        run: npm run build
+        run: npm run prod
       - name: controlla cosa c'è in frontend/build
         run: cd build && ls
 #        working-directory: frontend
