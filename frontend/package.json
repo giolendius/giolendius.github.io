@@ -8,8 +8,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "write-date": "echo \"export const BUILD_DATE = '$(date '+%d / %m / %Y')';\" > src/components/utils/build-date.ts",
-    "simula_prod_mac": "npm run write-date &&  npm run build && npm run preview",
-    "simula_prod_win": "npm run build && npm run preview"
+    "write-columns": "node create_column_names.js",
+    "simula_prod_mac": "npm run write-date && npm run write-columns &&  npm run build && npm run preview",
+    "simula_prod_win": "npm run build && npm run preview",
+    "prod": "npm run write-date && npm run write-columns && npm run build"
   },
   "repository": {
     "type": "git",
