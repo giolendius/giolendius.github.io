@@ -6,3 +6,5 @@ export function getElementById(elementId: string): HTMLElement {
     }
     return element;
 }
+
+export const isMediumScreen= window.matchMedia("(min-width: 768px)").matches;

@@ -30,7 +30,7 @@ function createInputField(inputType: 'input' | 'select', labelText: string, opti
 
 function createMultiselectInputField(labelText: string, options: string[]): StateWithSetter<string[], string> {
     const [curValue, setValue] = useState<string[]>([]);
-    return {curValue, setValue, inputType:'multiselect', labelText, options};
+    return {curValue, setValue, inputType: 'multiselect', labelText, options};
 }
 
 export function defineUserInputsStates(): userInputs {
@@ -98,13 +98,10 @@ function InputField<T extends string | string[]>(state: StateWithSetter<T, strin
 }
 
 export function Sidebar({userInputs}: { userInputs: userInputs }) {
-    return <div id="sidebarWrapper"
-                className="bg-[#121212] md:bg-black md:relative absolute top-0 left-0 sidebar w-64 h-full py-2 transition-all duration-300">
-
+    return <>
         <div className="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block space-y-0
                 md:space-y-6  space-x-4 md:space-x-0 md:mb-0 md:text-left ">
-            <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri </h1>
-
+            <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametriadadada awd awd aw  </h1>
             <InputField {...userInputs.search}/>
             <InputField {...userInputs.players}/>
             <InputField {...userInputs.collab}/>
@@ -112,6 +109,6 @@ export function Sidebar({userInputs}: { userInputs: userInputs }) {
             <InputField {...userInputs.time}/>
             <InputField  {...userInputs.categ}/>
         </div>
-    </div>
+    </>
 }
 

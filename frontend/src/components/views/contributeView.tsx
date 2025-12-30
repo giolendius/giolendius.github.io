@@ -1,15 +1,283 @@
 import React, {useRef} from "react";
-import {NewNavbar} from "../navbar";
-import {setPageT} from "./views";
 import {BUILD_DATE} from "../utils/build-date"
 
-export default function ContributeView({setPage}: { setPage: setPageT }) {
+export default function ContributeView({children}: { children: React.ReactNode }) {
     return <>
-        <NewNavbar setPage={setPage} activeLinkName={'contribute'}/>
+        {children}
+        <MyCoolStuff/>
         <GoooleSheet/>
         <GitHub/>
         <Spunti/>
     </>;
+}
+
+function MyCoolStuff() {
+    const [sidebarOpen, setSidebarOpen] = React.useState(true);
+    //   React.useEffect(() => {
+    //   document.body.style.overflow = sidebarOpen ? "hidden" : "auto";
+    // }, [sidebarOpen]);
+
+    return (
+        <div className="takes-all-screen tuttorosso"><div className='bg-green-200 sticky top-0 z-3'>
+            <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+                    Close sidebar
+                </button></div>
+            {/* MAIN CONTENT (always there) */}
+            <main className={`main ${sidebarOpen ? "locked" : ""}`}>
+                <h1>Main Content</h1>
+                <p>This content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more textThis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text
+                his content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more texthis content was always here. adokladkamw and here there
+                is a lot of text write more text This content was always here. adokladkamw and here there is a lot of text
+                write more text</p>
+            </main>
+
+            {/* SIDEBAR (on top) */}
+            <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
+                <h2>Sidebar</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ad architecto ipsa iste, iure,
+                    laboriosam libero minima molestias omnis quas rerum saepe sit, temporibus? Aut consequuntur earum
+                    eligendi id minus tenetur totam vel. Ab consequuntur, explicabo fugit necessitatibus nesciunt unde
+                    vel velit vitae? Accusamus aliquam aliquid cum dicta dolore enim facere facilis incidunt laborum
+                    libero nostrum numquam obcaecati odio perspiciatis praesentium, quo, repudiandae sunt suscipit
+                    tempora ut veniam vero voluptas voluptatum? Assumenda autem distinctio expedita laborum non tempore
+                    temporibus vel. A alias debitis deserunt doloremque ea fugiat impedit ipsam laboriosam nostrum optio
+                    pariatur, praesentium sequi sit suscipit voluptatem? Accusantium aliquid amet beatae consequuntur,
+                    dignissimos doloremque eaque eos excepturi exercitationem fugiat laborum modi natus provident
+                    repellat repudiandae! Ab ad alias aspernatur consequatur culpa earum ex excepturi laboriosam,
+                    molestiae necessitatibus nemo optio placeat quasi quidem repellat unde veniam! Ab distinctio nostrum
+                    ut. Adipisci commodi dolor doloribus enim est iste libero nostrum quis, repellendus? Accusamus, at
+                    commodi consequuntur deleniti, dignissimos distinctio dolorem ex exercitationem facilis fugiat illum
+                    maiores minima nesciunt nisi odio odit quaerat, qui quis quo ratione repellendus rerum saepe sed
+                    similique sint sit suscipit ut vel vero voluptatem. Ab accusamus assumenda atque corporis dolor
+                    doloremque ea earum illo impedit, ipsum laborum maiores maxime odio odit praesentium provident
+                    quaerat quas, quo repudiandae temporibus ullam veniam vitae voluptatibus. Aut delectus ea excepturi
+                    numquam quis. Amet culpa dolores doloribus dolorum eaque eius fugiat inventore itaque laborum
+                    molestias, neque, non odio quis reiciendis repellat temporibus tenetur voluptatem voluptates! Animi
+                    assumenda beatae consequatur cumque, deserunt doloribus eligendi esse eveniet ex explicabo fugiat
+                    incidunt magnam nulla possimus qui ratione reiciendis sit soluta temporibus vitae. Accusantium,
+                    culpa deleniti distinctio libero necessitatibus, nisi non odit omnis provident quos sit vitae.
+                    Aliquam asperiores aspernatur corporis dolore dolorem ea earum eius enim error eum exercitationem
+                    explicabo impedit in incidunt inventore libero nesciunt pariatur perspiciatis praesentium quam quas
+                    qui, quo quos repellat reprehenderit rerum sapiente tenetur vel voluptate voluptatibus. Ab animi id
+                    mollitia neque praesentium quae voluptate. A commodi consequatur consequuntur delectus deleniti
+                    deserunt dignissimos distinctio dolor dolorem doloribus ea earum eligendi illo illum iste labore
+                    odio porro, quae quia repellendus repudiandae velit voluptatibus! Blanditiis consequatur cum,
+                    deserunt eaque earum error, et eveniet fuga id iusto laboriosam molestiae nobis provident quo quod
+                    repellendus temporibus veritatis. A corporis dolore ea eaque, labore, minus nemo nisi officiis
+                    perferendis quas rem repellat sequi! Ab debitis iste minima officiis quae similique temporibus.
+                    Aliquid at autem dolorum eius explicabo in ipsum iure omnis optio, praesentium quis repellendus
+                    rerum temporibus ullam voluptate? Accusamus ad alias consequatur culpa delectus dolor doloribus,
+                    enim facilis illum laboriosam laborum, nesciunt nobis quae quod ratione, reprehenderit soluta
+                    suscipit totam veniam vero? Maiores quo sunt tenetur. Accusamus aliquid enim error esse iure
+                    repellat, repellendus? Distinctio ipsa nemo quidem, sequi sit voluptate. Aliquam amet aut doloremque
+                    et explicabo hic impedit magnam maxime obcaecati pariatur! Ab amet atque eius fugit harum impedit
+                    iste magni pariatur, porro quis rem temporibus vero. Architecto assumenda beatae deserunt doloremque
+                    dolorum earum eos, necessitatibus obcaecati, omnis pariatur porro reprehenderit sequi voluptas!
+                </p>
+
+            </aside>
+        </div>
+    );
 }
 
 function GoooleSheet() {

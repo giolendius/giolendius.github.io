@@ -116,7 +116,7 @@ button {
 /*-----------------------*/
 
 #sidebarWrapper {
-    width: 16rem; /* default md:w-64 */
+    /*width: 16rem; !* default md:w-64 *!*/
     transition: width 0.3s ease-in-out;
     /*overflow: hidden;*/
 }

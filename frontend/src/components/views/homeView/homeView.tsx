@@ -1,12 +1,17 @@
 import React from 'react';
-import {NewNavbar} from "../../navbar";
 import {setPageT} from "../views"
 import {ArrowToSlide, DotToSlide} from "./slideshow";
-// import {Response} from "../../../utils/types";
-import {env, keys} from "../../utils/constants";
+import meeple from "../../../img/3d-meeple-svgrepo-com.svg";
+import {SheetData} from "../../utils/types";
+import {getElementById} from "../../utils/utils";
 
 
-export default function HomeView({setPage}: { setPage: setPageT }) {
+export default function HomeView({children, setPage, PromiseSheetData}:
+                                 {
+                                     children: React.ReactNode,
+                                     setPage: setPageT,
+                                     PromiseSheetData: Promise<SheetData>
+                                 }) {
     function BarrageBehind() {
         return <div id="barrage-behind" className="parallax-container flex-o-center">
             <div className="parallax-image"></div>
@@ -25,9 +30,9 @@ export default function HomeView({setPage}: { setPage: setPageT }) {
 
     return <div>
         <MeepleCover/>
-        <NewNavbar setPage={setPage} activeLinkName={'home'}/>
+        {children}
         <BarrageBehind/>
-        <QuantiSono/>
+        <QuantiSono PromiseSheetData={PromiseSheetData}/>
         <Slideshow/>
     </div>
 }
@@ -39,7 +44,7 @@ function MeepleCover() {
             <div className="my-flex-wrap">
                 <div className="meeple">
                     <img id="meeple" className=""
-                         src="../../../img/3d-meeple-svgrepo-com.svg" alt="meeple"/>
+                         src={meeple} alt="meeple"/>
                 </div>
                 <h1 className="text-8xl pb-2 font-bold text-[#b7e4c7] m-4">Great Gallo Games</h1>
             </div>
@@ -48,36 +53,29 @@ function MeepleCover() {
 }
 
 
-function QuantiSono() {
+function QuantiSono({PromiseSheetData}: { PromiseSheetData: Promise<SheetData> }) {
     const [flipped, setFlipped] = React.useState<boolean>(false)
+
 
     function animateValue(obj: HTMLElement, start: number, end: number, duration: number) {
         let startTimestamp: number | null = null;
-
-
         const step = (timestamp: number) => {
             if (!startTimestamp) {
                 startTimestamp = timestamp
             }
             const progress: number = Math.min((timestamp - startTimestamp) / duration, 1);
             obj.innerText = Math.floor(progress * (end - start) + start).toString();
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
+            if (progress < 1) {window.requestAnimationFrame(step)}
         };
         window.requestAnimationFrame(step);
     }
 
-    function calcola_numero_giochi() {
+    async function calcola_numero_giochi() {
 
-        const obj: HTMLElement | null = document.getElementById("tot_giochi");
-        if (!obj) {
-            throw new Error("Elemento 'tot_giochi' non trovato")
-        }
-        // let tot: number = json["values"].length - 1;
-        let tot = 666;
-        animateValue(obj, 0, tot, 2000)
-
+        const SheetData: SheetData = await PromiseSheetData;
+        const tot_games: number = SheetData.length - 1;
+        const obj: HTMLElement = getElementById("tot_giochi");
+        animateValue(obj, 0, tot_games, 2000)
     }
 
     return <section id="quanti-sono" className="greenDDD my-flex-wrap h-1vh">
@@ -114,7 +112,7 @@ function QuantiSono() {
 
 
 function Slideshow() {
-    return<div className="slideshow">
+    return <div className="slideshow">
         <button className="arrow" onClick={() => {
             ArrowToSlide(-1)
         }}>&#10094;</button>
@@ -138,12 +136,22 @@ function Slideshow() {
                 <h4>Me</h4>
             </div>
         </div>
-        <button className="arrow right" onClick={()=>{ArrowToSlide(1)}}>&#10095;</button>
+        <button className="arrow right" onClick={() => {
+            ArrowToSlide(1)
+        }}>&#10095;</button>
         <div className="dots">
-            <span className="dot active" onClick={()=>{DotToSlide(0)}}></span>
-            <span className="dot" onClick={()=>{DotToSlide(1)}}></span>
-            <span className="dot" onClick={()=>{DotToSlide(2)}}></span>
-            <span className="dot" onClick={()=>{DotToSlide(3)}}></span>
+            <span className="dot active" onClick={() => {
+                DotToSlide(0)
+            }}></span>
+            <span className="dot" onClick={() => {
+                DotToSlide(1)
+            }}></span>
+            <span className="dot" onClick={() => {
+                DotToSlide(2)
+            }}></span>
+            <span className="dot" onClick={() => {
+                DotToSlide(3)
+            }}></span>
         </div>
     </div>
 }

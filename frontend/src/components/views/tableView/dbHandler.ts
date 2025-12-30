@@ -1,15 +1,15 @@
-// import {showInfoModal} from "./infoModal";
 import * as dfd from "danfojs"
 import {GameItem} from "./gameType";
 import {userInputs} from "./SideBar";
 import {SheetData} from "../../utils/types";
+import {columnNames} from "../../utils/column_names"
 import React from "react";
 
 type riga = string[];
 
 export async function dbHandler(promiseSheetData: Promise<SheetData>,
                                 userInputs: userInputs,
-                                setRows: React.Dispatch<React.SetStateAction<GameItem[] | null>>): Promise<void> {
+                                setRows: React.Dispatch<React.SetStateAction<GameItem[] | null>>) {
 
     try {
         const dati: riga[] = await promiseSheetData;
@@ -25,28 +25,13 @@ export async function dbHandler(promiseSheetData: Promise<SheetData>,
     }
 }
 
-// function listener(input, i, df, vector_inside = false) {
-//     if (vector_inside) {
-//         tmp = [];
-//         for (let j = 0; j < input.selectedOptions.length; j++) {
-//             tmp.push(input.selectedOptions[j].value);
-//         }
-//         console.log("come pensavo", i)
-//     } else {
-//         tmp = input.value
-//     }
-//     v[i] = tmp;
-//     df_filtrato = filter_db(df);
-//     console.log("printiamo");
-//     creaTabella(df_filtrato, df_exp);
-// }
 
 function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
 
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
     // let cond_base = df["Exp"].eq("");
 
-    const df_exp = df.query(df["Exp"].ne(""));
+    const df_exp = df.query(df[columnNames.EXPANSION].ne(""));
     let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(0));
     df.addColumn("NumeroEspansioni", zeroSeries, {inplace: true});
     // let NumeroEspansioniIndex: number = df.columns.indexOf("NumeroEspansioni");
@@ -61,19 +46,19 @@ function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
 //            console.log("Problema nelle espansioni di " + nome)
 //        }
 //    });
-    let df_base = df.query(df["Exp"].eq("")).resetIndex();
+    let df_base = df.query(df[columnNames.EXPANSION].eq("")).resetIndex();
     return [df_base, df_exp]
 }
 
 function filter_db(df: dfd.DataFrame, userInputs: userInputs): dfd.DataFrame {
-    const cond0 = df["Titolo"].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
+    const cond0 = df[columnNames.TITLE].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
     const players: number = Number(userInputs.players.curValue.replace(/\+$/, ''));
-    let cond1 = (df["Gioc Min"].le(players).and(df["Gioc Max"].ge(players))).or(players == 0);
+    let cond1 = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
 
-    let cond2 = df["Competizione"].str.toLowerCase().str.includes(userInputs.collab.curValue).or(userInputs.collab.curValue.length === 0);
-    let cond3 = isinArray(df['Difficoltà'], userInputs.complexity.curValue);
-    let cond4 = isinArray(df['Durata'], userInputs.time.curValue);
-    let cond5 = isinArray(df['Tipologie'], userInputs.categ.curValue);
+    let cond2 = df[columnNames.COMPETITION_CAT].str.toLowerCase().str.includes(userInputs.collab.curValue).or(userInputs.collab.curValue.length === 0);
+    let cond3 = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
+    let cond4 = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
+    let cond5 = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
     return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4).and(cond5));
 
 }

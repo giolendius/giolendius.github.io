@@ -5,6 +5,7 @@ import ContributeView from './views/contributeView';
 import fetchSheet from "./utils/fetchSheet";
 import {SheetData} from "./utils/types";
 import {defineUserInputsStates, userInputs} from "./views/tableView/SideBar";
+import {NewNavbar} from "./navbar";
 
 export default function App() {
     let PromiseSheetData: Promise<SheetData> = fetchSheet()
@@ -15,10 +16,15 @@ export default function App() {
 };
 
 
-function ThreeViews({PromiseSheetData}:{PromiseSheetData:Promise<SheetData>}) {
+function ThreeViews({PromiseSheetData}: { PromiseSheetData: Promise<SheetData> }) {
     const [page, setPage] = React.useState('table');
     const userInputs: userInputs = defineUserInputsStates();
-    return <>{page === "home" && <HomeView setPage={setPage}/>}
-        {page === "table" && <TableView setPage={setPage} PromiseSheetData={PromiseSheetData} userInputs={userInputs}/>}
-        {page === "contribute" && <ContributeView setPage={setPage}/>}</>;
+    return <>
+        {page === "home" && <HomeView setPage={setPage} PromiseSheetData={PromiseSheetData}>
+            <NewNavbar setPage={setPage} activeLinkName={'home'}/></HomeView>}
+        {page === "table" && <TableView PromiseSheetData={PromiseSheetData} userInputs={userInputs}>
+            <NewNavbar setPage={setPage} activeLinkName={'table'}/></TableView>}
+        {page === "contribute" &&
+            <ContributeView>
+                <NewNavbar setPage={setPage} activeLinkName={'contribute'}/></ContributeView>}</>;
 }

@@ -9,13 +9,13 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "strict": true,
-
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
   "include": ["src/**/*"]
 }

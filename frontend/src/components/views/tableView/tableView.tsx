@@ -1,32 +1,24 @@
 import React from 'react';
-import {NewNavbar} from "../../navbar";
-import {setPageT} from "../views";
 import {dbHandler} from "./dbHandler";
 import {GameItem} from "./gameType";
 import {SheetData} from "../../utils/types";
+import {isMediumScreen} from "../../utils/utils";
 import '../../../style/table-style.css';
 import {Sidebar, userInputs} from "./SideBar";
 
 
 type TableViewProps = {
-    setPage: setPageT; PromiseSheetData: Promise<SheetData>, userInputs: userInputs
+    PromiseSheetData: Promise<SheetData>, userInputs: userInputs, children?: React.ReactNode
 };
 
-export default function TableView({setPage, PromiseSheetData, userInputs}: TableViewProps) {
+export default function TableView({PromiseSheetData, userInputs, children}: TableViewProps) {
 
     const [rows, setRows] = React.useState<GameItem[] | null>(null);
+    const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(true);
     // const [columns, setColumns] = React.useState<string[]>([]);
     const columns = ['Titolo', 'Gioc Min', 'Gioc Max', 'Competizione', 'Difficoltà', 'Durata'] as (keyof GameItem)[];
     const [selectedGame, setSelectedGame] = React.useState<GameItem | null>(null);
 
-
-    // React.useEffect(() => {
-    //     PromiseSheetData.then(array => dbHandler(array, userInputs)).then(games => {
-    //         // let a = dfd.toJSON(games);
-    //         setRows(games);
-    //         // setColumns(Object.keys(games));
-    //     });
-    // }, [userInputs]);
     React.useEffect(() => {
             dbHandler(PromiseSheetData, userInputs, setRows);
         },
@@ -35,18 +27,17 @@ export default function TableView({setPage, PromiseSheetData, userInputs}: Table
     ;
 
     return <div>
-        <NewNavbar setPage={setPage} activeLinkName={'table'}/>
-        <div className={`bg-red-500`}>Ciaooooooo
-            testo è {userInputs.search.curValue}
-            pl={userInputs.players.curValue}
-            diff={userInputs.complexity.curValue}
-            categ sono {userInputs.categ.curValue.length} invece array
-            è {['ciao', 'amico ', 'caro  !'].length}</div>
+        {/*navigator*/}
+        {children}
         <div className="bg-black relative flex transition-all duration-300">
-
-            <Sidebar userInputs={userInputs}/>
-            <OpenCloseButton/>
-            <MainTable>
+            {/*w-[100vw] max-w-[88rem] */}
+            <div id="sidebarWrapper"
+                 className={`bg-[#121212] md:bg-black md:relative absolute top-0 left-0 w-[100vw] max-w-[88rem] 
+                 h-full py-2 transition-all duration-300 ${!sidebarOpen && 'collapsed'}`}>
+                <Sidebar userInputs={userInputs}/>
+            </div>
+            <OpenCloseButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+            {(isMediumScreen || !sidebarOpen) && <MainTableArea>
                 <tbody className="text-[#e1e1e1]">
                 <TableBody
                     rows={rows}
@@ -54,7 +45,7 @@ export default function TableView({setPage, PromiseSheetData, userInputs}: Table
                     showGame={setSelectedGame}
                 />
                 </tbody>
-            </MainTable>
+            </MainTableArea>}
             {selectedGame && <InfoPopUp
                 gameItem={selectedGame}
                 onClose={() => setSelectedGame(null)}
@@ -63,22 +54,30 @@ export default function TableView({setPage, PromiseSheetData, userInputs}: Table
     </div>
 }
 
-function OpenCloseButton() {
-    function toggleSidebar() {
-    }
+function OpenCloseButton({sidebarOpen, setSidebarOpen}: {
+    sidebarOpen: boolean,
+    setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
 
-    return <div id="buttonwrap" className="relative top-6 md:left-0 left-60">
-        <button id="sidebar-toggle" onClick={() => toggleSidebar()}
-                className="sticky top-32 h-12  p-3 cicckalo bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r rotate-180">
+    return <div id="buttonwrap" className={`relative top-6 md:left-0 ${sidebarOpen ? 'left-60' : ''}`}>
+        <button id="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}
+                className={`sticky top-32 h-12  p-3 cicckalo bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r ${sidebarOpen ? 'rotate-180' : ''}`}>
             ➤
         </button>
     </div>
 }
 
 
-function MainTable({children}: { children: React.ReactNode }) {
+function MainTableArea({children}: { children: React.ReactNode }) {
     return <main id="mainContent"
                  className="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
+        <div className={'text-[#b7e4c7]'}>
+            <p>Molto breve: 10 minuti e abbiamo finito!</p>
+            <p>Breve: 30 o 45 minuti</p>
+            <p>Medio: circa 1h30m</p>
+            <p>Lungo: fino a 3h di gioco</p>
+            <p>Molto Lungo: oltre le 3h di gioco</p>
+        </div>
         <h1 className="m-10 text-4xl font-bold text-[#b7e4c7] z-2"> Ricerca dei giochi </h1>
         <div className="overflow-x-auto bg-[#1b2a21] rounded-xl shadow-md">
             <table id="tabella_giochi" className="min-w-full table-auto">
@@ -97,13 +96,13 @@ function TableBody({rows, showGame, columns}: {
 
     if (rows?.length === 0) {
         return <tr>
-            <td colSpan={columns.length}> Nessun risultato trovato...</td>
+            <td className={'text-center p-4'} colSpan={columns.length}> Nessun risultato trovato</td>
         </tr>;
     }
     if (!rows) {
         console.log('adadadwawd')
         return <tr>
-            <td colSpan={columns.length}>Caricamento...</td>
+            <td className={'text-center p-2'} colSpan={columns.length}>Caricamento....</td>
         </tr>
             ;
     }
@@ -128,7 +127,6 @@ type TableRowProps = {
 
 
 function TableRow({rowData, showGame, index}: TableRowProps) {
-    const isMediumScreen = window.matchMedia("(min-width: 768px)").matches;
 
     return <>
         <tr key={index}
