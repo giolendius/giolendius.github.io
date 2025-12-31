@@ -20,11 +20,10 @@ function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
     const [page, setPage] = React.useState('table');
     const userInputs: userInputs = defineUserInputsStates();
     return <>
-        {page === "home" && <HomeView setPage={setPage} promiseDb={promiseDb}>
-            <NewNavbar setPage={setPage} activeLinkName={'home'}/></HomeView>}
-        {page === "table" && <TableView promiseDb={promiseDb} userInputs={userInputs}>
-            <NewNavbar setPage={setPage} activeLinkName={'table'}/></TableView>}
+        {page === "home" &&
+            <HomeView setPage={setPage} promiseDb={promiseDb}><NewNavbar setPage={setPage} activeLinkName={'home'}/></HomeView>}
+        {page === "table" &&
+            <TableView promiseDb={promiseDb} userInputs={userInputs}><NewNavbar setPage={setPage} activeLinkName={'table'}/></TableView>}
         {page === "contribute" &&
-            <ContributeView>
-                <NewNavbar setPage={setPage} activeLinkName={'contribute'}/></ContributeView>}</>;
-}
+            <ContributeView><NewNavbar setPage={setPage} activeLinkName={'contribute'}/></ContributeView>}
+    </>;}

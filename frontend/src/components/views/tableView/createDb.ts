@@ -65,14 +65,15 @@ export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
     console.log('Called db filter')
     const cond0 = df[columnNames.TITLE].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
     const players: number = Number(userInputs.players.curValue.replace(/\+$/, ''));
-    let cond1 = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
 
-    let cond2 = df[columnNames.COMPETITION_CAT].str.toLowerCase().str.includes(userInputs.collab.curValue).or(userInputs.collab.curValue.length === 0);
-    let cond3 = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
-    let cond4 = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
-    let cond5 = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
+    let name_cond = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
+    let collab_cond = isinArray(df[columnNames.COMPETITION_CAT], userInputs.collab.curValue);
+    let difficulty_cond = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
+    let duration_cond = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
+    let typologies_cond = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
 
-    let filtered_db: dfd.DataFrame = df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4).and(cond5));
+    let filtered_db: dfd.DataFrame = df.query((cond0)
+        .and(name_cond).and(collab_cond).and(difficulty_cond).and(duration_cond).and(typologies_cond));
     const games = dfd.toJSON(filtered_db) as GameItem[];
     setRows(games);
 }
@@ -80,7 +81,7 @@ export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
 function isinArray(series: dfd.Series, array: string[]) {
     let condition = new dfd.Series(Array(series.values.length).fill(array.length === 0));
     for (let i = 0; i < array.length; i++) {
-        condition = series.str.toLowerCase().eq(array[i].toLowerCase() as any).or(condition);
+        condition = series.str.toLowerCase().str.includes(array[i].toLowerCase() as any).or(condition);
     }
     return condition;
 }

@@ -4,7 +4,6 @@ import {BUILD_DATE} from "../utils/build-date"
 export default function ContributeView({children}: { children: React.ReactNode }) {
     return <>
         {children}
-        <MyCoolStuff/>
         <GoooleSheet/>
         <GitHub/>
         <Spunti/>
@@ -13,9 +12,6 @@ export default function ContributeView({children}: { children: React.ReactNode }
 
 function MyCoolStuff() {
     const [sidebarOpen, setSidebarOpen] = React.useState(true);
-    //   React.useEffect(() => {
-    //   document.body.style.overflow = sidebarOpen ? "hidden" : "auto";
-    // }, [sidebarOpen]);
 
     return (
         <div className="takes-all-screen tuttorosso"><div className='bg-green-200 sticky top-0 z-3'>

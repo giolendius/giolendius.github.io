@@ -22,15 +22,16 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
     React.useEffect(() => { promiseDb.then((db: dataframe) => filterDb(db, userInputs, setRows));},
         [userInputs]);
 
-    const sidebarWidth = 128
+    const sidebarWidthRem = 128
 
     return <div>
         { /*navigator*/ children}
-        <div className="bg-black takes-all-screen">
+        <div className={`bg-black takes-all-screen ${selectedGame ? 'locked':''}`}>
             <OpenCloseButton sidebarOpen={sidebarOpen}
                              setSidebarOpen={setSidebarOpen}
-            sidebarWidth={sidebarWidth}/>
-            <aside className={`my-sidebar max-w-${sidebarWidth} ${sidebarOpen ? "open" : "closed"}`}>
+            sidebarWidth={sidebarWidthRem}/>
+            <aside className={`my-sidebar ${sidebarOpen ? "open" : "closed"}`}
+                    style={{maxWidth:sidebarWidthRem*4}}>
                 <Sidebar userInputs={userInputs}/>
             </aside>
 
@@ -43,11 +44,12 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
                 />
                 </tbody>
             </MainTableArea>
-            {selectedGame && <InfoPopUp
+        </div>
+        {selectedGame && <InfoPopUp
                 gameItem={selectedGame}
                 onClose={() => setSelectedGame(null)}
             />}
-        </div>
+        <footer>This contains text <h1>and a title </h1></footer>
     </div>
 }
 
@@ -170,24 +172,29 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
 
     return <>
         <div id="popup-blur" onClick={onCloseHandler}
-             className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm transition-opacity duration-500">
+             className="fixed inset-0 flex items-center w-screen h-screen justify-center  z-50 backdrop-blur-sm transition-opacity duration-500 over">
             <div id="popup-outer" onClick={(e) => e.stopPropagation()}
                  className=
-                     {`bg-yellow-100 text-black rounded-lg p-[5%] md:py-20 max-w-[90%] relative transform transition-transform duration-300 ${show ? "scale-100" : "scale-25"}`}>
+                     {`bg-yellow-100 text-black rounded-lg  p-[5%] md:py-20 
+                     max-w-4/5 max-h-9/10 overflow-y-auto transform transition-transform duration-300 
+                     ${show ? "scale-100" : "scale-25"}`}>
                 <button onClick={onCloseHandler}
                         className="absolute top-2 right-2 text-xl font-bold">&times;</button>
                 <div id="popup-inner">
                     <img src={gameItem.LinkImmagine !== "" ? gameItem.LinkImmagine : undefined} alt=" "
                          className="mx-auto mb-4 rounded-lg shadow-lg w-auto max-h-48 md:max-h-80 object-cover"/>
                     <h2 className={'text-3xl font-bold text-center mb-4 text-[#95d5b2]'}>{gameItem.Titolo}</h2>
-                    <div className="space-y-2 text-center text-base">
+                    <div className="space-y-2 text-base">
                         {Object.entries(gameItem)
-                            .filter(([key]) => ["Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata",].includes(key))
+                            // .filter(([key]) => ["Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata",].includes(key))
                             .map(([key, value]) => (
-                                <p key={key}><b>{key}:</b> {String(value)}</p>
+                                <label key={key}><b>{key}:</b> <p>{String(value)}</p></label>
                             ))}
                     </div>
                 </div>
+                {/*<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
+               {/*<div className="text-red-500">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
+
             </div>
         </div>
     </>
