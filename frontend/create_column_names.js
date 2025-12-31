@@ -9,16 +9,11 @@ const unifiedObject = Object.values(json_column_names).reduce(
   (acc, obj) => ({ ...acc, ...obj }),
   {}
 );
-const prova = Object.values(unifiedObject).map(v=> `'${v}': string`).join(',\n');
 
 const fileContent = `// ⚠️ AUTO-GENERATED FILE — DO NOT EDIT
-export const columnNames = ${JSON.stringify(unifiedObject, null, 2)} as const;
-
-export type cazzone = {${prova}}`
-
+export const columnNames = ${JSON.stringify(unifiedObject, null, 2)} as const;`
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, fileContent);
 
 console.log("✅ column_names.ts succesfully generated");
-console.log(unifiedObject)

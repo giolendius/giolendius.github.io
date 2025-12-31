@@ -1,17 +1,17 @@
 import React from 'react';
-import {dbHandler} from "./dbHandler";
+import {filterDb, dataframe} from "./createDb";
 import {GameItem} from "./gameType";
-import {SheetData} from "../../utils/types";
 import {isMediumScreen} from "../../utils/utils";
 import '../../../style/table-style.css';
 import {Sidebar, userInputs} from "./SideBar";
+import {columnNames} from "../../utils/column_names";
 
 
 type TableViewProps = {
-    PromiseSheetData: Promise<SheetData>, userInputs: userInputs, children?: React.ReactNode
+    promiseDb: Promise<dataframe>, userInputs: userInputs, children?: React.ReactNode
 };
 
-export default function TableView({PromiseSheetData, userInputs, children}: TableViewProps) {
+export default function TableView({promiseDb, userInputs, children}: TableViewProps) {
 
     const [rows, setRows] = React.useState<GameItem[] | null>(null);
     const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(true);
@@ -19,25 +19,22 @@ export default function TableView({PromiseSheetData, userInputs, children}: Tabl
     const columns = ['Titolo', 'Gioc Min', 'Gioc Max', 'Competizione', 'Difficoltà', 'Durata'] as (keyof GameItem)[];
     const [selectedGame, setSelectedGame] = React.useState<GameItem | null>(null);
 
-    React.useEffect(() => {
-            dbHandler(PromiseSheetData, userInputs, setRows);
-        },
-        [userInputs]
-    )
-    ;
+    React.useEffect(() => { promiseDb.then((db: dataframe) => filterDb(db, userInputs, setRows));},
+        [userInputs]);
+
+    const sidebarWidth = 128
 
     return <div>
-        {/*navigator*/}
-        {children}
-        <div className="bg-black relative flex transition-all duration-300">
-            {/*w-[100vw] max-w-[88rem] */}
-            <div id="sidebarWrapper"
-                 className={`bg-[#121212] md:bg-black md:relative absolute top-0 left-0 w-[100vw] max-w-[88rem] 
-                 h-full py-2 transition-all duration-300 ${!sidebarOpen && 'collapsed'}`}>
+        { /*navigator*/ children}
+        <div className="bg-black takes-all-screen">
+            <OpenCloseButton sidebarOpen={sidebarOpen}
+                             setSidebarOpen={setSidebarOpen}
+            sidebarWidth={sidebarWidth}/>
+            <aside className={`my-sidebar max-w-${sidebarWidth} ${sidebarOpen ? "open" : "closed"}`}>
                 <Sidebar userInputs={userInputs}/>
-            </div>
-            <OpenCloseButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
-            {(isMediumScreen || !sidebarOpen) && <MainTableArea>
+            </aside>
+
+            <MainTableArea>
                 <tbody className="text-[#e1e1e1]">
                 <TableBody
                     rows={rows}
@@ -45,7 +42,7 @@ export default function TableView({PromiseSheetData, userInputs, children}: Tabl
                     showGame={setSelectedGame}
                 />
                 </tbody>
-            </MainTableArea>}
+            </MainTableArea>
             {selectedGame && <InfoPopUp
                 gameItem={selectedGame}
                 onClose={() => setSelectedGame(null)}
@@ -54,23 +51,28 @@ export default function TableView({PromiseSheetData, userInputs, children}: Tabl
     </div>
 }
 
-function OpenCloseButton({sidebarOpen, setSidebarOpen}: {
+function OpenCloseButton({sidebarOpen, setSidebarOpen, sidebarWidth}: {
     sidebarOpen: boolean,
-    setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    sidebarWidth: number
 }) {
-
-    return <div id="buttonwrap" className={`relative top-6 md:left-0 ${sidebarOpen ? 'left-60' : ''}`}>
+    const buttonDistance = Math.min((window.innerWidth), sidebarWidth*4)- 80;
+    return <>
+    {/*<div id="buttonwrap" className={`relative top-6 md:left-0 ${sidebarOpen ? 'left-60' : ''}`}>*/}
+    <div className='bg-green-200 sticky top-9 z-3'>
         <button id="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}
-                className={`sticky top-32 h-12  p-3 cicckalo bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r ${sidebarOpen ? 'rotate-180' : ''}`}>
+                className={`absolute p-3 bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r 
+                ${sidebarOpen ? `rotate-180` : ''}`}
+               style={{left: sidebarOpen ? `${buttonDistance}px` : '20px'}}>
             ➤
         </button>
-    </div>
+    </div></>
 }
 
 
 function MainTableArea({children}: { children: React.ReactNode }) {
     return <main id="mainContent"
-                 className="z-1 main  flex-1 -ml-11 md:ml-4  p-4 md:p-16 transition-all duration-300">
+                 className="z-1 main flex-1  p-4 md:p-16 transition-all duration-300">
         <div className={'text-[#b7e4c7]'}>
             <p>Molto breve: 10 minuti e abbiamo finito!</p>
             <p>Breve: 30 o 45 minuti</p>
@@ -92,15 +94,12 @@ function TableBody({rows, showGame, columns}: {
     showGame: showGame,
     columns: (keyof GameItem)[]
 }) {
-    console.log('rows are', rows)
-
     if (rows?.length === 0) {
         return <tr>
             <td className={'text-center p-4'} colSpan={columns.length}> Nessun risultato trovato</td>
         </tr>;
     }
     if (!rows) {
-        console.log('adadadwawd')
         return <tr>
             <td className={'text-center p-2'} colSpan={columns.length}>Caricamento....</td>
         </tr>
@@ -110,7 +109,8 @@ function TableBody({rows, showGame, columns}: {
 
     return <>
         {rows.map((row, index) => (
-            <TableRow rowData={row}
+            <TableRow key={row[columnNames.TITLE]}
+                      rowData={row}
                       index={index}
                       showGame={showGame}/>
         ))}
@@ -129,22 +129,21 @@ type TableRowProps = {
 function TableRow({rowData, showGame, index}: TableRowProps) {
 
     return <>
-        <tr key={index}
-            className={`${index % 2 === 1 ? "greenD" : "greenDD"} cursor-pointer hover-lighten transition-colors`}>
+        <tr className={`${index % 2 === 1 ? "greenD" : "greenDD"} cursor-pointer hover-lighten transition-colors`}>
             <td className="px-2 md:px-4 py-2 flex items-center gap-3">
                 <div className="w-12 flex-o-center">
-                    <img src={rowData.LinkImmagine} className="h-12 rounded shadow" alt=''/></div>
+                    <img src={`${rowData.LinkImmagine ? rowData.LinkImmagine : null}`} className="h-12 rounded shadow" alt=''/></div>
             </td>
             <td className="text-center md:px-4 py-3">
-                <span className="font-semibold px-2">{rowData.Titolo}</span>
+                <span className="font-semibold px-2">{rowData[columnNames.TITLE]}</span>
             </td>
-            <td className="text-center py-3">{rowData["Gioc Min"]}</td>
-            <td className="text-center py-3">{rowData["Gioc Max"]}</td>
+            <td className="text-center py-3">{rowData[columnNames.PLAYERS_MIN]}</td>
+            <td className="text-center py-3">{rowData[columnNames.PLAYERS_MAX]}</td>
             {isMediumScreen && (
                 <>
-                    <td className="text-center px-2 py-3">{rowData.Competizione}</td>
-                    <td className="text-center px-2 py-3">{rowData.Difficoltà}</td>
-                    <td className="text-center px-4 py-3">{rowData.Durata}</td>
+                    <td className="text-center px-2 py-3">{rowData[columnNames.COMPETITION_CAT]}</td>
+                    <td className="text-center px-2 py-3">{rowData[columnNames.DIFFICULTY_CAT]}</td>
+                    <td className="text-center px-4 py-3">{rowData[columnNames.DURATION_CAT]}</td>
                 </>
             )}
             <td className='text-center px-3 py-3 w-10'>

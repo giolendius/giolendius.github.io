@@ -4,23 +4,25 @@ import {userInputs} from "./SideBar";
 import {SheetData} from "../../utils/types";
 import {columnNames} from "../../utils/column_names"
 import React from "react";
+import fetchSheet from "../../utils/fetchSheet";
 
 type riga = string[];
 
-export async function dbHandler(promiseSheetData: Promise<SheetData>,
-                                userInputs: userInputs,
-                                setRows: React.Dispatch<React.SetStateAction<GameItem[] | null>>) {
+export type dataframe = dfd.DataFrame;
+
+export async function createDb(): Promise<dataframe> {
 
     try {
+        const promiseSheetData: Promise<SheetData> = fetchSheet()
         const dati: riga[] = await promiseSheetData;
-        console.log('chiamato dbhandler per dati:', dati);
+        console.log('dbCreator was called and obtain data:', dati);
 
         const [df_base, df_exp] = create_db(dati);
-        const df_filtrato = filter_db(df_base, userInputs);
-        const games = dfd.toJSON(df_filtrato) as GameItem[];
-        setRows(games);
+        return df_base
+
     } catch (error) {
         console.error('Errore in dbHandler:', error);
+        return new dfd.DataFrame;
 
     }
 }
@@ -29,6 +31,14 @@ export async function dbHandler(promiseSheetData: Promise<SheetData>,
 function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
 
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
+
+    const renameColumnObject = Object.fromEntries(
+        Object.entries(columnNames).map(([key, value]) => [
+            value,
+            key
+        ])
+    );
+
     // let cond_base = df["Exp"].eq("");
 
     const df_exp = df.query(df[columnNames.EXPANSION].ne(""));
@@ -50,7 +60,9 @@ function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
     return [df_base, df_exp]
 }
 
-function filter_db(df: dfd.DataFrame, userInputs: userInputs): dfd.DataFrame {
+export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
+                         setRows: React.Dispatch<React.SetStateAction<GameItem[] | null>>) {
+    console.log('Called db filter')
     const cond0 = df[columnNames.TITLE].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
     const players: number = Number(userInputs.players.curValue.replace(/\+$/, ''));
     let cond1 = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
@@ -59,8 +71,10 @@ function filter_db(df: dfd.DataFrame, userInputs: userInputs): dfd.DataFrame {
     let cond3 = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
     let cond4 = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
     let cond5 = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
-    return df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4).and(cond5));
 
+    let filtered_db: dfd.DataFrame = df.query((cond0).and(cond1).and(cond2).and(cond3).and(cond4).and(cond5));
+    const games = dfd.toJSON(filtered_db) as GameItem[];
+    setRows(games);
 }
 
 function isinArray(series: dfd.Series, array: string[]) {

@@ -40,7 +40,7 @@
 }
 
 /* SIDEBAR */
-.sidebar {
+.my-sidebar {
     position: absolute;
     inset: 0;
     /*top: 0;*/
@@ -53,13 +53,14 @@
     color: white;
     z-index: 2;
     transition: transform 0.4s ease;
+
 }
-.sidebar.open {
+.my-sidebar.open {
     transform: translateX(0);
 }
 
 /* CLOSED STATE */
-.sidebar.closed {
+.my-sidebar.closed {
     transform: translateX(-100%);
     pointer-events: none;
 }

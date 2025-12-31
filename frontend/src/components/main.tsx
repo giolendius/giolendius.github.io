@@ -2,27 +2,27 @@ import React from 'react';
 import HomeView from './views/homeView/homeView';
 import TableView from './views/tableView/tableView';
 import ContributeView from './views/contributeView';
-import fetchSheet from "./utils/fetchSheet";
-import {SheetData} from "./utils/types";
 import {defineUserInputsStates, userInputs} from "./views/tableView/SideBar";
 import {NewNavbar} from "./navbar";
+import {createDb, dataframe} from "./views/tableView/createDb";
 
 export default function App() {
-    let PromiseSheetData: Promise<SheetData> = fetchSheet()
+
+    const promiseDb = createDb();
 
     return <div className='text-black'>
-        <ThreeViews PromiseSheetData={PromiseSheetData}/>
+        <ThreeViews promiseDb={promiseDb}/>
     </div>;
 };
 
 
-function ThreeViews({PromiseSheetData}: { PromiseSheetData: Promise<SheetData> }) {
+function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
     const [page, setPage] = React.useState('table');
     const userInputs: userInputs = defineUserInputsStates();
     return <>
-        {page === "home" && <HomeView setPage={setPage} PromiseSheetData={PromiseSheetData}>
+        {page === "home" && <HomeView setPage={setPage} promiseDb={promiseDb}>
             <NewNavbar setPage={setPage} activeLinkName={'home'}/></HomeView>}
-        {page === "table" && <TableView PromiseSheetData={PromiseSheetData} userInputs={userInputs}>
+        {page === "table" && <TableView promiseDb={promiseDb} userInputs={userInputs}>
             <NewNavbar setPage={setPage} activeLinkName={'table'}/></TableView>}
         {page === "contribute" &&
             <ContributeView>

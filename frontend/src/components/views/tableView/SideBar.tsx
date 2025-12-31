@@ -80,10 +80,9 @@ function InputField<T extends string | string[]>(state: StateWithSetter<T, strin
                     <option key={index} value={option}>{option}</option>))}
             </select>}
             {state.inputType == 'multiselect' && <div className={multicheckboxClassName}>
-                {state.options?.map((option: string, index: number) => (<label className='block'>
+                {state.options?.map((option: string) => (<label key={option} className='block'>
                     <input type='checkbox'
                            value={option}
-                           key={index}
                            onChange={e => handleCheckboxChange(
                                option,
                                e.target.checked,
@@ -101,7 +100,7 @@ export function Sidebar({userInputs}: { userInputs: userInputs }) {
     return <>
         <div className="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block space-y-0
                 md:space-y-6  space-x-4 md:space-x-0 md:mb-0 md:text-left ">
-            <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametriadadada awd awd aw  </h1>
+            <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri</h1>
             <InputField {...userInputs.search}/>
             <InputField {...userInputs.players}/>
             <InputField {...userInputs.collab}/>

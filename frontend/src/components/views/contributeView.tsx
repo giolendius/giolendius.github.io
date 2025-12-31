@@ -232,7 +232,7 @@ function MyCoolStuff() {
             </main>
 
             {/* SIDEBAR (on top) */}
-            <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
+            <aside className={`my-sidebar  ${sidebarOpen ? "open" : "closed"}`}>
                 <h2>Sidebar</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ad architecto ipsa iste, iure,
                     laboriosam libero minima molestias omnis quas rerum saepe sit, temporibus? Aut consequuntur earum

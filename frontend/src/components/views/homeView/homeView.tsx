@@ -2,15 +2,15 @@ import React from 'react';
 import {setPageT} from "../views"
 import {ArrowToSlide, DotToSlide} from "./slideshow";
 import meeple from "../../../img/3d-meeple-svgrepo-com.svg";
-import {SheetData} from "../../utils/types";
 import {getElementById} from "../../utils/utils";
+import {dataframe} from "../tableView/createDb";
 
 
-export default function HomeView({children, setPage, PromiseSheetData}:
+export default function HomeView({children, setPage, promiseDb}:
                                  {
                                      children: React.ReactNode,
                                      setPage: setPageT,
-                                     PromiseSheetData: Promise<SheetData>
+                                     promiseDb: Promise<dataframe>
                                  }) {
     function BarrageBehind() {
         return <div id="barrage-behind" className="parallax-container flex-o-center">
@@ -32,7 +32,7 @@ export default function HomeView({children, setPage, PromiseSheetData}:
         <MeepleCover/>
         {children}
         <BarrageBehind/>
-        <QuantiSono PromiseSheetData={PromiseSheetData}/>
+        <QuantiSono promiseDb={promiseDb}/>
         <Slideshow/>
     </div>
 }
@@ -53,7 +53,7 @@ function MeepleCover() {
 }
 
 
-function QuantiSono({PromiseSheetData}: { PromiseSheetData: Promise<SheetData> }) {
+function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
     const [flipped, setFlipped] = React.useState<boolean>(false)
 
 
@@ -72,8 +72,8 @@ function QuantiSono({PromiseSheetData}: { PromiseSheetData: Promise<SheetData> }
 
     async function calcola_numero_giochi() {
 
-        const SheetData: SheetData = await PromiseSheetData;
-        const tot_games: number = SheetData.length - 1;
+        const dfGames: dataframe = await promiseDb;
+        const tot_games: number = dfGames.shape[0] - 1;
         const obj: HTMLElement = getElementById("tot_giochi");
         animateValue(obj, 0, tot_games, 2000)
     }

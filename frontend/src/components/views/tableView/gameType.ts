@@ -1,19 +1,7 @@
 import {columnNames} from "../../utils/column_names";
 
-export interface GameItem {
-    Titolo: string,
-    LinkImmagine: string,
-    "Gioc Min": number,
-    "Gioc Max": number,
-    Competizione: string,
-    "Difficoltà": string,
-    Durata: string,
-    Exp: string
-}
+type ourKeys = typeof columnNames[keyof typeof columnNames];
 
-type ValueKeys = typeof columnNames[keyof typeof columnNames];
-
-let prova: ValueKeys = "Link BGG"
-
-interface MyInterface { [K in ValueKeys]: string; }
-
+export type GameItem = {
+    [K in ourKeys]: string;
+};
