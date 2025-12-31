@@ -12,29 +12,56 @@ export default function HomeView({children, setPage, promiseDb}:
                                      setPage: setPageT,
                                      promiseDb: Promise<dataframe>
                                  }) {
-    function BarrageBehind() {
-        return <div id="barrage-behind" className="parallax-container flex-o-center">
-            <div className="parallax-image"></div>
-            <div className="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center">
-                <h1 className="text-2xl p-4 font-bold text-[#bd5909] m-4">Ma stasera a che si gioca?</h1>
-                <p>Che tu cerchi un veloce Party Game o un cinghialone che duri tutta la sera, qui puoi trovare
-                    ispirazione.</p>
-                <p>Vai alla sezione Ricerca e trova il più adatto a te!</p>
-                <div className="mybutton"><a onClick={() => {
-                    setPage('table')
-                }}>Ricerca</a></div>
-            </div>
-        </div>
 
-    }
 
     return <div>
         <MeepleCover/>
         {children}
-        <BarrageBehind/>
+        <BarrageBehind setPage={setPage}/>
         <QuantiSono promiseDb={promiseDb}/>
         <Slideshow/>
     </div>
+}
+
+
+function BarrageBehind({setPage}: { setPage: setPageT }) {
+    const parallaxRef = React.useRef<HTMLDivElement | null>(null);
+    const gravityFactor = 0.5;
+
+    React.useEffect(() => {
+        let ticking = false;
+
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const el = parallaxRef.current;
+                    if (!el) return;
+
+                    el.style.transform = `translateY(${window.scrollY * gravityFactor}px)`;
+                    el.style.bottom = `${500 * gravityFactor}px`;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    return <div id="barrage-behind" className="parallax-container flex-o-center">
+        <div ref={parallaxRef} className="parallax-image"></div>
+        <div className="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center">
+            <h1 className="text-2xl p-4 font-bold text-[#bd5909] m-4">Ma stasera a che si gioca?</h1>
+            <p>Che tu cerchi un veloce Party Game o un cinghialone che duri tutta la sera, qui puoi trovare
+                ispirazione.</p>
+            <p>Vai alla sezione Ricerca e trova il più adatto a te!</p>
+            <div className="mybutton"><a onClick={() => {
+                setPage('table')
+            }}>Ricerca</a></div>
+        </div>
+    </div>
+
 }
 
 
@@ -65,7 +92,9 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
             }
             const progress: number = Math.min((timestamp - startTimestamp) / duration, 1);
             obj.innerText = Math.floor(progress * (end - start) + start).toString();
-            if (progress < 1) {window.requestAnimationFrame(step)}
+            if (progress < 1) {
+                window.requestAnimationFrame(step)
+            }
         };
         window.requestAnimationFrame(step);
     }
@@ -83,10 +112,12 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
             {/*<div className="w-80">*/}
             <div style={{width: '80%'}}>
                 <h2> Ma quanti sono?</h2>
-                <p>Quanti giochi abbiamo al momento? Possiamo fare un calcolo provvisorio, senza distinguere tra giochi
+                <p>Quanti giochi abbiamo al momento? Possiamo fare un calcolo provvisorio, senza distinguere tra
+                    giochi
                     indipendenti ed espansioni... Ci sono i giochi dei nostri genitori, alcuni giochi con versioni
                     multiple
-                    molto simili tra loro... Però se proprio vuoi sapere un numero, al momento abbiamo informazioni nel
+                    molto simili tra loro... Però se proprio vuoi sapere un numero, al momento abbiamo informazioni
+                    nel
                     nostro database riguardo a.....</p>
             </div>
         </div>
@@ -131,9 +162,8 @@ function Slideshow() {
                 <h4>Reiner Knizia</h4>
             </div>
             <div className="slide flex-v-center">
-                <p>GG, well played</p>
-                <p>Serio, non sapevo che scrivere</p>
-                <h4>Me</h4>
+                <p>Games give us a reason to work together toward a shared goal.</p>
+                <h4>Jane McGonigal</h4>
             </div>
         </div>
         <button className="arrow right" onClick={() => {

@@ -5,6 +5,7 @@ import ContributeView from './views/contributeView';
 import {defineUserInputsStates, userInputs} from "./views/tableView/SideBar";
 import {NewNavbar} from "./navbar";
 import {createDb, dataframe} from "./views/tableView/createDb";
+import {ViewNames} from "./views/views";
 
 export default function App() {
 
@@ -17,7 +18,7 @@ export default function App() {
 
 
 function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
-    const [page, setPage] = React.useState('table');
+    const [page, setPage] = React.useState<ViewNames>('home');
     const userInputs: userInputs = defineUserInputsStates();
     return <>
         {page === "home" &&

@@ -21,12 +21,19 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
 
     React.useEffect(() => { promiseDb.then((db: dataframe) => filterDb(db, userInputs, setRows));},
         [userInputs]);
+    const mainRef = React.useRef<HTMLDivElement | null>(null);
 
+    window.scrollTo({
+      top: mainRef.current?.offsetTop,
+      behavior: "smooth"
+    })
     const sidebarWidthRem = 128
+
+
 
     return <div>
         { /*navigator*/ children}
-        <div className={`bg-black takes-all-screen ${selectedGame ? 'locked':''}`}>
+        <main ref={mainRef} className={`bg-black takes-all-screen ${selectedGame ? 'locked':''}`}>
             <OpenCloseButton sidebarOpen={sidebarOpen}
                              setSidebarOpen={setSidebarOpen}
             sidebarWidth={sidebarWidthRem}/>
@@ -44,12 +51,12 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
                 />
                 </tbody>
             </MainTableArea>
-        </div>
+        </main>
         {selectedGame && <InfoPopUp
                 gameItem={selectedGame}
                 onClose={() => setSelectedGame(null)}
             />}
-        <footer>This contains text <h1>and a title </h1></footer>
+        <footer className={"greenDDD"}>This contains text <h1>and a title </h1></footer>
     </div>
 }
 
