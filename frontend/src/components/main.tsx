@@ -18,7 +18,7 @@ export default function App() {
 
 
 function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
-    const [page, setPage] = React.useState<ViewNames>('home');
+    const [page, setPage] = React.useState<ViewNames>('table');
     const userInputs: userInputs = defineUserInputsStates();
     return <>
         {page === "home" &&

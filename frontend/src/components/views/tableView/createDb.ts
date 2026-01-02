@@ -32,12 +32,7 @@ function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
 
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
 
-    const renameColumnObject = Object.fromEntries(
-        Object.entries(columnNames).map(([key, value]) => [
-            value,
-            key
-        ])
-    );
+
 
     // let cond_base = df["Exp"].eq("");
 

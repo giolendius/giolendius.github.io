@@ -51,7 +51,7 @@ function BarrageBehind({setPage}: { setPage: setPageT }) {
 
     return <div id="barrage-behind" className="parallax-container flex-o-center">
         <div ref={parallaxRef} className="parallax-image"></div>
-        <div className="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center">
+        <div className="w-80 z-3 bg-[#1e2d24D0] p-10 rounded-2xl flex-v-center text-white">
             <h1 className="text-2xl p-4 font-bold text-[#bd5909] m-4">Ma stasera a che si gioca?</h1>
             <p>Che tu cerchi un veloce Party Game o un cinghialone che duri tutta la sera, qui puoi trovare
                 ispirazione.</p>

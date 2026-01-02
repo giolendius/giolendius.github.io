@@ -1,10 +1,13 @@
-import {ViewNames, NavigatorArguments} from "./views/views";
+import {ViewNames, setPageT} from "./views/views";
 import {ReactElement} from "react";
 import meeple from "../img/3d-meeple-svgrepo-com.svg";
 
+export type NavigatorProps = {
+    setPage: setPageT;
+    activeLinkName: ViewNames;
+}
 
-
-export function NewNavbar({setPage, activeLinkName}: NavigatorArguments): ReactElement {
+export function NewNavbar({setPage, activeLinkName}: NavigatorProps): ReactElement {
 
     function ButtonLink(
         {DisplayText, ViewName, additionalClasses = ''}:

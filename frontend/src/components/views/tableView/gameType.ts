@@ -1,7 +1,7 @@
 import {columnNames} from "../../utils/column_names";
 
-type ourKeys = typeof columnNames[keyof typeof columnNames];
+export type ItalianSheetColumnNames = typeof columnNames[keyof typeof columnNames];
 
 export type GameItem = {
-    [K in ourKeys]: string;
+    [K in ItalianSheetColumnNames]: string;
 };
