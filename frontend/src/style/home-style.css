@@ -51,6 +51,7 @@
     align-items: center;
     padding: 2rem;
     background: #d3d3d3;
+    color: black;
     overflow: hidden;
 }
 .slides {

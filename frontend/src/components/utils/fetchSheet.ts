@@ -1,8 +1,9 @@
-import {keys, env} from "./constants";
 import {SheetData} from "./types";
 
-export default async function fetchSheet(): Promise<SheetData> {
-    let chiave = keys[env]
+type sheetname = 'Database' | 'Todo';
+
+export default async function fetchSheet(sheetname: sheetname): Promise<SheetData> {
+    let chiave: string = keys['prod2']
     let schl = {
         "dev": "1WgYYSWL6uOdjfEGFeQ",
         "prod": "Zw6N3_JFjwqPsMt41c",
@@ -12,8 +13,8 @@ export default async function fetchSheet(): Promise<SheetData> {
         "1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8" +
         // "1YuvMg055gT-pA0brzaKnK9PJqH8Z0bGdPez79sdWR8c" +
         "/values/" +
-        "Database" +
-        "/?key=AIzaSyC" + chiave + schl[env];
+        sheetname +
+        "/?key=AIzaSyC" + chiave + schl['prod2'];
     // https://docs.google.com/spreadsheets/d/1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8/edit?gid=1973594395#gid=1973594395
     return fetch(sheetLink).then(response => response.json())
         .catch(error => {
@@ -27,3 +28,9 @@ export default async function fetchSheet(): Promise<SheetData> {
     // .then(() =>{ , dati)})
     // .then(dati => listen_filter_show(dati))
 }
+
+const keys = {
+    "dev": "j5yLYFOBinCuQ",
+    "prod": "H7XOLG0wx22AFr",
+    "prod2": "bSHnGb-q7SXpjUqoW"
+  }

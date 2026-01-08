@@ -63,6 +63,9 @@ located, create
 a file called ``vite.config.js``. Here you can insert configuration lines such as:
 
 ``` js
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+
 module.exports = {
   root: 'src',
   build: {
@@ -76,5 +79,7 @@ module.exports = {
 Root: allows to choose the folder of source file, i.e. subfolder of root folder where `index.html` is placed.
 build.outDir: allows to choose where all output files are placed
 preview.port: you get it
+plugins: [react(), tailwindcss()]: after installing plugins with regular npm install, you can use them here. React allows for faster reload of page preserving states!
+
 
 

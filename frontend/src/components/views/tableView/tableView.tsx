@@ -23,18 +23,28 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
             promiseDb.then((db: dataframe) => filterDb(db, userInputs, setRows));
         },
         [userInputs]);
-    const mainRef = React.useRef<HTMLDivElement | null>(null);
+    const mainRef = React.useRef<HTMLDivElement>(null!);
+    const scrollToMain = () => {
 
-    window.scrollTo({
-        top: mainRef.current?.offsetTop,
-        behavior: "smooth"
-    })
+        mainRef.current?.scrollTo({ //this scrolls the referenced div at its top
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    setTimeout(() => {
+        mainRef.current?.scrollIntoView({ //this scroll the windows at the start of ref
+            behavior: "smooth",
+            block: 'start'
+        })
+    }, 1000);
     const sidebarWidthRem = 128
 
 
     return <div>
         { /*navigator*/ children}
-        <main ref={mainRef} className={`bg-black takes-all-screen ${selectedGame ? 'locked' : ''}`}>
+        <main className={`bg-black takes-all-screen ${selectedGame ? 'locked' : ''}`}>
+            <div></div>
             <OpenCloseButton sidebarOpen={sidebarOpen}
                              setSidebarOpen={setSidebarOpen}
                              sidebarWidth={sidebarWidthRem}/>
@@ -43,7 +53,7 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
                 <Sidebar userInputs={userInputs}/>
             </aside>
 
-            <MainTableArea>
+            <MainTableArea refer={mainRef}>
                 <tbody className="text-[#e1e1e1]">
                 <TableBody
                     rows={rows}
@@ -52,12 +62,19 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
                 />
                 </tbody>
             </MainTableArea>
+            <div>
+                <button id="backToTop"
+                        onClick={scrollToMain}
+                        className="fixed bottom-[10vw] right-[10vw] w-16 h-16  bg-[#b7e4c7] hover:bg-yellow-200 text-white rounded-full shadow-lg text-6xl">
+                    ⮭
+                </button>
+            </div>
         </main>
         {selectedGame && <InfoPopUp
             gameItem={selectedGame}
             onClose={() => setSelectedGame(null)}
         />}
-        <footer className={"greenDDD"}>This contains text <h1>and a title </h1></footer>
+        {/*<footer className={"greenDDD"}>This contains text <h1>and a title </h1></footer>*/}
     </div>
 }
 
@@ -81,9 +98,9 @@ function OpenCloseButton({sidebarOpen, setSidebarOpen, sidebarWidth}: {
 }
 
 
-function MainTableArea({children}: { children: React.ReactNode }) {
+function MainTableArea({children, refer}: { children: React.ReactNode, refer: React.RefObject<HTMLDivElement> }) {
     const [showLegend, setShowLegend] = React.useState(false);
-    return <main id="mainContent"
+    return <main ref={refer} id="mainContent"
                  className="z-1 main flex-1  p-4 md:p-16 transition-all duration-300">
         <div className={'text-[#b7e4c7] flex-o-center'}>
             <h1 className="m-10 text-4xl font-bold text-[#b7e4c7]"> Ricerca dei giochi </h1>
@@ -203,10 +220,10 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
             content = children
         } else if (field && gameItem[field] !== '') {
             content = <p><b>{label}</b>{gameItem[field]}</p>
-        } else if (!field || gameItem[field] === ''){
-            content = <></>
+        } else if (!field || gameItem[field] === '') {
+            content = null
         } else {
-            throw field as string +' non trovato'
+            throw field as string + ' non trovato'
         }
 
         if (!content) return <></>;
@@ -226,11 +243,12 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
                         className="absolute top-2 right-2 text-xl font-bold">&times;</button>
                 <div id="popup-inner">
                     <img src={gameItem.LinkImmagine !== "" ? gameItem.LinkImmagine : undefined} alt=" "
-                         className="mx-auto mb-4 rounded-lg w-auto max-h-48 md:max-h-80 object-cover"/>
+                         className="mx-auto mb-4 rounded-lg max-h-48 md:max-h-80 object-cover p-8 orangeLL"/>
                     <h2 className={'text-3xl font-bold text-center mb-4 text-[#95d5b2]'}>
                         {LinkBGG ? <a href={LinkBGG} target="_blank" rel="noopener noreferrer" className={'underline'}>
-                        {gameItem.Titolo}</a> : gameItem.Titolo}
+                            {gameItem.Titolo}</a> : gameItem.Titolo}
                     </h2>
+                    <hr className="border-t-0 my-4"/>
                     <div className={'flex-o-center flex-wrap gap-8 text-center text-base'}>
                         <Casella>
                             <p>{gameItem[columnNames.PLAYERS_MIN]}-{gameItem[columnNames.PLAYERS_MAX]} giocatori</p>
@@ -248,18 +266,17 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
                         <Casella field={columnNames.RANK} label={'BGG Rating: '}/>
                         <Casella field={columnNames.PLACE_CURRENT} label={'Al momento sembra essere in: '}/>
                     </div>
-                    {/*FIXME aggiungere le tipologie con colore diverso*/}
-                    {/*<div className="space-y-2 text-base">*/}
-                    {/*    {Object.entries(gameItem)*/}
-                    {/*        // .filter(([key]) => ["Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata",].includes(key))*/}
-                    {/*        .map(([key, value]) => (*/}
-                    {/*            <label key={key}><b>{key}:</b> <p>{String(value)}</p></label>*/}
-                    {/*        ))}*/}
-                    {/*</div>*/}
+                    <hr className="border-t-1 border-black my-8"/>
+                    <div className={'flex-o-center flex-wrap gap-8 text-center text-base'}>
+                        {gameItem[columnNames.TYPOLOGIES]?.split(',').map((typology, index) => (
+                            <div key={index} className={' rounded-xl orangeLL min-w-fit p-2'}>
+                                <p>{typology.trim()}
+                                </p></div>
+                        ))}
+                    </div>
                 </div>
                 {/*<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
                 {/*<div className="text-red-500">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
-
             </div>
         </div>
     </>

@@ -13,7 +13,7 @@ export type dataframe = dfd.DataFrame;
 export async function createDb(): Promise<dataframe> {
 
     try {
-        const promiseSheetData: Promise<SheetData> = fetchSheet()
+        const promiseSheetData: Promise<SheetData> = fetchSheet("Database")
         const dati: riga[] = await promiseSheetData;
         console.log('dbCreator was called and obtain data:', dati);
 
@@ -31,7 +31,6 @@ export async function createDb(): Promise<dataframe> {
 function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
 
     let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
-
 
 
     // let cond_base = df["Exp"].eq("");
@@ -66,101 +65,44 @@ export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
     let difficulty_cond = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
     let duration_cond = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
     let typologies_cond = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
+    let authors_cond = isinArray(df[columnNames.AUTHORS], [userInputs.authors.curValue]);
+    let publisher_cond = isinArray(df[columnNames.PUBLISHER], [userInputs.publisher.curValue]);
+    let publisher_IT_cond = isinArray(df[columnNames.PUBLISHER_IT], [userInputs.publisher.curValue]);
 
     let filtered_db: dfd.DataFrame = df.query((cond0)
-        .and(name_cond).and(collab_cond).and(difficulty_cond).and(duration_cond).and(typologies_cond));
+        .and(name_cond)
+        .and(collab_cond)
+        .and(difficulty_cond)
+        .and(duration_cond)
+        .and(typologies_cond)
+        .and(authors_cond)
+        .and(publisher_cond.or(publisher_IT_cond)));
     const games = dfd.toJSON(filtered_db) as GameItem[];
     setRows(games);
 }
 
-function isinArray(series: dfd.Series, array: string[]) {
+/**
+ * Check if values in a series are within a given array
+ *
+ * @param series - The series to check if it satisfies the condition
+ * @param array - The array of admissible
+ * @returns A series of booleans indicating if each element in the series is in the array
+ */
+function isinArray(series: dfd.Series, array: string[]): dfd.Series {
     let condition = new dfd.Series(Array(series.values.length).fill(array.length === 0));
+
+    const normalizedSeries = new dfd.Series(series.values.map(
+        (val: any) => normalizeString(String(val)))
+    );
+
     for (let i = 0; i < array.length; i++) {
-        condition = series.str.toLowerCase().str.includes(array[i].toLowerCase() as any).or(condition);
+        const searchedTerm: string = normalizeString(array[i]);
+        condition = normalizedSeries.str.includes(searchedTerm).or(condition);
     }
     return condition;
 }
 
 
-//
-// function creaTabella(df: dfd.DataFrame, df_exp: dfd.DataFrame) {
-//
-//     const tabella_giochi = document.getElementById("tabella_giochi")!;
-//
-//
-//     tabella_giochi.removeChild(document.getElementById("tbody_giochi"));
-//
-//     let tablebody = document.createElement("tbody");
-//     tablebody.id = "tbody_giochi";
-//     tabella_giochi.appendChild(tablebody);
-//     // let array = df.loc({columns: ["Titolo", "Gioc Min", "Gioc Max", "Competizione", "Difficoltà", "Durata"]}).values;
-//
-//     dfd.toJSON(df).forEach((rowData, index) => {
-//         let row_div = document.createElement("tr");
-//         const bgClass = index % 2 === 0 ? "greenD" : "green-DD";
-//         row_div.className = `${bgClass} cursor-pointer hover:bg-[#36543f] transition-colors`;
-//         tablebody.appendChild(row_div);
-//
-//
-//         innerHTMLst = `
-//             <td class="px-2 md:px-4 py-2 flex items-center gap-3">
-//                 <div class="w-12"><img src="${rowData.LinkImmagine}" class="h-12 rounded shadow"/></div>
-//             </td>
-//             <td class="text-center md:px-4 py-3">
-//               <span class="font-semibold px-2">${rowData.Titolo}</span>
-//             </td>
-//             <td class="text-center py-3">${rowData["Gioc Min"]}</td>
-//             <td class="text-center py-3">${rowData["Gioc Max"]}</td>`;
-//
-//         //if medium screen or larger, also show Competizione/Comp
-//         const isMediumScreen = window.matchMedia("(min-width: 768px)").matches;
-//         if (isMediumScreen) {
-//             innerHTMLst += `
-//             <td class="text-center px-2 py-3">${rowData.Competizione}</td>
-//             <td class="text-center px-2 py-3">${rowData.Difficoltà}</td>
-//             <td class="text-center px-4 py-3">${rowData.Durata}</td>`;
-//         }
-//
-//         row_div.innerHTML = innerHTMLst;
-//         const tdbutton = document.createElement('td');
-//         tdbutton.className = 'text-center px-3 py-3 w-10';
-//         row_div.appendChild(tdbutton);
-//         const btn = document.createElement('button');
-//         // btn.className = 'text-xl';
-//         btn.className = 'text-[#1f3127] bg-yellow-400 hover:bg-yellow-600 hover:text-white font-bold rounded-full w-10 h-10 ' +
-//             'flex items-center justify-center text-xl shadow-md transition';
-//
-//         btn.innerText = '?';
-//         btn.addEventListener('click', () => showInfoModal(rowData));
-//         tdbutton.appendChild(btn);
-//
-//
-//         // CREATE EXPANSION
-//         if (rowData["NumeroEspansioni"] > 0) {
-//             const firstCell = row_div.querySelectorAll("td")[1];
-//             firstCell.innerHTML = `<span class="text-300 text-xl mr-4">⭐</span>${firstCell.textContent}`;
-//             let exp_array = dfd.toJSON(df_exp.loc({rows: df_exp["Exp"].eq(rowData.Titolo)}));
-//             row_div.addEventListener("click", () => {
-//                 row_div.classList.toggle("active");
-//                 let nextRow = row_div.nextElementSibling;
-//                 while (nextRow && nextRow.classList.contains("row-details")) {
-//                     nextRow.style.display = nextRow.style.display === "table-row" ? "none" : "table-row";
-//                     nextRow = nextRow.nextElementSibling;
-//                 }
-//             });
-//
-//             exp_array.forEach((exp) => {
-//                 let ExpansionRow = document.createElement("tr");
-//                 ExpansionRow.style.display = 'none';
-//                 ExpansionRow.className = "row-details bg-[#2d3e33]";
-//                 ExpansionRow.innerHTML = `
-//                 <td colspan="8" class="px-6 py-4 text-[#d8f3dc]">
-//                   <strong>Expansion:</strong> ${exp.Titolo}
-//                 </td>
-//               `;
-//                 tablebody.appendChild(ExpansionRow);
-//             });
-//
-//         }
-//     });
-// }
+function normalizeString(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}

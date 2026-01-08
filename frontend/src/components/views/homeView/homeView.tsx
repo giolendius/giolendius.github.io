@@ -23,6 +23,20 @@ export default function HomeView({children, setPage, promiseDb}:
     </div>
 }
 
+function MeepleCover() {
+    return <div id="cover" className="greenD">
+        <section className="h-1vh flex-o-center">
+            <div className="my-flex-wrap">
+                <div className="meeple">
+                    <img id="meeple" className=""
+                         src={meeple} alt="meeple"/>
+                </div>
+                <h1 className="text-8xl pb-2 font-bold text-[#b7e4c7] m-4">Great Gallo Games</h1>
+            </div>
+        </section>
+    </div>
+}
+
 
 function BarrageBehind({setPage}: { setPage: setPageT }) {
     const parallaxRef = React.useRef<HTMLDivElement | null>(null);
@@ -65,19 +79,7 @@ function BarrageBehind({setPage}: { setPage: setPageT }) {
 }
 
 
-function MeepleCover() {
-    return <div id="cover" className="greenD">
-        <section className="h-1vh flex-o-center">
-            <div className="my-flex-wrap">
-                <div className="meeple">
-                    <img id="meeple" className=""
-                         src={meeple} alt="meeple"/>
-                </div>
-                <h1 className="text-8xl pb-2 font-bold text-[#b7e4c7] m-4">Great Gallo Games</h1>
-            </div>
-        </section>
-    </div>
-}
+
 
 
 function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
@@ -143,12 +145,12 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
 
 
 function Slideshow() {
-    return <div className="slideshow">
+    return <div className="slideshow text-black">
         <button className="arrow" onClick={() => {
             ArrowToSlide(-1)
         }}>&#10094;</button>
 
-        <div className="slides">
+        <div className="slides ">
             <div className="slide active flex-v-center">
                 <p>"We don’t stop playing because we grow old; We grow old because we stop playing."</p>
                 <h4>George Bernard Shaw</h4>

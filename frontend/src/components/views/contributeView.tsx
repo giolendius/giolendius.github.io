@@ -1,5 +1,6 @@
 import React, {useRef} from "react";
 import {BUILD_DATE} from "../utils/build-date"
+import fetchSheet from "../utils/fetchSheet";
 
 export default function ContributeView({children}: { children: React.ReactNode }) {
     return <>
@@ -277,7 +278,7 @@ function MyCoolStuff() {
 }
 
 function GoooleSheet() {
-    return <section className="h-1vh my-flex-wrap greenD mb-lg-5">
+    return <div className="my-flex-wrap greenD mb-lg-5">
         <div className="m-10">
             <div className="didascalia-immagine">
                 <h2 className="m-6">Manca un gioco?</h2>
@@ -297,12 +298,12 @@ function GoooleSheet() {
             <img className='fittare' alt="Punto di Domanda"
                  src="https://img.freepik.com/premium-photo/close-up-green-plant-against-white-background_1048944-1056718.jpg?w=826"/>
         </div>
-    </section>
+    </div>
 }
 
 function GitHub() {
     const referenza = useRef<HTMLDivElement | null>(null);
-    return <section className="h-vh-2 flex-o-center greenDD">
+    return <section className="h-vh-1 flex-o-center greenDD p-10">
         <div ref={referenza}>
             <h2>Guarda il codice!</h2>
             <p>Vuoi vedere il codice sorgente di questo sito? Trovi il codice su github:</p>
@@ -325,20 +326,26 @@ function GitHub() {
 
 
 function Spunti() {
+    const [todo, setTodo] = React.useState<string[]>([]);
+    React.useEffect(() => {
+        fetchSheet('Todo').then((dati) => {
+            setTodo([dati[0][2].replace(/\//g, ' / '), ...dati.slice(1).map(row => row[0])])
+        })
+    }, [])
     return <>
-        <section className="h-vh-2 flex-o-center bg-black">
-            <div>
+        <div className="h-vh-2 flex-o-center flex-wrap bg-black gap-0">
+            <div className={"p-8"}>
                 <h3>Suggerimenti su futuri miglioramenti</h3>
-                <p>Ricerca avanzata: tipologie, autori...</p>
-                <p>Pagina con visuale dettagliata del gioco</p>
-                <p> Sviluppare le espansioni</p>
+                {todo.slice(1).map(item => <p key={item}>- {item}</p>)}
             </div>
-            <div>
-                <h3>Ultimi aggiornamenti</h3>
-                <p>Game DB: 2024-12-22</p>
+            <div className={'p-8'}>
+                <h3>Last updates</h3>
+                <p>Games Database:   {todo.slice(0,1)}</p>
                 <p>Site layout: {BUILD_DATE}</p>
             </div>
 
-        </section>
+        </div>
+
     </>
 }
+

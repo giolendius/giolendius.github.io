@@ -1,7 +1,13 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
 
 
-const tipologie = ["Piazzamento Lavoratori", "Gestionale", "Deduzione Sociale", "Parole",]
+const tipologie = [
+    "Piazzamento Lavoratori",
+    "Gestionale",
+    "Social Deduction",
+    "Parole",
+    "EngineBuilding",
+    "Asimmetrici"]
 
 interface StateWithSetter<T extends string | string [], K extends string> {
     curValue: T;
@@ -18,6 +24,8 @@ export interface userInputs {
     complexity: StateWithSetter<string[], string>;
     time: StateWithSetter<string[], string>;
     categ: StateWithSetter<string[], string>;
+    authors: StateWithSetter<string, string>;
+    publisher: StateWithSetter<string, string>;
 }
 
 function createInputField(inputType: 'input' | 'select', labelText: string, options?: string[]): StateWithSetter<string, string> {
@@ -33,15 +41,17 @@ function createMultiselectInputField(labelText: string, options: string[]): Stat
     return {curValue, setValue, inputType: 'multiselect', labelText, options};
 }
 
-export function defineUserInputsStates(): userInputs {
 
+export function defineUserInputsStates(): userInputs {
     return {
         search: createInputField('input', "Cerca ..."),
         players: createInputField('select', "Numero di Giocatori:", ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"]),
         collab: createMultiselectInputField("Cooperazione: ", ['COOPerativo', 'Tutti contro Tutti', 'A Squadre']),
         complexity: createMultiselectInputField("Complessità: ", ['Facilissimo', 'Facile', 'Medio', 'Difficile', 'Molto complesso']),
         time: createMultiselectInputField("Durata: ", ['Molto Breve', 'Breve', 'Medio', 'Lungo', 'Molto Lungo']),
-        categ: createMultiselectInputField("Tipologie: ", tipologie)
+        categ: createMultiselectInputField("Tipologie: ", tipologie),
+        authors: createInputField('input', 'Cerca autore:'), // Example authors
+        publisher: createInputField('input', 'Cerca editore:') // Example publishers
     }
 }
 
@@ -101,12 +111,8 @@ export function Sidebar({userInputs}: { userInputs: userInputs }) {
         <div className="flex sticky top-0 pl-4 p-8 max-h-screen overflow-y-auto overflow-hidden flex-col md:block space-y-0
                 md:space-y-6  space-x-4 md:space-x-0 md:mb-0 md:text-left ">
             <h1 className="m-auto p-4 text-2xl font-bold text-[#b7e4c7]"> Parametri</h1>
-            <InputField {...userInputs.search}/>
-            <InputField {...userInputs.players}/>
-            <InputField {...userInputs.collab}/>
-            <InputField {...userInputs.complexity}/>
-            <InputField {...userInputs.time}/>
-            <InputField  {...userInputs.categ}/>
+            {Object.entries(userInputs).map(([key, value]) => (
+                <InputField key={key} {...value}/>))}
         </div>
     </>
 }

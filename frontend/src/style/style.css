@@ -1,34 +1,37 @@
 @import "tailwindcss";
 
 @layer base {
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-  }
-}
-body, html {
-    height: 100%;
-    font-family: sans-serif;
-    scroll-behavior: smooth;
-    color: #e1e1e1;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+    }
 
-body h2 {
-    font-size: 2em;
-    font-weight: bold;
-    line-height: 2;
-    color: #bd5909; /* Tailwind orange-600 */
-    text-align: center;
-}
+    body {
+        height: 100%;
+        font-family: sans-serif;
+        scroll-behavior: smooth;
+        color: #e1e1e1;
+    }
 
-body h3 {
-    font-size: 1.2em;
-    font-weight: bold;
-    line-height: 1.5;
-    text-align: center;
-margin-bottom: 1rem;}
+    h2 {
+        font-size: 2em;
+        font-weight: bold;
+        line-height: 2;
+        color: #bd5909; /* Tailwind orange-600 */
+        text-align: center;
+    }
+
+    h3 {
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1.5;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #bd5909;
+    }
+}
 
 button {
     cursor: pointer;
@@ -61,15 +64,18 @@ button {
     /*flex-shrink: 1;*/
     /*flex-basis: 50%;*/
 }
+
 .my-flex-wrap {
     display: flex;
     flex-direction: column;
     align-items: center; /*  centers items on cross axis */
     justify-content: center; /*  centers items on main axis */
 }
+
 .switch {
     flex-direction: column-reverse;
 }
+
 @media (min-width: 768px) {
     .my-flex-wrap {
         justify-content: space-between;
@@ -79,26 +85,18 @@ button {
 
 .h-1vh {
     height: 100vh;
-    color: white;
 }
 
 .h-vh-2 {
     height: 50vh;
-    color: white;
 }
 
 .red {
     background-color: crimson;
 }
 
-.white {
-    background-color: white;
-    color: black;
-    z-index: 2;
-    position: relative;
-}
 
-.meeple{
+.meeple {
     background-color: #b7e4c7;
     max-width: 30rem;
     border-radius: 100%;
@@ -108,7 +106,6 @@ button {
     margin-left: 2rem;
     margin-right: 2rem;
 }
-
 
 
 /*-----------------------*/
@@ -135,7 +132,7 @@ button {
     transition: width 0.3s ease-in-out;
 }
 
-button.active, a.active{
+button.active, a.active {
     background-color: #bd5909; /* Tailwind orange-600 */
 }
 
@@ -185,6 +182,7 @@ button.active, a.active{
 .greenM {
     background-color: #36543f;
 }
+
 .hover-lighten:hover {
     background-color: #36543f
 }
@@ -192,6 +190,13 @@ button.active, a.active{
 .greenLL {
     background-color: #b7e4c7;
 }
+
+.orangeLL {
+    background-color: #efb976;
+}
+
+.orangeD {
+    background-color: #bd5909;;}
 
 .opaco {
     opacity: 70%;

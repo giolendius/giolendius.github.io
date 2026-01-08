@@ -11,14 +11,14 @@ export default function App() {
 
     const promiseDb = createDb();
 
-    return <div className='text-black'>
+    return <div>
         <ThreeViews promiseDb={promiseDb}/>
     </div>;
 };
 
 
 function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
-    const [page, setPage] = React.useState<ViewNames>('table');
+    const [page, setPage] = React.useState<ViewNames>('home');
     const userInputs: userInputs = defineUserInputsStates();
     return <>
         {page === "home" &&
