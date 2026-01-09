@@ -6,7 +6,7 @@ import {columnNames} from "../../utils/column_names"
 import React from "react";
 import fetchSheet from "../../utils/fetchSheet";
 
-type riga = string[];
+type gameRowInfo = string[];
 
 export type dataframe = dfd.DataFrame;
 
@@ -14,11 +14,11 @@ export async function createDb(): Promise<dataframe> {
 
     try {
         const promiseSheetData: Promise<SheetData> = fetchSheet("Database")
-        const dati: riga[] = await promiseSheetData;
-        console.log('dbCreator was called and obtain data:', dati);
+        const array_dati: gameRowInfo[] = await promiseSheetData;
+        console.log('dbCreator was called and obtain data:', array_dati);
 
-        const [df_base, df_exp] = create_db(dati);
-        return df_base
+        const df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
+        return splitExpansions(df);
 
     } catch (error) {
         console.error('Errore in dbHandler:', error);
@@ -28,49 +28,51 @@ export async function createDb(): Promise<dataframe> {
 }
 
 
-function create_db(array_dati: riga[]): [dfd.DataFrame, dfd.DataFrame] {
+function splitExpansions(df: dfd.DataFrame): dfd.DataFrame {
 
-    let df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
+    const df_exp: dfd.DataFrame = df.query(df[columnNames.EXPANSION].ne(""));
 
+    let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(''));
+    df.addColumn("IndiceEspansioni", zeroSeries, {inplace: true});
 
-    // let cond_base = df["Exp"].eq("");
+    df_exp.index.forEach((index)=>{
+        const expRow: string[] = df_exp.loc({rows: [index]}).values[0] as string[];
+        const expName: string = expRow[df_exp.columns.indexOf(columnNames.EXPANSION)];
+        const baseGameIndeces: number[] = df.loc(
+            {rows: df[columnNames.TITLE].eq(expName), columns: ['IndiceEspansioni']}
+        ).index as number[]; // the array of indices of the possible base games... should be of length 1
 
-    const df_exp = df.query(df[columnNames.EXPANSION].ne(""));
-    let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(0));
-    df.addColumn("NumeroEspansioni", zeroSeries, {inplace: true});
-    // let NumeroEspansioniIndex: number = df.columns.indexOf("NumeroEspansioni");
-
-//    The Following code was blocking execution. But the idea could still be interesting
-
-//    df_exp["Exp"].values.forEach(function(nome) {
-//        vanilla_index = df.loc({rows: df["Titolo"].eq(nome)}).index[0];
-//        if (vanilla_index) {
-//            df.values[vanilla_index][NumeroEspansioniIndex] = df.values[vanilla_index][NumeroEspansioniIndex] + 1;
-//        } else {
-//            console.log("Problema nelle espansioni di " + nome)
-//        }
-//    });
-    let df_base = df.query(df[columnNames.EXPANSION].eq("")).resetIndex();
-    return [df_base, df_exp]
+        if (baseGameIndeces.length == 1) {
+            const baseIndex: number = baseGameIndeces[0];
+            ((df.values[baseIndex] as any)[df.columns.indexOf('IndiceEspansioni')] as any) += `${index}, `
+        } else {
+            console.log("Problema nell' espansione " + expRow[df_exp.columns.indexOf(columnNames.TITLE)])
+        }
+        // df.loc({rows:[8], columns:['Titolo', 'IndiceEspansioni']}).print();
+    });
+    return df
 }
 
 export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
                          setRows: React.Dispatch<React.SetStateAction<GameItem[] | null>>) {
     console.log('Called db filter')
-    const cond0 = df[columnNames.TITLE].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
     const players: number = Number(userInputs.players.curValue.replace(/\+$/, ''));
+    const temporary_only_expansion_show = false
 
-    let name_cond = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
-    let collab_cond = isinArray(df[columnNames.COMPETITION_CAT], userInputs.collab.curValue);
-    let difficulty_cond = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
-    let duration_cond = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
-    let typologies_cond = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
-    let authors_cond = isinArray(df[columnNames.AUTHORS], [userInputs.authors.curValue]);
-    let publisher_cond = isinArray(df[columnNames.PUBLISHER], [userInputs.publisher.curValue]);
-    let publisher_IT_cond = isinArray(df[columnNames.PUBLISHER_IT], [userInputs.publisher.curValue]);
+    const cond_base = df[columnNames.EXPANSION].eq("");
+    const cond_name = df[columnNames.TITLE].str.toLowerCase().str.includes(userInputs.search.curValue.toLowerCase());
+    const players_cond = (df[columnNames.PLAYERS_MIN].le(players).and(df[columnNames.PLAYERS_MAX].ge(players))).or(players == 0);
+    const collab_cond = isinArray(df[columnNames.COMPETITION_CAT], userInputs.collab.curValue);
+    const difficulty_cond = isinArray(df[columnNames.DIFFICULTY_CAT], userInputs.complexity.curValue);
+    const duration_cond = isinArray(df[columnNames.DURATION_CAT], userInputs.time.curValue);
+    const typologies_cond = isinArray(df[columnNames.TYPOLOGIES], userInputs.categ.curValue);
+    const authors_cond = isinArray(df[columnNames.AUTHORS], [userInputs.authors.curValue]);
+    const publisher_cond = isinArray(df[columnNames.PUBLISHER], [userInputs.publisher.curValue]);
+    const publisher_IT_cond = isinArray(df[columnNames.PUBLISHER_IT], [userInputs.publisher.curValue]);
 
-    let filtered_db: dfd.DataFrame = df.query((cond0)
-        .and(name_cond)
+    let filtered_db: dfd.DataFrame = df.query((cond_name)
+        .and( temporary_only_expansion_show ? cond_base : true)
+        .and(players_cond)
         .and(collab_cond)
         .and(difficulty_cond)
         .and(duration_cond)
@@ -106,3 +108,4 @@ function isinArray(series: dfd.Series, array: string[]): dfd.Series {
 function normalizeString(str: string): string {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
+

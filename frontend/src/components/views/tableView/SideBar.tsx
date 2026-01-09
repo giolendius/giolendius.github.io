@@ -30,7 +30,7 @@ export interface userInputs {
 
 function createInputField(inputType: 'input' | 'select', labelText: string, options?: string[]): StateWithSetter<string, string> {
     if (inputType != 'input' && !options) {
-        throw new Error("Options must be provided for multiselect input type");
+        throw new Error("Options must be provided for select input type");
     }
     const [curValue, setValue] = useState<string>('');
     return {curValue, setValue, inputType, labelText, options};
@@ -77,12 +77,20 @@ function InputField<T extends string | string[]>(state: StateWithSetter<T, strin
     return <div className="mb-4">
         <label htmlFor="s_game_name" className="block mb-1 text-sm font-medium text-[#b7e4c7]">
             {state.labelText}
-            {state.inputType == 'input' && <input
+            {state.inputType == 'input' && <div className={'relative'}><input
                 id='s_game_name'
                 value={state.curValue}
                 onChange={e => state.setValue(e.target.value as T)}
                 placeholder="Cerca..."
-                className={inputClassName}/>}
+                className={inputClassName}/>
+                {state.curValue && (
+                    <button
+                        onClick={() => state.setValue('' as T)}
+                        className="absolute text-xl right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    > ×
+                    </button>
+                )}</div>
+            }
             {state.inputType == 'select' && <select value={state.curValue}
                                                     onChange={e => state.setValue(e.target.value as T)}
                                                     className={selectClassName}>

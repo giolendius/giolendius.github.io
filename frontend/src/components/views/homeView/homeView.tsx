@@ -23,6 +23,7 @@ export default function HomeView({children, setPage, promiseDb}:
     </div>
 }
 
+
 function MeepleCover() {
     return <div id="cover" className="greenD">
         <section className="h-1vh flex-o-center">

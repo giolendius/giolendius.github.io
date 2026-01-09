@@ -5,6 +5,7 @@ import {isMediumScreen} from "../../utils/utils";
 import '../../../style/table-style.css';
 import {Sidebar, userInputs} from "./SideBar";
 import {columnNames} from "../../utils/column_names";
+import {toJSON} from "danfojs";
 
 
 type TableViewProps = {
@@ -65,14 +66,15 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
             <div>
                 <button id="backToTop"
                         onClick={scrollToMain}
-                        className="fixed bottom-[10vw] right-[10vw] w-16 h-16  bg-[#b7e4c7] hover:bg-yellow-200 text-white rounded-full shadow-lg text-6xl">
-                    ⮭
+                        className="fixed bottom-0 right-0 w-[18vw] h-[12vw] p-2  bg-[#b7e4c7] hover:bg-yellow-200 text-white rounded-tl-[10vw] shadow-lg text-4xl">
+                    ↑⇧⮝⮭
                 </button>
             </div>
         </main>
         {selectedGame && <InfoPopUp
             gameItem={selectedGame}
-            onClose={() => setSelectedGame(null)}
+            PromiseDb={promiseDb}
+            setSelectedGame={setSelectedGame}
         />}
         {/*<footer className={"greenDDD"}>This contains text <h1>and a title </h1></footer>*/}
     </div>
@@ -195,7 +197,11 @@ function TableRow({rowData, showGame, index}: TableRowProps) {
     </>
 }
 
-function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => void }) {
+function InfoPopUp({gameItem, PromiseDb, setSelectedGame}: {
+    gameItem: GameItem;
+    PromiseDb: Promise<dataframe>,
+    setSelectedGame: React.Dispatch<React.SetStateAction<GameItem | null>>
+}) {
     const [show, setShow] = React.useState(false);
 
     React.useEffect(() => {
@@ -204,7 +210,9 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
 
     function onCloseHandler() {
         setShow(false);
-        setTimeout(onClose, 200);
+        setTimeout(() => {
+            setSelectedGame(null)
+        }, 200);
     }
 
     const LinkBGG: string = gameItem[columnNames.LINK_BGG];
@@ -265,6 +273,7 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
                         <Casella field={columnNames.DIFFICULTY_WEIGHT} label={'BGG Weight: '}/>
                         <Casella field={columnNames.RANK} label={'BGG Rating: '}/>
                         <Casella field={columnNames.PLACE_CURRENT} label={'Al momento sembra essere in: '}/>
+                        <Casella field={columnNames.EXPANSION} label={'expansionbiad: '}/>
                     </div>
                     <hr className="border-t-1 border-black my-8"/>
                     <div className={'flex-o-center flex-wrap gap-8 text-center text-base'}>
@@ -274,11 +283,51 @@ function InfoPopUp({gameItem, onClose}: { gameItem: GameItem; onClose: () => voi
                                 </p></div>
                         ))}
                     </div>
+                    <Expansions expansionsIndices={gameItem['IndiceEspansioni'] as string}
+                                PromiseDb={PromiseDb}
+                                setSelectedGame={setSelectedGame}/>
                 </div>
                 {/*<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
                 {/*<div className="text-red-500">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias assumenda cumque dicta eveniet explicabo illo itaque laboriosam minima molestiae odio optio quibusdam ratione, sequi totam ullam voluptatum? Amet asperiores deserunt eius excepturi nesciunt, perferendis sequi? Ad aliquam ex, illo mollitia quas quidem rerum. Adipisci amet animi architecto aut cumque deleniti distinctio doloremque doloribus, ducimus est ipsam, iste laborum maxime nesciunt quam quasi quia quos ratione reiciendis sequi sint voluptate voluptates voluptatibus. Adipisci, dignissimos ex explicabo, incidunt ipsam maiores modi nisi porro provident recusandae tenetur vero vitae! Accusantium commodi, distinctio earum expedita incidunt laudantium numquam perferendis reiciendis repudiandae sunt ut!</div>*/}
             </div>
         </div>
+    </>
+}
+
+function Expansions({expansionsIndices, PromiseDb, setSelectedGame}:
+                    {
+                        expansionsIndices: string,
+                        PromiseDb: Promise<dataframe>,
+                        setSelectedGame: React.Dispatch<React.SetStateAction<GameItem | null>>
+                    }) {
+    if (expansionsIndices.trim() === '') {
+        return <></>;
+    }
+    const [expansions, setExpansions] = React.useState<GameItem[]>([])
+
+    React.useEffect(() => {
+        PromiseDb.then((db: dataframe) => {
+            const expansionArray = expansionsIndices.split(',').slice(0, -1).map(str => Number(str.trim()));
+            const gameRows = db.loc({rows: expansionArray});
+            const expansionsNames: GameItem[] = toJSON(gameRows) as GameItem[] //gameArray[db.columns.indexOf(columnNames.TITLE)];
+
+            console.log('expansionsNames:', expansionsNames);
+            setExpansions(expansionsNames);
+        });
+    }, [])
+
+    return <>
+        <hr className="border-t-1 border-black my-8"/>
+        <div className={'flex-o-center flex-wrap gap-8 text-center text-base'}>
+            {expansions.map((game, index) => (
+                <div key={index} className={'flex-v-center rounded-xl pinkM min-w-fit p-2 cursor-pointer gap-2'}
+                     onClick={() => setSelectedGame(game)}>
+                    {game.LinkImmagine &&
+                        <img src={game.LinkImmagine}  className="h-12 rounded shadow" alt=''/>}
+                    <p>
+                        {game.Titolo}
+                    </p>
+                </div>))}</div>
     </>
 }
 
