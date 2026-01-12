@@ -37,18 +37,21 @@ function splitExpansions(df: dfd.DataFrame): dfd.DataFrame {
 
     df_exp.index.forEach((index)=>{
         const expRow: string[] = df_exp.loc({rows: [index]}).values[0] as string[];
-        const expName: string = expRow[df_exp.columns.indexOf(columnNames.EXPANSION)];
-        const baseGameIndeces: number[] = df.loc(
-            {rows: df[columnNames.TITLE].eq(expName), columns: ['IndiceEspansioni']}
-        ).index as number[]; // the array of indices of the possible base games... should be of length 1
+        const expansionName: string = expRow[df_exp.columns.indexOf(columnNames.TITLE)];
 
-        if (baseGameIndeces.length == 1) {
-            const baseIndex: number = baseGameIndeces[0];
-            ((df.values[baseIndex] as any)[df.columns.indexOf('IndiceEspansioni')] as any) += `${index}, `
-        } else {
-            console.log("Problema nell' espansione " + expRow[df_exp.columns.indexOf(columnNames.TITLE)])
+        const vanillaName: string = expRow[df_exp.columns.indexOf(columnNames.EXPANSION)];
+        if (vanillaName) {
+            const baseGameIndeces: number[] = df.loc(
+                {rows: df[columnNames.TITLE].eq(vanillaName), columns: ['IndiceEspansioni']}
+            ).index as number[]; // the array of indices of the possible base games... should be of length 1
+
+            if (baseGameIndeces.length == 1) {
+                const baseIndex: number = baseGameIndeces[0];
+                ((df.values[baseIndex] as any)[df.columns.indexOf('IndiceEspansioni')] as any) += `${index}, `
+            } else {
+                console.log("Problema nell' espansione " + expRow[df_exp.columns.indexOf(columnNames.TITLE)])
+            }
         }
-        // df.loc({rows:[8], columns:['Titolo', 'IndiceEspansioni']}).print();
     });
     return df
 }
