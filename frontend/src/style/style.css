@@ -111,7 +111,6 @@ button {
 /*-----------------------*/
 /*        SIDEBAR        */
 /*-----------------------*/
-
 #sidebarWrapper {
     /*width: 16rem; !* default md:w-64 *!*/
     transition: width 0.3s ease-in-out;
@@ -166,7 +165,6 @@ button.active, a.active {
 /*D=dark, DD=Darker*/
 /*M=Medium*/
 /*L=Light*/
-
 .greenD {
     background-color: #253b2f;
 }
@@ -200,7 +198,8 @@ button.active, a.active {
 }
 
 .orangeD {
-    background-color: #bd5909;;}
+    background-color: #bd5909;;
+}
 
 .opaco {
     opacity: 70%;

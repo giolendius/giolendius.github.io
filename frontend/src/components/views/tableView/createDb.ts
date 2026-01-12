@@ -71,7 +71,7 @@ export function filterDb(df: dfd.DataFrame, userInputs: userInputs,
     const publisher_IT_cond = isinArray(df[columnNames.PUBLISHER_IT], [userInputs.publisher.curValue]);
 
     let filtered_db: dfd.DataFrame = df.query((cond_name)
-        .and( temporary_only_expansion_show ? cond_base : true)
+        .and(userInputs.expansion?.curValue ? true : cond_base)
         .and(players_cond)
         .and(collab_cond)
         .and(difficulty_cond)

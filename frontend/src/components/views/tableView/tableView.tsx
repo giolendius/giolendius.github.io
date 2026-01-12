@@ -66,8 +66,8 @@ export default function TableView({promiseDb, userInputs, children}: TableViewPr
             <div>
                 <button id="backToTop"
                         onClick={scrollToMain}
-                        className="fixed bottom-0 right-0 w-[18vw] h-[12vw] p-2  bg-[#b7e4c7] hover:bg-yellow-200 text-white rounded-tl-[10vw] shadow-lg text-4xl">
-                    ↑⇧⮝⮭
+                        className="fixed bottom-0 right-0 w-[12vh] h-[12vh] p-2  bg-[#b7e4c7] hover:bg-yellow-200 text-white rounded-tl-[80%] shadow-lg text-8xl">
+                    ↑
                 </button>
             </div>
         </main>
@@ -88,13 +88,14 @@ function OpenCloseButton({sidebarOpen, setSidebarOpen, sidebarWidth}: {
     const buttonDistance = Math.min((window.innerWidth), sidebarWidth * 4) - 80;
     return <>
         {/*<div id="buttonwrap" className={`relative top-6 md:left-0 ${sidebarOpen ? 'left-60' : ''}`}>*/}
-        <div className='bg-green-200 sticky top-9 z-3'>
+        <div className='sticky top-9 z-3'>
+            <div className={`greenDDD absolute p-1 rounded`} style={{left: sidebarOpen ? `${buttonDistance}px` : '20px'}}>
             <button id="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className={`absolute p-3 bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r 
+                    className={`p-3 bg-[#2d3e33] hover:bg-[#3e5544] text-white rounded-r 
                 ${sidebarOpen ? `rotate-180` : ''}`}
-                    style={{left: sidebarOpen ? `${buttonDistance}px` : '20px'}}>
+                    >
                 ➤
-            </button>
+            </button></div>
         </div>
     </>
 }
@@ -103,7 +104,7 @@ function OpenCloseButton({sidebarOpen, setSidebarOpen, sidebarWidth}: {
 function MainTableArea({children, refer}: { children: React.ReactNode, refer: React.RefObject<HTMLDivElement> }) {
     const [showLegend, setShowLegend] = React.useState(false);
     return <main ref={refer} id="mainContent"
-                 className="z-1 main flex-1  p-4 md:p-16 transition-all duration-300">
+                 className="z-1 main flex-1 transition-all duration-300 px-8">
         <div className={'text-[#b7e4c7] flex-o-center'}>
             <h1 className="m-10 text-4xl font-bold text-[#b7e4c7]"> Ricerca dei giochi </h1>
             <button
@@ -178,8 +179,9 @@ function TableRow({rowData, showGame, index}: TableRowProps) {
             <td className="text-center md:px-4 py-3">
                 <span className="font-semibold px-2">{rowData[columnNames.TITLE]}</span>
             </td>
-            <td className="text-center py-3">{rowData[columnNames.PLAYERS_MIN]}</td>
-            <td className="text-center py-3">{rowData[columnNames.PLAYERS_MAX]}</td>
+            <td className="text-center py-2">{rowData[columnNames.PLAYERS_MIN]}</td>
+            <td className="text-center">-</td>
+            <td className="text-center py-2">{rowData[columnNames.PLAYERS_MAX]}</td>
             {isMediumScreen && (
                 <>
                     <td className="text-center px-2 py-3">{rowData[columnNames.COMPETITION_CAT]}</td>
