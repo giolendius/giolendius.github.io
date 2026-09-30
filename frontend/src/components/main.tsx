@@ -2,6 +2,7 @@ import React from 'react';
 import HomeView from './views/homeView/homeView';
 import TableView from './views/tableView/tableView';
 import ContributeView from './views/contributeView';
+import ProjectsView from './views/projectsView';
 import {defineUserInputsStates, userInputs} from "./views/tableView/SideBar";
 import {NewNavbar} from "./navbar";
 import {createDb, dataframe} from "./views/tableView/createDb";
@@ -27,4 +28,6 @@ function ThreeViews({promiseDb}: { promiseDb: Promise<dataframe> }) {
             <TableView promiseDb={promiseDb} userInputs={userInputs}><NewNavbar setPage={setPage} activeLinkName={'table'}/></TableView>}
         {page === "contribute" &&
             <ContributeView><NewNavbar setPage={setPage} activeLinkName={'contribute'}/></ContributeView>}
+        {page === "projects" &&
+            <ProjectsView><NewNavbar setPage={setPage} activeLinkName={'projects'}/></ProjectsView>}
     </>;}

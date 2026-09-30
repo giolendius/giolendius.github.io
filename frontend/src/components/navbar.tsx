@@ -25,7 +25,8 @@ export function NewNavbar({setPage, activeLinkName}: NavigatorProps): ReactEleme
         <div className="backdrop-blur-md rounded-lg border border-white/30 flex m-8">
             <ButtonLink DisplayText={'Home'} ViewName={'home'} additionalClasses={'rounded-l-lg'}/>
             <ButtonLink DisplayText={'Ricerca'} ViewName={'table'} additionalClasses={''}/>
-            <ButtonLink DisplayText={'Contribuisci'} ViewName={'contribute'} additionalClasses={'rounded-r-lg'}/>
+            <ButtonLink DisplayText={'Contribuisci'} ViewName={'contribute'} additionalClasses={''}/>
+            <ButtonLink DisplayText={'Progetti'} ViewName={'projects'} additionalClasses={'rounded-r-lg'}/>
         </div>
         <div className="flex items-center bg-[#1e2d24] rounded-full p-2 m-4 border-2 border-[#b7e4c7]">
             <div className="bg-[#b7e4c7] ml-auto mr-2 rounded-full p-1">

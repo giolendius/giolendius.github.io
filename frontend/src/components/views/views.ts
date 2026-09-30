@@ -1,4 +1,4 @@
-export type ViewNames = "home" | "table" | "contribute";
+export type ViewNames = "home" | "table" | "contribute" | "projects";
 
 export type setPageT = (page: ViewNames) => void;
 
