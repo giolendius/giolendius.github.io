@@ -6,6 +6,8 @@ bgg_integration/constants/column_names.py
 
 # Frontend Files
 build/
+frontend/src/components/utils/build-date.ts
+frontend/src/components/utils/column_names.ts
 
 # Tests and miscellaneous
 frontend/node_modules/

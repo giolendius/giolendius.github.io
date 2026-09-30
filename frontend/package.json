@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "write-date": "echo \"export const BUILD_DATE = '$(date '+%d / %m / %Y')';\" > src/components/utils/build-date.ts",
-    "write-columns": "node create_column_names.js",
+    "write-date": "node prebuild-scripts/write_build_date.js",
+    "write-columns": "node prebuild-scripts/create_column_names.js",
+    "prepare": "npm run write-date && npm run write-columns",
     "simula_prod_mac": "npm run write-date && npm run write-columns &&  npm run build && npm run preview",
     "simula_prod_win": "npm run build && npm run preview",
     "prod": "npm run write-date && npm run write-columns && npm run build"
