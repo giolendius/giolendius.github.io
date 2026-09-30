@@ -18,7 +18,7 @@ export async function createDb(): Promise<dataframe> {
         console.log('dbCreator was called and obtain data:', array_dati);
 
         const df = new dfd.DataFrame(array_dati.slice(1, -1), {columns: array_dati[0]});
-        return splitExpansions(df);
+        return categorizeExpansions(df);
 
     } catch (error) {
         console.error('Errore in dbHandler:', error);
@@ -27,18 +27,24 @@ export async function createDb(): Promise<dataframe> {
     }
 }
 
+export function splitExpansions(df: dfd.DataFrame, getExpansions: boolean = true): dfd.Series {
+    if (getExpansions) {
+        return df[columnNames.EXPANSION].ne("");
+    } else {
+        return df[columnNames.EXPANSION].eq("");
+    }
+}
 
-function splitExpansions(df: dfd.DataFrame): dfd.DataFrame {
+function categorizeExpansions(df: dfd.DataFrame): dfd.DataFrame {
 
-    const df_exp: dfd.DataFrame = df.query(df[columnNames.EXPANSION].ne(""));
+    const df_exp: dfd.DataFrame = df.query(splitExpansions(df));
 
     let zeroSeries = new dfd.Series(Array(df.shape[0]).fill(''));
     df.addColumn("IndiceEspansioni", zeroSeries, {inplace: true});
 
-    df_exp.index.forEach((index)=>{
+    df_exp.index.forEach((index) => {
         const expRow: string[] = df_exp.loc({rows: [index]}).values[0] as string[];
         const expansionName: string = expRow[df_exp.columns.indexOf(columnNames.TITLE)];
-
         const vanillaName: string = expRow[df_exp.columns.indexOf(columnNames.EXPANSION)];
         if (vanillaName) {
             const baseGameIndeces: number[] = df.loc(

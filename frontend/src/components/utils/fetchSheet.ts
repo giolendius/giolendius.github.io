@@ -1,20 +1,21 @@
 import {SheetData} from "./types";
 
-type sheetname = 'Database' | 'Todo';
+type sheetname = 'Database' | 'Todo' | 'VittorieHanabi';
+
+const sheetIds: Record<sheetname, string> = {
+    'Database': "1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8",
+    'Todo': "1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8",
+    'VittorieHanabi': "1h7IvoNZO3YYa0biNw5IfTobiYkSWuyenDjNThKjCGRM",
+}
 
 export default async function fetchSheet(sheetname: sheetname): Promise<SheetData> {
-    let chiave: string = keys['prod2']
-    let schl = {
-        "dev": "1WgYYSWL6uOdjfEGFeQ",
-        "prod": "Zw6N3_JFjwqPsMt41c",
-        "prod2": "g2eGJy8CEaahauw"
-    }
+
     let sheetLink = "https://sheets.googleapis.com/v4/spreadsheets/" +
-        "1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8" +
-        // "1YuvMg055gT-pA0brzaKnK9PJqH8Z0bGdPez79sdWR8c" +
+        sheetIds[sheetname] +
         "/values/" +
         sheetname +
-        "/?key=AIzaSyC" + chiave + schl['prod2'];
+        "/?key=" +
+        key;
     // https://docs.google.com/spreadsheets/d/1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8/edit?gid=1973594395#gid=1973594395
     return fetch(sheetLink).then(response => response.json())
         .catch(error => {
@@ -25,12 +26,8 @@ export default async function fetchSheet(sheetname: sheetname): Promise<SheetDat
             console.log('Chiamato api');
             return json["values"];
         })
-    // .then(() =>{ , dati)})
-    // .then(dati => listen_filter_show(dati))
 }
+// https://sheets.googleapis.com/v4/spreadsheets/1RnaUmV5fSHc3oyIf62DhY3m21oLaS6xh2ss3KcMzKn8/values/Database/?key=AIzaSyCbSHnGb-q7SXpjUqoWg2eGJy8CEaahauw
+// https://sheets.googleapis.com/v4/spreadsheets/1h7IvoNZO3YYa0biNw5IfTobiYkSWuyenDjNThKjCGRM/values/Vittorie/?key=AIzaSyCbSHnGb-q7SXpjUqoWg2eGJy8CEaahauw
 
-const keys = {
-    "dev": "j5yLYFOBinCuQ",
-    "prod": "H7XOLG0wx22AFr",
-    "prod2": "bSHnGb-q7SXpjUqoW"
-  }
+const key = "AIzaSyCbSHnGb-q7SXpjUqoWg2eGJy8CEaahauw"

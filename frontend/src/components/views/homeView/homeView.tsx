@@ -3,7 +3,7 @@ import {setPageT} from "../views"
 import {ArrowToSlide, DotToSlide} from "./slideshow";
 import meeple from "../../../img/3d-meeple-svgrepo-com.svg";
 import {getElementById} from "../../utils/utils";
-import {dataframe} from "../tableView/createDb";
+import {dataframe, splitExpansions} from "../tableView/createDb";
 
 
 export default function HomeView({children, setPage, promiseDb}:
@@ -94,7 +94,7 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
                 startTimestamp = timestamp
             }
             const progress: number = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerText = Math.floor(progress * (end - start) + start).toString();
+            obj.innerText = `${Math.floor(progress * (end - start) + start)}`;
             if (progress < 1) {
                 window.requestAnimationFrame(step)
             }
@@ -103,9 +103,10 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
     }
 
     async function calcola_numero_giochi() {
-
         const dfGames: dataframe = await promiseDb;
-        const tot_games: number = dfGames.shape[0] - 1;
+        const dfBaseGames = dfGames.query(splitExpansions(dfGames, false));
+        const dfExpansions = dfGames.query(splitExpansions(dfGames, true));
+        const tot_games: number = dfBaseGames.shape[0];
         const obj: HTMLElement = getElementById("tot_giochi");
         animateValue(obj, 0, tot_games, 2000)
     }
@@ -137,7 +138,7 @@ function QuantiSono({promiseDb}: { promiseDb: Promise<dataframe> }) {
                     <button onClick={() => calcola_numero_giochi()} className="mybutton">Calcola<span> !!! </span>
                     </button>
                     <p></p>
-                    <h2 id="tot_giochi">??</h2>
+                    <h2 id="tot_giochi">????<span ></span></h2>
                 </div>
             </div>
         </div>
