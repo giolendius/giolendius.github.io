@@ -16,6 +16,8 @@ from __future__ import annotations
 import argparse
 import html as html_module
 import re
+import shutil
+import subprocess
 import sys
 import threading
 import time
@@ -47,7 +49,7 @@ from polling_seconds import (
 )
 
 try:
-    # stdlib ma presente solo su Windows: altrove si ricade sul bell ASCII.
+    # stdlib ma presente solo su Windows: altrove si suona in altro modo.
     import winsound
 except ImportError:
     winsound = None  # type: ignore[assignment]
@@ -249,14 +251,50 @@ def interval_for(seconds_to_open: float) -> float:
     return COOLDOWN_INTERVAL
 
 
+MACOS_SOUNDS = (
+    "/System/Library/Sounds/Sosumi.aiff",
+    "/System/Library/Sounds/Ping.aiff",
+    "/System/Library/Sounds/Glass.aiff",
+)
+
+
+def _macos_sound_file() -> str | None:
+    return next((path for path in MACOS_SOUNDS if Path(path).exists()), None)
+
+
+def beep_once() -> None:
+    """Uno squillo, col mezzo disponibile sulla piattaforma.
+
+    Il bell ASCII `\\a` resta solo come ultima spiaggia: su macOS il Terminal
+    di solito lo ignora o lo rende come lampeggio muto, quindi non basta.
+    """
+    if winsound is not None:
+        winsound.Beep(1200, 350)
+        winsound.Beep(880, 350)
+        return
+
+    sound = _macos_sound_file()
+    if sound is not None and shutil.which("afplay"):
+        subprocess.run(["afplay", "-v", "2", sound], check=False)
+        return
+
+    if shutil.which("osascript"):
+        subprocess.run(["osascript", "-e", "beep 2"], check=False)
+        return
+
+    if shutil.which("paplay") and Path("/usr/share/sounds/freedesktop/stereo/bell.oga").exists():
+        subprocess.run(
+            ["paplay", "/usr/share/sounds/freedesktop/stereo/bell.oga"], check=False
+        )
+        return
+
+    print("\a", end="", flush=True)
+
+
 def sound_alarm(stop: threading.Event, max_seconds: float = ALARM_MAX) -> None:
     deadline = time.monotonic() + max_seconds
     while not stop.is_set() and time.monotonic() < deadline:
-        if winsound is not None:
-            winsound.Beep(1200, 350)
-            winsound.Beep(880, 350)
-        else:
-            print("\a", end="", flush=True)
+        beep_once()
         stop.wait(0.2)
 
 
