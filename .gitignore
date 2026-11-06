@@ -21,3 +21,7 @@ prove/
 logs
 npm-debug.log*
 *.pyc
+
+# Clickday monitor
+python_clicker/clickday_hit.txt
+__pycache__/
