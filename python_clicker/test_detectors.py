@@ -14,12 +14,27 @@ from clickday_ideag import (  # noqa: E402
     detect_table_button,
     fetch,
     interval_for,
+    ssl_store_is_empty,
 )
 
 FORM_URL = "https://www.idea-g.it/2027-it/iscrizioni-game-designer-ideag/"
 
-gd = fetch(GAME_DESIGNER_URL).html
-reg = fetch(REGISTRATION_URL).html
+def must_fetch(url: str) -> str:
+    result = fetch(url)
+    if result is None:
+        print(f"\nIMPOSSIBILE SCARICARE {url}")
+        if ssl_store_is_empty():
+            print("Causa: nessun certificato CA. Su macOS lancia")
+            print("  /Applications/Python 3.x/Install Certificates.command")
+            print("oppure installa certifi nel venv: pip install certifi")
+        else:
+            print("Controlla la connessione: il sito non risponde.")
+        sys.exit(2)
+    return result.html
+
+
+gd = must_fetch(GAME_DESIGNER_URL)
+reg = must_fetch(REGISTRATION_URL)
 
 failures: list[str] = []
 

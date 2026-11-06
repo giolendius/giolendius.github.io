@@ -17,6 +17,7 @@ import argparse
 import html as html_module
 import re
 import shutil
+import ssl
 import subprocess
 import sys
 import threading
@@ -53,6 +54,13 @@ try:
     import winsound
 except ImportError:
     winsound = None  # type: ignore[assignment]
+
+try:
+    # Dipendenza opzionale: serve solo a salvare il caso macOS descritto in
+    # _ssl_context(). Senza, lo script funziona comunque.
+    import certifi
+except ImportError:
+    certifi = None  # type: ignore[assignment]
 
 
 Html = str
@@ -182,6 +190,28 @@ def _server_time(date_header: str | None) -> datetime | None:
         return None
 
 
+def _ssl_context() -> ssl.SSLContext:
+    """Contesto TLS con dei certificati validi, qualunque sia la piattaforma.
+
+    Su macOS il Python di python.org non trova nessuna CA finche' non si lancia
+    `Install Certificates.command`, e ogni richiesta fallisce con
+    CERTIFICATE_VERIFY_FAILED. Se e' quel caso e `certifi` e' installato, lo si
+    usa invece di restare ciechi per tutto il clickday.
+    """
+    context = ssl.create_default_context()
+    if context.cert_store_stats()["x509_ca"] == 0 and certifi is not None:
+        context.load_verify_locations(cafile=certifi.where())
+    return context
+
+
+SSL_CONTEXT = _ssl_context()
+
+
+def ssl_store_is_empty() -> bool:
+    """Vero se non abbiamo nessuna CA: ogni richiesta HTTPS fallirebbe."""
+    return SSL_CONTEXT.cert_store_stats()["x509_ca"] == 0
+
+
 def fetch(url: str) -> FetchResult | None:
     """Scarica la pagina. Restituisce None su qualunque errore, senza propagarlo."""
     request = urllib.request.Request(
@@ -195,7 +225,9 @@ def fetch(url: str) -> FetchResult | None:
         },
     )
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as response:
+        with urllib.request.urlopen(
+            request, timeout=REQUEST_TIMEOUT, context=SSL_CONTEXT
+        ) as response:
             body = response.read().decode("utf-8", errors="replace")
             return FetchResult(html=body, server_time=_server_time(response.headers.get("Date")))
     except (urllib.error.URLError, TimeoutError, OSError, ValueError) as error:
@@ -429,8 +461,17 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def warn_if_no_certificates() -> None:
+    if not ssl_store_is_empty():
+        return
+    log("ATTENZIONE: nessun certificato CA trovato, ogni richiesta HTTPS fallira'.")
+    log("  macOS: lancia '/Applications/Python 3.x/Install Certificates.command'")
+    log("  oppure installa certifi nel venv: pip install certifi")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    warn_if_no_certificates()
 
     if args.check:
         return run_check()
