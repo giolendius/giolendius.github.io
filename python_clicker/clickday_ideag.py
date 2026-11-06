@@ -32,6 +32,20 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse, urlunparse
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from polling_seconds import (
+    ALARM_MAX,
+    CLOCK_RESYNC,
+    COOLDOWN_INTERVAL,
+    FAR_INTERVAL,
+    FAR_THRESHOLD,
+    HOT_INTERVAL,
+    HOT_WINDOW_END,
+    NEAR_INTERVAL,
+    NEAR_THRESHOLD,
+    PANIC_OPEN_AFTER,
+    REQUEST_TIMEOUT,
+)
+
 try:
     # stdlib ma presente solo su Windows: altrove si ricade sul bell ASCII.
     import winsound
@@ -65,8 +79,6 @@ USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 )
-REQUEST_TIMEOUT = 6.0
-CLOCK_RESYNC_SECONDS = 300.0
 HIT_FILE = Path(__file__).with_name("clickday_hit.txt")
 
 BUTTON_BLOCK = re.compile(
@@ -133,7 +145,7 @@ class Clock:
 
     @property
     def needs_sync(self) -> bool:
-        return time.monotonic() - self.last_sync_monotonic > CLOCK_RESYNC_SECONDS
+        return time.monotonic() - self.last_sync_monotonic > CLOCK_RESYNC
 
     def now(self) -> datetime:
         return datetime.fromtimestamp(time.time() + self.offset_seconds, tz=ROME)
@@ -223,18 +235,21 @@ PROBES: Sequence[Probe] = (
 )
 
 
-def interval_for(seconds_to_open: float, floor: float) -> float:
-    """Cadenza di polling in funzione della distanza dall'orario di apertura."""
-    if seconds_to_open > 600:
-        return 30.0
-    if seconds_to_open > 60:
-        return 5.0
-    if seconds_to_open > -1200:
-        return floor
-    return max(floor, 5.0)
+def interval_for(seconds_to_open: float) -> float:
+    """Cadenza di polling in funzione della distanza dall'orario di apertura.
+
+    Le soglie e gli intervalli stanno tutti in `polling_seconds`.
+    """
+    if seconds_to_open > FAR_THRESHOLD:
+        return FAR_INTERVAL
+    if seconds_to_open > NEAR_THRESHOLD:
+        return NEAR_INTERVAL
+    if seconds_to_open > HOT_WINDOW_END:
+        return HOT_INTERVAL
+    return COOLDOWN_INTERVAL
 
 
-def sound_alarm(stop: threading.Event, max_seconds: float = 90.0) -> None:
+def sound_alarm(stop: threading.Event, max_seconds: float = ALARM_MAX) -> None:
     deadline = time.monotonic() + max_seconds
     while not stop.is_set() and time.monotonic() < deadline:
         if winsound is not None:
@@ -306,9 +321,9 @@ def poll_once(pool: ThreadPoolExecutor, clock: Clock) -> list[Hit]:
     return hits
 
 
-def watch(open_at: datetime, floor: float, panic_after_minutes: float) -> int:
+def watch(open_at: datetime) -> int:
     clock = Clock()
-    panic_deadline = open_at + timedelta(minutes=panic_after_minutes)
+    panic_deadline = open_at + timedelta(seconds=PANIC_OPEN_AFTER)
     panicked = False
     pool = ThreadPoolExecutor(max_workers=len(PROBES))
 
@@ -332,12 +347,12 @@ def watch(open_at: datetime, floor: float, panic_after_minutes: float) -> int:
             log("nessun segnale rilevato dopo l'orario previsto: apro comunque la pagina pubblica.")
             webbrowser.open(GAME_DESIGNER_URL)
 
-        delay = interval_for(seconds_to_open, floor)
+        delay = interval_for(seconds_to_open)
         countdown = timedelta(seconds=round(abs(seconds_to_open)))
         verso = "mancano" if seconds_to_open > 0 else "trascorsi da T"
         print(
-            f"[{now:%H:%M:%S}] chiuso -- {verso} {countdown} -- ricontrollo fra {delay:.0f}s   ",
-            end="\r" if delay <= 5 else "\n",
+            f"[{now:%H:%M:%S}] chiuso -- {verso} {countdown} -- ricontrollo fra {delay:g}s   ",
+            end="\r" if delay <= NEAR_INTERVAL else "\n",
             flush=True,
         )
         # Scala il tempo gia' speso a scaricare, altrimenti la cadenza reale slitta.
@@ -362,20 +377,6 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_OPEN_AT,
         metavar="'AAAA-MM-GG HH:MM'",
         help="orario di apertura previsto (ora italiana)",
-    )
-    parser.add_argument(
-        "--interval-floor",
-        type=float,
-        default=1.0,
-        metavar="SEC",
-        help="intervallo minimo fra due controlli della stessa pagina",
-    )
-    parser.add_argument(
-        "--panic-open-after",
-        type=float,
-        default=10.0,
-        metavar="MIN",
-        help="minuti dopo l'apertura oltre i quali apre comunque la pagina pubblica",
     )
     parser.add_argument(
         "--check",
@@ -404,7 +405,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     try:
-        return watch(args.open_at, args.interval_floor, args.panic_open_after)
+        return watch(args.open_at)
     except KeyboardInterrupt:
         print()
         log("interrotto.")

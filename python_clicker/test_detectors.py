@@ -6,12 +6,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+import polling_seconds as ps  # noqa: E402
 from clickday_ideag import (  # noqa: E402
     GAME_DESIGNER_URL,
     REGISTRATION_URL,
     detect_password_lifted,
     detect_table_button,
     fetch,
+    interval_for,
 )
 
 FORM_URL = "https://www.idea-g.it/2027-it/iscrizioni-game-designer-ideag/"
@@ -74,6 +76,17 @@ expect("aperto: password rimossa scatta", hit_pw is not None, f"-> {hit_pw.url i
 
 # --- pagina rotta: non deve scattare ---
 expect("pagina vuota/errore: non scatta", detect_password_lifted("<html><body>502</body></html>", REGISTRATION_URL) is None)
+
+# --- cadenza di polling: ogni finestra pesca la costante giusta ---
+expect("cadenza: apertura lontana", interval_for(3600.0) == ps.FAR_INTERVAL)
+expect("cadenza: avvicinamento", interval_for(300.0) == ps.NEAR_INTERVAL)
+expect("cadenza: ultimo minuto", interval_for(10.0) == ps.HOT_INTERVAL)
+expect("cadenza: appena dopo T", interval_for(-5.0) == ps.HOT_INTERVAL)
+expect("cadenza: finestra calda esaurita", interval_for(-3600.0) == ps.COOLDOWN_INTERVAL)
+expect(
+    "soglie coerenti (lontano > vicino > fine finestra calda)",
+    ps.FAR_THRESHOLD > ps.NEAR_THRESHOLD > 0 > ps.HOT_WINDOW_END,
+)
 
 print()
 print("TUTTI I TEST PASSATI" if not failures else f"FALLITI: {failures}")
